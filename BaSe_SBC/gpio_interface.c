@@ -37,6 +37,8 @@ void init_pins(void) {
 	dis_data_port.DIRSET = (dis_db4 | dis_db5 | dis_db6 | dis_db7);
 	dis_data_port.OUTSET = 0x00;
 	
+	//dis_pwm_port.DIRSET = dis_pwm;
+	
 	/* USART initialization has its own gpio direction and state setter function */
 }
 
@@ -56,6 +58,13 @@ int button_1_pressed(void) {
 	}
 }
 
+/* HMI Buttons */
+
+void set_interrupts_for_buttons(void) {
+	button_port.button_0_ctrl |= PORT_ISC_FALLING_gc;
+	button_port.button_1_ctrl |= PORT_ISC_FALLING_gc;
+}
+
 /* HMI LED */
 
 void led_hmi_on(void) {
@@ -71,6 +80,19 @@ void toggle_hmi_led(void) {
 }
 
 /* HMI Display */
+
+void dim_display(int dimming_value) {
+	//To be implemented properly
+	if (dimming_value > 0) {
+		dis_pwm_port.OUTSET = dis_pwm;
+		} else {
+		dis_pwm_port.OUTCLR = dis_pwm;
+	}
+}
+
+void toggle_display_backlight(void) {
+	dis_pwm_port.OUTTGL = dis_pwm;
+}
 
 void display_enable(uint8_t duration_ms) {
 	dis_e_port.OUTSET = dis_e;
@@ -115,11 +137,21 @@ void setup_heartbeat_interrupt(void) {
 }
 
 /* Interrupt Service Routines regarding pin interrupts */
-ISR(PORTB_PORT_vect)
+
+ISR(PORTA_PORT_vect)
 {
 	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
+	if(PORTA_INTFLAGS & button_0) {
+		flag_button_0_pressed = true;
+		PORTA_INTFLAGS &= button_0;
+	}
+}
+
+ISR(PORTB_PORT_vect)
+{
+	toggle_display_backlight();
+	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
 	if(PORTB_INTFLAGS & bpi_heartbeat) {
-		led_hmi_on();
 		flag_heartbeat = true;
 		PORTB_INTFLAGS &= bpi_heartbeat;
 	}

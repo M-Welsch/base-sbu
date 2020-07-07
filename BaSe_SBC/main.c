@@ -21,6 +21,7 @@
 
 int main(void)
 {
+	init_flags();
 	init_pins();
 	init_heatbeat_monitor();
 	set_interrupts_for_buttons();
@@ -33,24 +34,29 @@ int main(void)
 	
     while (1) 
     {
-		//heartbeat_monitor();
-		//if(!flag_heartbeat_ok) {
-			///* if heartbeat from bpi is missing, stop loading it with a high-level voltage on its rx-pin! */
-			//disable_usart_tx();
-		//}
+		heartbeat_monitor();
+		if(!flag_heartbeat_ok) {
+			/* if heartbeat from bpi is missing, stop loading it with a high-level voltage on its rx-pin! */
+			disable_usart_tx();
+		}
 		
 		/* HEART Beat processing doesn't work! */
 		
 		if (flag_button_0_pressed == true) {
 			led_hmi_off();
+			flag_button_0_pressed = false;
 		}
-		if (button_1_pressed() == 1) {
-			dim_display(1);
-			USART0_sendString("C:Hello\r\n");
-			} else {
-			dim_display(0);
-		}
+		//if (button_1_pressed() == 1) {
+			//dim_display(1);
+			//USART0_sendString("C:Hello\r\n");
+			//} else {
+			//dim_display(0);
+		//}
 		
+		/* let hmi led toggle as a sbc heartbeat */
+		
+		_delay_ms(100);		
+		toggle_hmi_led();
     }
 }
 

@@ -12,9 +12,6 @@
 void led_hmi_on(void);
 void led_hmi_off(void);
 
-void set_interrupts_for_buttons(void);
-
-void dim_display(int dimming_value);
 void display_enable(uint8_t duration_ms);
 void sweep_display_pins(void);
 

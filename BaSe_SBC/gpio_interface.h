@@ -44,6 +44,10 @@ void init_pins(void);
 int button_0_pressed(void);
 int button_1_pressed(void);
 
+/* HMI Buttons */
+
+void set_interrupts_for_buttons(void);
+
 /* HMI LED */
 
 void led_hmi_on(void);
@@ -52,6 +56,7 @@ void toggle_hmi_led(void);
 
 /* HMI Display */
 
+void dim_display(int dimming_value);
 void display_enable(uint8_t duration_ms);
 void set_display_data_pins(uint8_t data_nibble);
 void toggle_rs_pin(void);

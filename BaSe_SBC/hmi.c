@@ -13,21 +13,7 @@
 #include "flags.h"
 #include "gpio_interface.h"
 
-void set_interrupts_for_buttons(void) {
-	button_port.button_0_ctrl |= PORT_ISC_FALLING_gc;
-	button_port.button_1_ctrl |= PORT_ISC_FALLING_gc;
-}
-
 /* Display Control */
-
-void dim_display(int dimming_value) {
-	//To be implemented
-	if (dimming_value > 0) {
-		dis_pwm_port.OUT |= dis_pwm;
-	} else {
-		dis_pwm_port.OUT &= ~dis_pwm;
-	}
-}
 
 void sweep_display_pins(void) {
 	set_display_data_pins(0x01);
@@ -153,13 +139,4 @@ void display_clear(void) {
 	set_display_data_pins(0x01);
 	display_enable(1);
 	_delay_ms(5);
-}
-
-ISR(PORTA_PORT_vect)
-{
-	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
-	if(PORTA_INTFLAGS & button_0) {
-		flag_button_0_pressed = true;
-		PORTA_INTFLAGS &= button_0;
-	}
 }

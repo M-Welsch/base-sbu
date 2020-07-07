@@ -15,7 +15,7 @@ void init_heatbeat_monitor(void) {
 
 void heartbeat_monitor(void) {
 	if(flag_heartbeat) {
-		toggle_hmi_led();
+		toggle_display_backlight();
 		flag_heartbeat = false;
 	}
 }
