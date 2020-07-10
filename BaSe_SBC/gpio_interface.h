@@ -1,5 +1,5 @@
 #include <avr/io.h>
-
+#include <avr/interrupt.h>
 
 /* pin definitions */
 
@@ -70,3 +70,6 @@ void disable_usart_tx(void);
 
 /* Heartbeat */
 void setup_heartbeat_interrupt(void);
+
+/* Interrupt Service Routines */
+ISR(PORTA_PORT_vect);

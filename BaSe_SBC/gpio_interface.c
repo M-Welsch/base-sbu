@@ -156,3 +156,15 @@ ISR(PORTB_PORT_vect)
 		PORTB_INTFLAGS &= bpi_heartbeat;
 	}
 }
+
+ISR(BADISR_vect)
+{
+	/* This routine is called if a non defined interrupt-vector is requested. It flashes the HMI_LED real fast */
+	for(int i = 0; i < 20; i++)
+	{
+		led_hmi_on();
+		_delay_ms(10);
+		led_hmi_off();
+		_delay_ms(10);	
+	}
+}
