@@ -57,6 +57,7 @@ void toggle_hmi_led(void);
 /* HMI Display */
 
 void dim_display(int dimming_value);
+void toggle_display_backlight(void);
 void display_enable(uint8_t duration_ms);
 void set_display_data_pins(uint8_t data_nibble);
 void toggle_rs_pin(void);

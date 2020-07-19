@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <stdio.h>
+
 
 #include "flags.h"
 #include "gpio_interface.h"
@@ -40,23 +42,22 @@ int main(void)
 			disable_usart_tx();
 		}
 		
-		/* HEART Beat processing doesn't work! */
-		
 		if (flag_button_0_pressed == true) {
 			led_hmi_off();
 			flag_button_0_pressed = false;
 		}
-		//if (button_1_pressed() == 1) {
-			//dim_display(1);
-			//USART0_sendString("C:Hello\r\n");
-			//} else {
-			//dim_display(0);
-		//}
+		if (button_1_pressed() == 1) {
+			USART0_sendString("C:Hello\r\n");
+		}
 		
 		/* let hmi led toggle as a sbc heartbeat */
 		
 		_delay_ms(100);		
 		toggle_hmi_led();
+		send_heartbeat_count_to_bpi();
+		sprintf(buffer, "H:%i", get_heartbeat_count());
+		display_clear();
+		display_write_string(buffer);
     }
 }
 

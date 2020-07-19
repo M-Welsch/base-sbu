@@ -141,19 +141,25 @@ void setup_heartbeat_interrupt(void) {
 ISR(PORTA_PORT_vect)
 {
 	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
+	/* EDIT: still true?? */
 	if(PORTA_INTFLAGS & button_0) {
 		flag_button_0_pressed = true;
 		PORTA_INTFLAGS &= button_0;
+	}
+	
+	if(PORTA_INTFLAGS & button_1) {
+		flag_button_1_pressed = true;
+		PORTA_INTFLAGS &= button_1;
 	}
 }
 
 ISR(PORTB_PORT_vect)
 {
-	toggle_display_backlight();
 	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
 	if(PORTB_INTFLAGS & bpi_heartbeat) {
 		flag_heartbeat = true;
 		PORTB_INTFLAGS &= bpi_heartbeat;
+		/* reset timer. This has to be done within the ISR to avoid false timeouts due to the slowness of the mainloop */
 	}
 }
 

@@ -14,6 +14,7 @@ char buffer[32];
 void init_uart(void);
 void USART0_sendChar(char c);
 void USART0_sendString(char *s);
+void USART0_sendString_w_eol(char *s);
 
 
 #endif /* USART_H_ */

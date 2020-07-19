@@ -26,7 +26,10 @@ void USART0_sendChar(char c) {
 	;
 	USART0.TXDATAL = c;
 }
-
+void USART0_sendString_w_eol(char *s) {
+	USART0_sendString(s);
+	USART0_sendChar('\n');
+}
 void USART0_sendString(char *s) {
 	for(size_t i = 0; i < strlen(s); i++) {
 		USART0_sendChar(s[i]);
