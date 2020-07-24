@@ -70,7 +70,7 @@ void set_pb2_txd_and_pb3_rxd(void);
 void disable_usart_tx(void);
 
 /* Heartbeat */
-void setup_heartbeat_interrupt(void);
+void setup_interrupt_for_hb_edge_detection(void);
 
 /* Interrupt Service Routines */
 ISR(PORTA_PORT_vect);

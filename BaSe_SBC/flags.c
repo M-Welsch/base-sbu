@@ -17,4 +17,4 @@ bool flag_bpi_shutdown_timer_elapsed = false;
 
 bool flag_button_1_pressed = false;
 
-bool flag_heartbeat_ok = false;
+bool flag_bpi_heartbeat_ok = false;

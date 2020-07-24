@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include "gpio_interface.h"
 #include "usart.h"
+#include "flags.h"
 #include <string.h>
 
 #define F_CPU 3333333
@@ -17,8 +18,21 @@
 
 void init_uart(void) {
 	set_pb2_txd_and_pb3_rxd();
+	USART0_set_baud_rate();
+	USART0_enable_periperials();
+	USART0_enable_rx_complete_interrupt();
+}
+
+void USART0_set_baud_rate() {
 	USART0.BAUD = UROUND(64UL*F_CPU/16/BAUD_RATE);
+}
+
+void USART0_enable_periperials() {
 	USART0.CTRLB = USART_RXEN_bm | USART_TXEN_bm;
+}
+
+void USART0_enable_rx_complete_interrupt() {
+	USART0.CTRLA |= USART_RXCIE_bm;
 }
 
 void USART0_sendChar(char c) {
@@ -26,6 +40,7 @@ void USART0_sendChar(char c) {
 	;
 	USART0.TXDATAL = c;
 }
+
 void USART0_sendString_w_eol(char *s) {
 	USART0_sendString(s);
 	USART0_sendChar('\n');
@@ -34,4 +49,33 @@ void USART0_sendString(char *s) {
 	for(size_t i = 0; i < strlen(s); i++) {
 		USART0_sendChar(s[i]);
 	}
+}
+
+uint8_t USART0_read()
+{
+	
+	while (!(USART0_receive_complete()))
+	{
+		;
+	}
+	return USART0.RXDATAL;
+}
+
+uint8_t USART0_receive_complete() {
+	return USART0.STATUS & USART_RXCIF_bm;
+}
+
+/* to be implemented */
+ISR(USART0_RXC_vect) {
+	temp_receive_buffer = USART0_read();
+	if(temp_receive_buffer == '\0') {
+		flag_usart_string_receive_complete = true;
+	}
+	else {
+		append_current_byte_to_receive_buffer(temp_receive_buffer);
+	}
+}
+
+void append_current_byte_to_receive_buffer(uint8_t byte_of_data) {
+	;
 }

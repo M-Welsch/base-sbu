@@ -132,7 +132,7 @@ void disable_usart_tx(void) {
 }
 
 /* Heartbeat */
-void setup_heartbeat_interrupt(void) {
+void setup_interrupt_for_hb_edge_detection(void) {
 	bpi_heartbeat_port.bpi_heartbeat_ctrl |= PORT_PULLUPEN_bm | PORT_ISC_BOTHEDGES_gc;
 }
 
