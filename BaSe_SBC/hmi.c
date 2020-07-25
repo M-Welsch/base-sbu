@@ -115,10 +115,23 @@ void display_write_char(char s) {
 	display_enable(1);
 }
 
+void display_next_line(void) {
+	display_clear_rs_pin();
+	set_display_data_pins(0xC);
+	display_enable(1);
+	set_display_data_pins(0x0);
+	display_enable(1);
+}
+
 void display_write_string(char *s) {
 	display_set_rs_pin();
 	while(*s!='\0') {
-		display_write_char(*s);
+		if(*s == '\n') {
+			display_next_line();
+		}
+		else {
+			display_write_char(*s);
+		}
 		s++;
 	}
 }

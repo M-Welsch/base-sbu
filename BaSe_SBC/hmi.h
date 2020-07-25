@@ -20,5 +20,6 @@ void display_clear(void);
 void display_return_home(void);
 void display_write_char(char s);
 void display_write_string(char *s);
+void display_next_line(void);
 
 #endif /* HMI_H_ */

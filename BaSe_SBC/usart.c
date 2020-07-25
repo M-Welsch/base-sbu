@@ -65,17 +65,27 @@ uint8_t USART0_receive_complete() {
 	return USART0.STATUS & USART_RXCIF_bm;
 }
 
-/* to be implemented */
-ISR(USART0_RXC_vect) {
-	temp_receive_buffer = USART0_read();
-	if(temp_receive_buffer == '\0') {
-		flag_usart_string_receive_complete = true;
+void USART0_read_string(char *receive_buffer, int maxlen) {
+	if (maxlen > 32) {
+		maxlen = 32; //increase size of receive buffer in uart.h if you want to have more space!
 	}
-	else {
-		append_current_byte_to_receive_buffer(temp_receive_buffer);
+	int i = 0;
+	while(i <= maxlen) {
+		i++;
+		*receive_buffer = USART0_read();
+		if (*receive_buffer == '\n') {
+			*receive_buffer = '\0';
+			break;
+		}
+		receive_buffer++;
+	}
+	if (i > maxlen) {
+		*receive_buffer = '\0';
 	}
 }
 
-void append_current_byte_to_receive_buffer(uint8_t byte_of_data) {
-	;
+/* to be implemented */
+ISR(USART0_RXC_vect) {
+	USART0_read_string(usart_receive_buffer, 32);
+	flag_usart_string_receive_complete = true;
 }

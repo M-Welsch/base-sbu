@@ -31,8 +31,7 @@ int main(void)
 	init_display();
 	sei();
 	
-	dim_display(1);
-	display_write_string("Hallo Welt!\n");
+	display_write_string("Standby Unit\nready!");
 	USART0_sendString("I:STARTED");
 	
     while (1) 
@@ -53,12 +52,15 @@ int main(void)
 		
 		/* let hmi led toggle as a sbc heartbeat */
 		
+		if (flag_usart_string_receive_complete == true) {
+			display_clear();
+			flag_usart_string_receive_complete = false;
+			display_write_string("Received TS\nBaSe Ready.");
+		}
+		
 		_delay_ms(100);		
 		toggle_hmi_led();
 		send_sbc_heartbeat_count_to_bpi();
-		sprintf(buffer, "H:%i", get_sbc_heartbeat_count());
-		display_clear();
-		display_write_string(buffer);
     }
 }
 
