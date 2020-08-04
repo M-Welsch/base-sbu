@@ -15,21 +15,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000cfc  2**2
                   CONTENTS, READONLY
-  6 .debug_aranges 00000210  00000000  00000000  00000d38  2**0
+  6 .debug_aranges 00000218  00000000  00000000  00000d38  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   000041fa  00000000  00000000  00000f48  2**0
+  7 .debug_info   00004264  00000000  00000000  00000f50  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00001e10  00000000  00000000  00005142  2**0
+  8 .debug_abbrev 00001e3a  00000000  00000000  000051b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00001165  00000000  00000000  00006f52  2**0
+  9 .debug_line   0000118f  00000000  00000000  00006fee  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  000004a8  00000000  00000000  000080b8  2**2
+ 10 .debug_frame  000004b8  00000000  00000000  00008180  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    000015f2  00000000  00000000  00008560  2**0
+ 11 .debug_str    00001619  00000000  00000000  00008638  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000eb0  00000000  00000000  00009b52  2**0
+ 12 .debug_loc    00000eb0  00000000  00000000  00009c51  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 000001b0  00000000  00000000  0000aa02  2**0
+ 13 .debug_ranges 000001b8  00000000  00000000  0000ab01  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -608,6 +608,7 @@ int main(void)
  306:	80 91 06 3e 	lds	r24, 0x3E06	; 0x803e06 <flag_usart_string_receive_complete>
  30a:	88 23       	and	r24, r24
  30c:	31 f0       	breq	.+12     	; 0x31a <main+0x54>
+			//USART0_process_incoming_message();
 			display_clear();
  30e:	d4 d0       	rcall	.+424    	; 0x4b8 <display_clear>
 			flag_usart_string_receive_complete = false;
@@ -867,12 +868,12 @@ void display_clear(void) {
  4d6:	08 95       	ret
 
 000004d8 <USART0_enable_rx_complete_interrupt>:
-	return USART0.RXDATAL;
+	}
 }
 
-uint8_t USART0_receive_complete() {
-	return USART0.STATUS & USART_RXCIF_bm;
-}
+void USART0_process_incoming_message() {
+	if (strcmp(usart_receive_buffer, "Test") == 0) {
+		USART0_sendString_w_eol("Echo");
  4d8:	e0 e0       	ldi	r30, 0x00	; 0
  4da:	f8 e0       	ldi	r31, 0x08	; 8
  4dc:	85 81       	ldd	r24, Z+5	; 0x05
@@ -953,8 +954,6 @@ uint8_t USART0_receive_complete() {
  562:	08 95       	ret
 
 00000564 <USART0_read_string>:
-
-void USART0_read_string(char *receive_buffer, int maxlen) {
  564:	cf 92       	push	r12
  566:	df 92       	push	r13
  568:	ef 92       	push	r14
@@ -972,64 +971,30 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
  580:	cc 24       	eor	r12, r12
  582:	c5 f8       	bld	r12, 5
  584:	d1 2c       	mov	r13, r1
-	if (maxlen > 32) {
-		maxlen = 32; //increase size of receive buffer in uart.h if you want to have more space!
-	}
-	int i = 0;
-	while(i <= maxlen) {
  586:	dd 20       	and	r13, r13
  588:	a4 f0       	brlt	.+40     	; 0x5b2 <USART0_read_string+0x4e>
  58a:	e7 01       	movw	r28, r14
  58c:	00 e0       	ldi	r16, 0x00	; 0
  58e:	10 e0       	ldi	r17, 0x00	; 0
  590:	7e 01       	movw	r14, r28
-		i++;
  592:	0f 5f       	subi	r16, 0xFF	; 255
  594:	1f 4f       	sbci	r17, 0xFF	; 255
-		*receive_buffer = USART0_read();
  596:	de df       	rcall	.-68     	; 0x554 <USART0_read>
  598:	89 93       	st	Y+, r24
-		if (*receive_buffer == '\n') {
  59a:	8a 30       	cpi	r24, 0x0A	; 10
  59c:	31 f4       	brne	.+12     	; 0x5aa <USART0_read_string+0x46>
-			*receive_buffer = '\0';
  59e:	f7 01       	movw	r30, r14
  5a0:	10 82       	st	Z, r1
-			break;
-		}
-		receive_buffer++;
-	}
-	if (i > maxlen) {
  5a2:	c0 16       	cp	r12, r16
  5a4:	d1 06       	cpc	r13, r17
  5a6:	3c f4       	brge	.+14     	; 0x5b6 <USART0_read_string+0x52>
  5a8:	04 c0       	rjmp	.+8      	; 0x5b2 <USART0_read_string+0x4e>
-		*receive_buffer = USART0_read();
-		if (*receive_buffer == '\n') {
-			*receive_buffer = '\0';
-			break;
-		}
-		receive_buffer++;
  5aa:	7e 01       	movw	r14, r28
-void USART0_read_string(char *receive_buffer, int maxlen) {
-	if (maxlen > 32) {
-		maxlen = 32; //increase size of receive buffer in uart.h if you want to have more space!
-	}
-	int i = 0;
-	while(i <= maxlen) {
  5ac:	c0 16       	cp	r12, r16
  5ae:	d1 06       	cpc	r13, r17
  5b0:	7c f7       	brge	.-34     	; 0x590 <USART0_read_string+0x2c>
-			break;
-		}
-		receive_buffer++;
-	}
-	if (i > maxlen) {
-		*receive_buffer = '\0';
  5b2:	f7 01       	movw	r30, r14
  5b4:	10 82       	st	Z, r1
-	}
-}
  5b6:	df 91       	pop	r29
  5b8:	cf 91       	pop	r28
  5ba:	1f 91       	pop	r17
@@ -1041,6 +1006,8 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
  5c6:	08 95       	ret
 
 000005c8 <__vector_22>:
+	}
+}
 
 /* to be implemented */
 ISR(USART0_RXC_vect) {

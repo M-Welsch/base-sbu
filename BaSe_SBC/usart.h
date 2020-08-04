@@ -25,6 +25,7 @@ void USART0_sendString_w_eol(char *s);
 uint8_t USART0_read();
 void USART0_read_string(char *receive_buffer, int maxlen);
 uint8_t USART0_receive_complete();
+void USART0_process_incoming_message();
 
 void append_current_byte_to_receive_buffer(uint8_t byte_of_data);
 

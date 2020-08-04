@@ -9,6 +9,7 @@
 #include "gpio_interface.h"
 #include "usart.h"
 #include "flags.h"
+#include "string.h"
 #include <string.h>
 
 #define F_CPU 3333333
@@ -81,6 +82,12 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 	}
 	if (i > maxlen) {
 		*receive_buffer = '\0';
+	}
+}
+
+void USART0_process_incoming_message() {
+	if (strcmp(usart_receive_buffer, "Test") == 0) {
+		USART0_sendString_w_eol("Echo");
 	}
 }
 

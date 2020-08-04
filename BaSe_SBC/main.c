@@ -53,6 +53,7 @@ int main(void)
 		/* let hmi led toggle as a sbc heartbeat */
 		
 		if (flag_usart_string_receive_complete == true) {
+			//USART0_process_incoming_message(); //this leads to the display being dark all the time
 			display_clear();
 			flag_usart_string_receive_complete = false;
 			display_write_string("Received TS\nBaSe Ready.");
