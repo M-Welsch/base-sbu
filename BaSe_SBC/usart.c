@@ -74,7 +74,7 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 	while(i <= maxlen) {
 		i++;
 		*receive_buffer = USART0_read();
-		if (*receive_buffer == '\n') {
+		if ((*receive_buffer == '\n') || (*receive_buffer == '\0') || (*receive_buffer == '\r')) {
 			*receive_buffer = '\0';
 			break;
 		}
