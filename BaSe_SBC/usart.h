@@ -12,6 +12,7 @@
 char buffer[32];
 char usart_receive_buffer[32];
 char temp_receive_buffer;
+char display_content_from_bcu[32];
 
 void init_uart(void);
 void USART0_set_baud_rate();

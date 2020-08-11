@@ -16,6 +16,7 @@ bool flag_button_1_pressed;
 volatile bool flag_heartbeat;
 bool flag_bpi_heartbeat_ok;
 bool flag_usart_string_receive_complete;
+bool flag_string_for_display_received;
 
 /* function prototypes */
 void init_flags(void);

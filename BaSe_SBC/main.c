@@ -57,7 +57,13 @@ int main(void)
 			display_clear();
 			flag_usart_string_receive_complete = false;
 			//display_write_string("Received TS\nBaSe Ready.");
-			display_write_string(usart_receive_buffer);
+			//display_write_string(usart_receive_buffer);
+			
+		}
+		
+		if (flag_string_for_display_received == true) {
+			flag_string_for_display_received = false;
+			display_write_string(display_content_from_bcu);
 		}
 		
 		_delay_ms(100);		

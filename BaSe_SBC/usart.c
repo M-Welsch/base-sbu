@@ -44,7 +44,7 @@ void USART0_sendChar(char c) {
 
 void USART0_sendString_w_eol(char *s) {
 	USART0_sendString(s);
-	USART0_sendChar('\n');
+	USART0_sendChar('\0');
 }
 void USART0_sendString(char *s) {
 	for(size_t i = 0; i < strlen(s); i++) {
@@ -86,9 +86,20 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 }
 
 void USART0_process_incoming_message() {
+	char *message_code, *payload;
+	
 	if (strcmp(usart_receive_buffer, "Test") == 0) {
 		USART0_sendString_w_eol("Echo");
 	}
+	
+    message_code = strtok(usart_receive_buffer, ":");
+    payload = strtok(NULL,"\0");
+	
+	if (strcmp(message_code, "DS") == 0) {
+		flag_string_for_display_received = true;	
+		strcpy(display_content_from_bcu, payload);
+	}
+	
 }
 
 /* to be implemented */
