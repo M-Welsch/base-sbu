@@ -2,7 +2,7 @@ enum pwr_states {
 	standby = 0,
 	display_on = 1,
 	active = 2,
-};
+} next_pwr_state;
 
 /* function protoypes */
 void enable_5v0_smps(void);

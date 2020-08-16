@@ -23,6 +23,7 @@ void disable_bpi_sply(void) {
 void goto_pwr_state(enum pwr_states pwr_state) {
 	switch(pwr_state) {
 		case standby:
+			
 		if (flag_bpi_ready_for_shutdown == true && flag_bpi_shutdown_timer_elapsed == true) {
 			disable_bpi_sply();
 			disable_5v0_smps();

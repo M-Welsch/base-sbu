@@ -9,14 +9,24 @@
 #ifndef INCFILE1_H_
 #define INCFILE1_H_
 
+/* flags */
+
 bool flag_bpi_ready_for_shutdown;
 bool flag_bpi_shutdown_timer_elapsed;
-volatile bool flag_button_0_pressed;
 bool flag_button_1_pressed;
-volatile bool flag_heartbeat;
 bool flag_bpi_heartbeat_ok;
 bool flag_usart_string_receive_complete;
 bool flag_string_for_display_received;
+bool flag_pwr_state_change_request;
+bool flag_human_readable_timestamp_next_bu_received;
+bool flag_usart_string_receive_complete;
+bool flag_received_seconds_to_next_bu;
+bool flag_goto_sleep;
+
+/* globals */
+volatile bool flag_button_0_pressed;
+volatile bool flag_heartbeat;
+long seconds_to_next_bu;
 
 /* function prototypes */
 void init_flags(void);

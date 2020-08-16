@@ -11,7 +11,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
-
+#include <avr/sleep.h>
 
 #include "flags.h"
 #include "gpio_interface.h"
@@ -19,6 +19,7 @@
 #include "hmi.h"
 #include "usart.h"
 #include "heartbeat.h"
+#include "rtc.h"
 
 
 int main(void)
@@ -50,11 +51,8 @@ int main(void)
 			USART0_sendString("C:Hello\r\n");
 		}
 		
-		/* let hmi led toggle as a sbc heartbeat */
-		
 		if (flag_usart_string_receive_complete == true) {
 			USART0_process_incoming_message(); //this leads to the display being dark all the time
-			display_clear();
 			flag_usart_string_receive_complete = false;
 			//display_write_string("Received TS\nBaSe Ready.");
 			//display_write_string(usart_receive_buffer);
@@ -63,12 +61,47 @@ int main(void)
 		
 		if (flag_string_for_display_received == true) {
 			flag_string_for_display_received = false;
-			display_write_string(display_content_from_bcu);
+			display_clear();
+			display_write_string(display_line1_content_from_bcu);
+			display_next_line();
+			display_write_string(display_line2_content_from_bcu);
+			USART0_sendString_w_eol("New Display\n"); //<- line is being received, but no new content on display??
 		}
 		
-		_delay_ms(100);		
+		if (flag_pwr_state_change_request == true) {
+			display_clear();
+			display_write_string("Received Shut-\ndown Request!");
+			flag_pwr_state_change_request = false;
+			goto_pwr_state(next_pwr_state);
+		}
+		
+		if (flag_human_readable_timestamp_next_bu_received == true) {
+			display_clear();
+			display_write_string(human_readable_timestamp_next_bu);
+			flag_human_readable_timestamp_next_bu_received = false;
+		}
+		
+		if (flag_received_seconds_to_next_bu == true) {
+			//Todo: acknowledge to bcu
+			flag_received_seconds_to_next_bu = false;
+			rtc_write_seconds_to_cmp();
+			rtc_setup();
+		}
+		
+		if (flag_goto_sleep == true) {
+			flag_goto_sleep = false;
+			USART0_sendString_w_eol("going to sleep ...\n");
+			_delay_ms(100);
+			SLPCTRL.CTRLA |= SLPCTRL_SMODE_STDBY_gc;
+			SLPCTRL.CTRLA |= SLPCTRL_SEN_bm;
+			sleep_cpu();
+		}	
+		
+		_delay_ms(100);
+		
+		/* let hmi led toggle as a sbc heartbeat */		
 		toggle_hmi_led();
-		send_sbc_heartbeat_count_to_bpi();
+		// send_sbc_heartbeat_count_to_bpi();
     }
 }
 

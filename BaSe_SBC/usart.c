@@ -6,10 +6,13 @@
  */ 
 
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "gpio_interface.h"
 #include "usart.h"
 #include "flags.h"
 #include "string.h"
+#include "powerpath_control.h"
 #include <string.h>
 
 #define F_CPU 3333333
@@ -94,15 +97,61 @@ void USART0_process_incoming_message() {
 	
     message_code = strtok(usart_receive_buffer, ":");
     payload = strtok(NULL,"\0");
+	sprintf(buffer,"MC: %s, PL: %s\n",message_code, payload);
 	
-	if (strcmp(message_code, "DS") == 0) {
-		flag_string_for_display_received = true;	
-		strcpy(display_content_from_bcu, payload);
+	if (strcmp(message_code, "D1") == 0) {
+		USART0_sendString_w_eol("ACK_D1");
+		strcpy(display_line1_content_from_bcu, payload);
 	}
 	
+	if (strcmp(message_code, "D2") == 0) {
+		USART0_sendString_w_eol("ACK_D2");
+		strcpy(display_line2_content_from_bcu, payload);
+		flag_string_for_display_received = true;
+	}
+	
+	if (strcmp(message_code, "SR") == 0) {
+		flag_pwr_state_change_request = true;
+		next_pwr_state = standby;
+	}	
+	
+	if (strcmp(message_code, "BU") == 0) {
+		sprintf(buffer,"ACK:BU:%s\n", payload);
+		USART0_sendString_w_eol(buffer);
+		seconds_to_next_bu = convert_str_to_long(payload);
+		flag_received_seconds_to_next_bu = true;
+	}
+	
+	if (strcmp(message_code, "BR") == 0) {
+		/* received human readable timestamp for next backup */
+		strcpy(human_readable_timestamp_next_bu, payload);
+		human_readable_timestamp_next_bu[16] = '\n';
+		flag_human_readable_timestamp_next_bu_received = true;
+	}	
+	
+	if (strcmp(message_code, "SB") == 0) {
+		flag_goto_sleep = true;
+	}
+	
+	if (strcmp(message_code, "CC") == 0) {
+		/* received request for current measurement result */
+		;
+	}
+	*message_code = '\0';
+	*payload = '\0';
 }
 
-/* to be implemented */
+long convert_str_to_long(char *str) {
+	char *ptr;
+	printf("Parsing '%s':\n", str);
+	long ret;
+
+	ret = strtol(str, &ptr, 10);
+	return ret;
+}
+
+/* Interrupts */
+
 ISR(USART0_RXC_vect) {
 	USART0_read_string(usart_receive_buffer, 32);
 	flag_usart_string_receive_complete = true;

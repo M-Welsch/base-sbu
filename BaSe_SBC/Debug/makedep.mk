@@ -14,5 +14,7 @@ hmi.c
 
 powerpath_control.c
 
+rtc.c
+
 usart.c
 

@@ -43,6 +43,7 @@ C_SRCS +=  \
 ../main.c \
 ../hmi.c \
 ../powerpath_control.c \
+../rtc.c \
 ../usart.c
 
 
@@ -59,6 +60,7 @@ heartbeat.o \
 main.o \
 hmi.o \
 powerpath_control.o \
+rtc.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
@@ -68,6 +70,7 @@ heartbeat.o \
 main.o \
 hmi.o \
 powerpath_control.o \
+rtc.o \
 usart.o
 
 C_DEPS +=  \
@@ -77,6 +80,7 @@ heartbeat.d \
 main.d \
 hmi.d \
 powerpath_control.d \
+rtc.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
@@ -86,6 +90,7 @@ heartbeat.d \
 main.d \
 hmi.d \
 powerpath_control.d \
+rtc.d \
 usart.d
 
 OUTPUT_FILE_PATH +=BaSe_SBC.elf
@@ -138,6 +143,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./powerpath_control.o: .././powerpath_control.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.3.229\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=attiny816 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.3.229\gcc\dev\attiny816" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./rtc.o: .././rtc.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.3.229\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=attiny816 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.3.229\gcc\dev\attiny816" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
