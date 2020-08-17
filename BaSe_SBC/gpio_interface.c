@@ -37,9 +37,18 @@ void init_pins(void) {
 	dis_data_port.DIRSET = (dis_db4 | dis_db5 | dis_db6 | dis_db7);
 	dis_data_port.OUTSET = 0x00;
 	
-	//dis_pwm_port.DIRSET = dis_pwm;
+	dis_pwm_port.DIRSET = dis_pwm; //for some reason this has to be there!
 	
 	/* USART initialization has its own gpio direction and state setter function */
+	
+	disable_digital_input_buffers_for_adc();
+}
+
+void disable_digital_input_buffers_for_adc() {
+	PORTA.PIN1CTRL &= ~PORT_ISC_gm;
+	PORTA.PIN1CTRL |= PORT_ISC_INPUT_DISABLE_gc;
+	PORTA.PIN5CTRL &= ~PORT_ISC_gm;
+	PORTA.PIN5CTRL |= PORT_ISC_INPUT_DISABLE_gc;
 }
 
 int button_0_pressed(void) {
@@ -85,7 +94,7 @@ void dim_display(int dimming_value) {
 	//To be implemented properly
 	if (dimming_value > 0) {
 		dis_pwm_port.OUTSET = dis_pwm;
-		} else {
+	} else {
 		dis_pwm_port.OUTCLR = dis_pwm;
 	}
 }

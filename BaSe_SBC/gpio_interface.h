@@ -41,6 +41,7 @@
 /* function prototypes */
 
 void init_pins(void);
+void disable_digital_input_buffers_for_adc();
 int button_0_pressed(void);
 int button_1_pressed(void);
 

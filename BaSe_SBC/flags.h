@@ -22,6 +22,9 @@ bool flag_human_readable_timestamp_next_bu_received;
 bool flag_usart_string_receive_complete;
 bool flag_received_seconds_to_next_bu;
 bool flag_goto_sleep;
+bool flag_request_current_measurement;
+bool flag_request_temperature_measurement;
+bool flag_request_3v3_measurement;
 
 /* globals */
 volatile bool flag_button_0_pressed;

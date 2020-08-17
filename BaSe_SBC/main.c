@@ -20,6 +20,7 @@
 #include "usart.h"
 #include "heartbeat.h"
 #include "rtc.h"
+#include "adc.h"
 
 
 int main(void)
@@ -30,10 +31,12 @@ int main(void)
 	set_interrupts_for_buttons();
 	init_uart();
 	init_display();
+	adc_init();
 	sei();
 	
 	display_write_string("Standby Unit\nready!");
 	USART0_sendString("I:STARTED");
+	dim_display(1);
 	
     while (1) 
     {
@@ -52,11 +55,8 @@ int main(void)
 		}
 		
 		if (flag_usart_string_receive_complete == true) {
-			USART0_process_incoming_message(); //this leads to the display being dark all the time
+			USART0_process_incoming_message();
 			flag_usart_string_receive_complete = false;
-			//display_write_string("Received TS\nBaSe Ready.");
-			//display_write_string(usart_receive_buffer);
-			
 		}
 		
 		if (flag_string_for_display_received == true) {
@@ -95,7 +95,34 @@ int main(void)
 			SLPCTRL.CTRLA |= SLPCTRL_SMODE_STDBY_gc;
 			SLPCTRL.CTRLA |= SLPCTRL_SEN_bm;
 			sleep_cpu();
-		}	
+		}
+		
+		if (flag_request_current_measurement == true) {
+			flag_request_current_measurement = false;
+			uint16_t input_current = adc_measure_input_current();
+			sprintf(buffer,"Cur: %d", input_current);
+			USART0_sendString_w_eol(buffer);
+			display_clear();
+			display_write_string(buffer);
+		}
+		
+		if	(flag_request_temperature_measurement == true) {
+			flag_request_temperature_measurement = false;
+			uint16_t temperature = adc_measure_temperature();
+			sprintf(buffer, "TMP: %d", temperature);
+			USART0_sendString_w_eol(buffer);
+			display_clear();
+			display_write_string(buffer);
+		}
+		
+		if (flag_request_3v3_measurement == true) {
+			flag_request_3v3_measurement = false;
+			uint16_t voltage_3v3 = adc_measure_3v3();
+			sprintf(buffer, "3V3: %d", voltage_3v3);
+			USART0_sendString_w_eol(buffer);
+			display_clear();
+			display_write_string(buffer);			
+		}
 		
 		_delay_ms(100);
 		

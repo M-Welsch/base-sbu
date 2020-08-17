@@ -134,11 +134,19 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "CC") == 0) {
-		/* received request for current measurement result */
-		;
+		USART0_sendString_w_eol("ACK:CC");
+		flag_request_current_measurement = true;
 	}
-	*message_code = '\0';
-	*payload = '\0';
+	
+	if (strcmp(message_code, "TP") == 0) {
+		USART0_sendString_w_eol("ACK:TP");
+		flag_request_temperature_measurement = true;
+	}
+	
+	if (strcmp(message_code, "3V") == 0) {
+		USART0_sendString_w_eol("ACK:3V");
+		flag_request_3v3_measurement = true;
+	}
 }
 
 long convert_str_to_long(char *str) {
