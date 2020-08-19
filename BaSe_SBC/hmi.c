@@ -153,3 +153,10 @@ void display_clear(void) {
 	display_enable(1);
 	_delay_ms(5);
 }
+
+/* Dimming */
+
+void dimmer_init() {
+	TCA0_SINGLE_CTRLA |= TCA_SINGLE_CLKSEL_DIV1024_gc; //tbd...
+	TCA0_SINGLE_CTRLA |= TCA_SINGLE_ENABLE_bm;
+}

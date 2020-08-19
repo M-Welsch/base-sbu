@@ -25,11 +25,19 @@ bool flag_goto_sleep;
 bool flag_request_current_measurement;
 bool flag_request_temperature_measurement;
 bool flag_request_3v3_measurement;
+bool flag_5v0_up;
+bool flag_bcu_sply_up;
 
 /* globals */
 volatile bool flag_button_0_pressed;
 volatile bool flag_heartbeat;
 long seconds_to_next_bu;
+
+enum pwr_states {
+	standby = 0,
+	display_on = 1,
+	active = 2,
+} next_pwr_state, current_pwr_state;
 
 /* function prototypes */
 void init_flags(void);

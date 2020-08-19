@@ -31,3 +31,6 @@ bool flag_goto_sleep = false;
 bool flag_request_current_measurement = false;
 bool flag_request_temperature_measurement = false;
 bool flag_request_3v3_measurement = false;
+
+bool flag_5v0_up = true;
+bool flag_bcu_sply_up = true;

@@ -77,7 +77,9 @@ void set_interrupts_for_buttons(void) {
 /* HMI LED */
 
 void led_hmi_on(void) {
-	PORTB.OUTSET = led_hmi;
+	if(current_pwr_state != standby) {
+		PORTB.OUTSET = led_hmi;
+	}
 }
 
 void led_hmi_off(void) {
@@ -85,14 +87,18 @@ void led_hmi_off(void) {
 }
 
 void toggle_hmi_led(void) {
-	PORTB.OUTTGL = led_hmi;
+	if(current_pwr_state != standby) {
+		PORTB.OUTTGL = led_hmi;
+	} else {
+		led_hmi_off();
+	}
 }
 
 /* HMI Display */
 
 void dim_display(int dimming_value) {
-	//To be implemented properly
-	if (dimming_value > 0) {
+	//To be implemented properly with pwm
+	if ((dimming_value > 0) && (current_pwr_state != standby)) {
 		dis_pwm_port.OUTSET = dis_pwm;
 	} else {
 		dis_pwm_port.OUTCLR = dis_pwm;
