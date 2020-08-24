@@ -1,5 +1,8 @@
+#define F_CPU 3333333
+
 #include <avr/io.h>
 #include <stdbool.h>
+#include <util/delay.h>
 #include "flags.h"
 #include "gpio_interface.h"
 #include "powerpath_control.h"
@@ -40,7 +43,9 @@ void goto_pwr_state(enum pwr_states pwr_state) {
 		
 		case display_on:
 			current_pwr_state = display_on;
+			set_interrupts_for_buttons();
 			enable_5v0_smps();
+			_delay_ms(5);
 			init_display();
 			break;
 			

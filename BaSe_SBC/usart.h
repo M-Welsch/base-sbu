@@ -14,8 +14,6 @@ char usart_receive_buffer[32];
 char temp_receive_buffer;
 char display_line1_content_from_bcu[17];
 char display_line2_content_from_bcu[17];
-char human_readable_timestamp_next_bu[33];
-
 
 void init_uart(void);
 void USART0_set_baud_rate();

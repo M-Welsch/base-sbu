@@ -27,11 +27,13 @@ bool flag_request_temperature_measurement;
 bool flag_request_3v3_measurement;
 bool flag_5v0_up;
 bool flag_bcu_sply_up;
+bool flag_schedule_backup_now;
 
 /* globals */
 volatile bool flag_button_0_pressed;
 volatile bool flag_heartbeat;
 long seconds_to_next_bu;
+char human_readable_timestamp_next_bu[33];
 
 enum pwr_states {
 	standby = 0,

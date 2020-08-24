@@ -34,3 +34,5 @@ bool flag_request_3v3_measurement = false;
 
 bool flag_5v0_up = true;
 bool flag_bcu_sply_up = true;
+
+bool flag_schedule_backup_now = false;

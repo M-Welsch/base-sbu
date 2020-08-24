@@ -27,7 +27,6 @@ void setup_interrupt_timeout_detection() {
 
 void heartbeat_monitor(void) {
 	if(flag_heartbeat) {
-		dim_display(1);
 		reset_bpi_hb_timeout_timer();
 		flag_heartbeat = false;
 	}

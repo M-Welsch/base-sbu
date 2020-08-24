@@ -17,6 +17,8 @@
 
 void init_pins(void) {
 	// Todo: remove all |= from DIRSET, DIRCLR Commands!!
+	
+	/* PORTA Pins */
 	dis_e_port.OUTCLR = dis_e;
 	dis_e_port.DIRSET = dis_e;
 	
@@ -155,8 +157,6 @@ void setup_interrupt_for_hb_edge_detection(void) {
 
 ISR(PORTA_PORT_vect)
 {
-	/* Writing something to display here freezes the MCU. Perhaps because the ISR will be called over and over again. */
-	/* EDIT: still true?? */
 	if(PORTA_INTFLAGS & button_0) {
 		flag_button_0_pressed = true;
 		PORTA_INTFLAGS &= button_0;
