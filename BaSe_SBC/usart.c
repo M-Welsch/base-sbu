@@ -100,12 +100,12 @@ void USART0_process_incoming_message() {
 	
 	if (strcmp(message_code, "D1") == 0) {
 		USART0_sendString_w_eol("ACK_D1");
-		strcpy(display_line1_content_from_bcu, payload);
+		strcpy(display_line1_content, payload);
 	}
 	
 	if (strcmp(message_code, "D2") == 0) {
 		USART0_sendString_w_eol("ACK_D2");
-		strcpy(display_line2_content_from_bcu, payload);
+		strcpy(display_line2_content, payload);
 		flag_string_for_display_received = true;
 	}
 	

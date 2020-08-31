@@ -157,6 +157,9 @@ void setup_interrupt_for_hb_edge_detection(void) {
 
 ISR(PORTA_PORT_vect)
 {
+	// use the following lines to see the interrupt level (Datasheet p.111)
+	//sprintf(buffer,"iflags = %d, status = %d\n", PORTA_INTFLAGS, CPUINT.STATUS);
+	//USART0_sendString(buffer);
 	if(PORTA_INTFLAGS & button_0) {
 		flag_button_0_pressed = true;
 		PORTA_INTFLAGS &= button_0;

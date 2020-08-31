@@ -14,6 +14,8 @@ main.c
 
 hmi.c
 
+menu.c
+
 powerpath_control.c
 
 rtc.c

@@ -14,6 +14,8 @@
 #include <avr/sleep.h>
 #include <string.h>
 
+#include <avr/interrupt.h>
+
 #include "flags.h"
 #include "gpio_interface.h"
 #include "powerpath_control.h"
@@ -22,6 +24,7 @@
 #include "heartbeat.h"
 #include "rtc.h"
 #include "adc.h"
+#include "menu.h"
 
 /* function prototypes for mainloops */
 
@@ -34,12 +37,6 @@ void wake_bcu_and_do_backup_now();
 void wake_bcu();
 void show_menu_actions();
 void show_main_menu();
-
-/* function pointers */
-
-void (*show_menu)() = show_main_menu;
-void (*button0_action)() = NULL;
-void (*button1_action)() = NULL;
 
 void init_sbu()
 {
@@ -107,8 +104,8 @@ void mainloop_active()
 	}
 	
 	if (flag_button_0_pressed == true) {
-		led_hmi_off();
 		flag_button_0_pressed = false;
+		led_hmi_off();
 	}
 	
 	if (flag_button_1_pressed == true) {
@@ -124,9 +121,9 @@ void mainloop_active()
 	if (flag_string_for_display_received == true) {
 		flag_string_for_display_received = false;
 		display_clear();
-		display_write_string(display_line1_content_from_bcu);
+		display_write_string(display_line1_content);
 		display_next_line();
-		display_write_string(display_line2_content_from_bcu);
+		display_write_string(display_line2_content);
 		USART0_sendString_w_eol("New Display\n"); //<- line is being received, but no new content on display??
 	}
 	
@@ -194,29 +191,32 @@ void mainloop_active()
 }
 
 void mainloop_standby() {
-	if (flag_button_0_pressed == true) {
+	if (flag_button_0_pressed | flag_button_1_pressed) {
 		flag_button_0_pressed = false;
-		flag_pwr_state_change_request = true;
-		next_pwr_state = display_on;
-	}
-	
-	if (flag_button_1_pressed == true) {
 		flag_button_1_pressed = false;
-		flag_pwr_state_change_request = true;
+		
 		next_pwr_state = display_on;
-	}
-	
-	if (flag_pwr_state_change_request == true) {
-		flag_pwr_state_change_request = false;
 		goto_pwr_state(next_pwr_state);
 	}	
 	_delay_ms(100);
 }
 
 void mainloop_display_on() {
-	dim_display(1);
+	if (flag_entering_mainloop_display_on) {
+		flag_entering_mainloop_display_on = false;
+		show_menu = show_main_menu;
+		button0_action = show_menu_timestamp;
+		button1_action = show_menu_actions;
+		dim_display(1);
+	}
 	show_menu();
-	goto_sleep_idle();
+	sprintf(buffer, "flag0: %d, flag1: %d\n",flag_button_0_pressed,flag_button_1_pressed);
+	USART0_sendString(buffer);
+	_delay_ms(100);
+	while(!flag_button_0_pressed & !flag_button_1_pressed) {
+		;
+	}
+	//goto_sleep_idle();
 	//Fixme: button1 press cannot wake mcu from standby!
 	
 	if (flag_button_0_pressed) {
@@ -224,57 +224,9 @@ void mainloop_display_on() {
 		button0_action();
 	}
 	
-	if (flag_button_1_pressed) {
+	if (button_1_pressed()) {
 		flag_button_1_pressed = false;
 		button1_action();
 	}
-	//_delay_ms(100);
-}
-
-/* Menus */
-
-void show_main_menu() {
-	display_clear();
-	display_write_string("Show next BU   >\nActions        >");
-	button0_action = show_menu_timestamp;
-	button1_action = show_menu_actions;	
-}
-
-void show_menu_actions() {
-	show_menu = show_menu_actions;
-	display_clear();
-	display_write_string("Do Backup Now  >\nWake for config>");
-	button0_action = wake_bcu_and_do_backup_now;
-	button1_action = wake_bcu;	
-}
-
-void show_menu_timestamp() {
-	show_menu = show_menu_timestamp;
-	display_clear();
-	display_write_string(human_readable_timestamp_next_bu);
-	button0_action = back_to_main_menu;
-	button1_action = back_to_main_menu;
-}
-
-/* Button Actions */
-
-void back_to_main_menu() {
-	show_menu = show_main_menu;
-}
-
-void wake_bcu_and_do_backup_now() {
-	display_clear();
-	display_write_string("Waking BCU and\ndo Backup now ..");
-	flag_schedule_backup_now = true;
-	flag_pwr_state_change_request = true;
-	next_pwr_state = active;
-	goto_pwr_state(next_pwr_state);
-}
-
-void wake_bcu() {
-	display_clear();
-	display_write_string("Waking BCU and\ndo Backup now ..");
-	flag_pwr_state_change_request = true;
-	next_pwr_state = active;
-	goto_pwr_state(next_pwr_state);	
+	
 }

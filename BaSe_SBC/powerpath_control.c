@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <stdbool.h>
 #include <util/delay.h>
+#include <string.h>
 #include "flags.h"
 #include "gpio_interface.h"
 #include "powerpath_control.h"
@@ -47,11 +48,13 @@ void goto_pwr_state(enum pwr_states pwr_state) {
 			enable_5v0_smps();
 			_delay_ms(5);
 			init_display();
+			flag_entering_mainloop_display_on = true;
 			break;
 			
 		case active:
 			// Todo: check if conditions for save startup are met ... if there are any
-			display_write_string("Hello Folks!\nStarting BCU ..");
+			strcpy(display_line1_content,"BCU starting up");
+			strcpy(display_line2_content,"Please wait ...");
 			enable_bpi_sply();
 			current_pwr_state = active;
 			break;

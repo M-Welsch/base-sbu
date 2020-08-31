@@ -28,12 +28,21 @@ bool flag_request_3v3_measurement;
 bool flag_5v0_up;
 bool flag_bcu_sply_up;
 bool flag_schedule_backup_now;
+bool flag_entering_mainloop_display_on;
 
 /* globals */
 volatile bool flag_button_0_pressed;
 volatile bool flag_heartbeat;
 long seconds_to_next_bu;
+char display_line1_content[17];
+char display_line2_content[17];
 char human_readable_timestamp_next_bu[33];
+
+/* function pointers */
+
+void (*show_menu)();
+void (*button0_action)();
+void (*button1_action)();
 
 enum pwr_states {
 	standby = 0,
