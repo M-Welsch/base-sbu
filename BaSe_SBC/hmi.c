@@ -157,6 +157,25 @@ void display_clear(void) {
 /* Dimming */
 
 void dimmer_init() {
-	TCA0_SINGLE_CTRLA |= TCA_SINGLE_CLKSEL_DIV1024_gc; //tbd...
-	TCA0_SINGLE_CTRLA |= TCA_SINGLE_ENABLE_bm;
+	/* WO0 (PB0) is used for the Display Backlight, WO1 (PB4) is used for the HMI LED. PB4 is not the default output pin for WO1 */
+	
+	
+	// wgmode in ctrla selects waveform generation
+	// 
+	TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV4_gc; // prescaler is 4 from fclk_per
+	TCA0.SINGLE.PERBUF = 0x01A0; // about 1kHz with prescaler = 4
+	TCA0.SINGLE.EVCTRL &= ~(TCA_SINGLE_CNTEI_bm); // count clock ticks instead of events
+	TCA0.SINGLE.CTRLB |= TCA_SINGLE_WGMODE_SINGLESLOPE_gc;
+	//TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP0EN_bm; // overide port output register for WO0 (PB0)
+	//TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP1EN_bm; // overide port output register for WO1 (PB4)
+	
+	//TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+}
+
+void set_dimming_value_display_bl(uint16_t dimming_value) {
+	TCA0.SINGLE.CMP0 = dimming_value;
+}
+
+void set_dimming_value_led(uint16_t dimming_value) {
+	TCA0.SINGLE.CMP1 = dimming_value;
 }

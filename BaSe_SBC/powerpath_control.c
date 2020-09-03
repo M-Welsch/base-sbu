@@ -30,7 +30,7 @@ void disable_bpi_sply(void) {
 	flag_bcu_sply_up = false;
 }
 
-void goto_pwr_state(enum pwr_states pwr_state) {
+void transition_to_pwr_state(enum pwr_states pwr_state) {
 	switch(pwr_state) {
 		case standby:
 			wait_until_bpi_ready_for_shutdown();
@@ -49,12 +49,18 @@ void goto_pwr_state(enum pwr_states pwr_state) {
 			_delay_ms(5);
 			init_display();
 			flag_entering_mainloop_display_on = true;
-			break;
+			if(flag_wakeup_by_rtc) {
+				/* if rtc woke the sbu, it has to go to the active state immediately */
+				pwr_state = active;
+			} else {
+				break;
+			}
 			
 		case active:
 			// Todo: check if conditions for save startup are met ... if there are any
 			strcpy(display_line1_content,"BCU starting up");
 			strcpy(display_line2_content,"Please wait ...");
+			enable_5v0_smps();
 			enable_bpi_sply();
 			current_pwr_state = active;
 			break;

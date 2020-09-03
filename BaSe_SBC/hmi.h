@@ -22,4 +22,10 @@ void display_write_char(char s);
 void display_write_string(char *s);
 void display_next_line(void);
 
+/* Dimming */
+
+void dimmer_init();
+void set_dimming_value_display_bl(uint8_t dimming_value);
+void set_dimming_value_led(uint8_t dimming_value);
+
 #endif /* HMI_H_ */

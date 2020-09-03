@@ -146,6 +146,23 @@ void USART0_process_incoming_message() {
 		USART0_sendString_w_eol("ACK:3V");
 		flag_request_3v3_measurement = true;
 	}
+	
+	if(strcmp(message_code, "ON") == 0) {
+		USART0_sendString_w_eol("ACK:ON\n");
+		if(flag_schedule_backup_now) {
+			flag_schedule_backup_now = false;
+			USART0_sendString_w_eol("User Backup\n");
+		}
+	}
+	
+	if(strcmp(message_code, "DB") == 0) {
+		USART0_sendString_w_eol("ACK:DB\n");
+		//dim display
+	}
+	
+	if(strcmp(message_code, "DL") == 0) {
+		USART0_sendString_w_eol("ACK:DL");
+	}
 }
 
 long convert_str_to_long(char *str) {

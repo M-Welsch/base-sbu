@@ -47,7 +47,8 @@ void init_sbu()
 	init_uart();
 	init_display();
 	adc_init();
-	strcpy(human_readable_timestamp_next_bu, "next BU in 168h\n09.01.1990 12:57");
+	strcpy(human_readable_timestamp_next_bu, "09.01.1990 12:57");
+	dimmer_init();
 	sei();
 }
 
@@ -124,14 +125,14 @@ void mainloop_active()
 		display_write_string(display_line1_content);
 		display_next_line();
 		display_write_string(display_line2_content);
-		USART0_sendString_w_eol("New Display\n"); //<- line is being received, but no new content on display??
+		USART0_sendString_w_eol("ACK:New Display Content\n");
 	}
 	
 	if (flag_pwr_state_change_request == true) {
 		display_clear();
 		display_write_string("Received Shut-\ndown Request!");
 		flag_pwr_state_change_request = false;
-		goto_pwr_state(next_pwr_state);
+		transition_to_pwr_state(next_pwr_state);
 	}
 	
 	if (flag_human_readable_timestamp_next_bu_received == true) {
@@ -187,7 +188,6 @@ void mainloop_active()
 	
 	/* let hmi led toggle as a sbc heartbeat */
 	toggle_hmi_led();
-	// send_sbc_heartbeat_count_to_bpi();
 }
 
 void mainloop_standby() {
@@ -196,7 +196,7 @@ void mainloop_standby() {
 		flag_button_1_pressed = false;
 		
 		next_pwr_state = display_on;
-		goto_pwr_state(next_pwr_state);
+		transition_to_pwr_state(next_pwr_state);
 	}	
 	_delay_ms(100);
 }
@@ -210,10 +210,8 @@ void mainloop_display_on() {
 		dim_display(1);
 	}
 	show_menu();
-	sprintf(buffer, "flag0: %d, flag1: %d\n",flag_button_0_pressed,flag_button_1_pressed);
-	USART0_sendString(buffer);
-	_delay_ms(100);
-	while(!flag_button_0_pressed & !flag_button_1_pressed) {
+	_delay_ms(100); //debouncing 
+	while(!flag_button_0_pressed & !button_1_pressed()) {
 		;
 	}
 	//goto_sleep_idle();
@@ -228,5 +226,4 @@ void mainloop_display_on() {
 		flag_button_1_pressed = false;
 		button1_action();
 	}
-	
 }

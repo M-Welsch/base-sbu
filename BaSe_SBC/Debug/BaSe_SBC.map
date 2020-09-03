@@ -128,8 +128,10 @@ Discarded input sections
                 0x00000000       0x9e hmi.o
  .text.display_return_home
                 0x00000000       0x20 hmi.o
- .text.dimmer_init
-                0x00000000       0x12 hmi.o
+ .text.set_dimming_value_display_bl
+                0x00000000        0xa hmi.o
+ .text.set_dimming_value_led
+                0x00000000        0xa hmi.o
  .text          0x00000000        0x0 menu.o
  .data          0x00000000        0x0 menu.o
  .bss           0x00000000        0x0 menu.o
@@ -140,6 +142,8 @@ Discarded input sections
  .data          0x00000000        0x0 rtc.o
  .bss           0x00000000        0x0 rtc.o
  .text.rtc_set_prescaler_and_enable
+                0x00000000        0x8 rtc.o
+ .text.rtc_enabled
                 0x00000000        0x8 rtc.o
  .text.rtc_set_compare_interrupt
                 0x00000000        0x8 rtc.o
@@ -471,7 +475,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x175c
+.text           0x00000000     0x17b4
  *(.vectors)
  .vectors       0x00000000       0x34 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
                 0x00000000                __vectors
@@ -652,181 +656,184 @@ END GROUP
                 0x0000039e       0x34 main.o
                 0x0000039e                mainloop_standby
  .text.mainloop_display_on
-                0x000003d2       0xc2 main.o
+                0x000003d2       0x94 main.o
                 0x000003d2                mainloop_display_on
  .text.init_sbu
-                0x00000494       0x24 main.o
-                0x00000494                init_sbu
- .text.main     0x000004b8       0x56 main.o
-                0x000004b8                main
+                0x00000466       0x26 main.o
+                0x00000466                init_sbu
+ .text.main     0x0000048c       0x56 main.o
+                0x0000048c                main
  .text.goto_sleep_standby
-                0x0000050e       0x14 main.o
-                0x0000050e                goto_sleep_standby
+                0x000004e2       0x14 main.o
+                0x000004e2                goto_sleep_standby
  .text.mainloop_active
-                0x00000522      0x1d0 main.o
-                0x00000522                mainloop_active
+                0x000004f6      0x1d0 main.o
+                0x000004f6                mainloop_active
  .text.init_display
-                0x000006f2      0x12e hmi.o
-                0x000006f2                init_display
+                0x000006c6      0x12e hmi.o
+                0x000006c6                init_display
  .text.display_write_char
-                0x00000820       0x1e hmi.o
-                0x00000820                display_write_char
+                0x000007f4       0x1e hmi.o
+                0x000007f4                display_write_char
  .text.display_next_line
-                0x0000083e       0x14 hmi.o
-                0x0000083e                display_next_line
+                0x00000812       0x14 hmi.o
+                0x00000812                display_next_line
  .text.display_write_string
-                0x00000852       0x26 hmi.o
-                0x00000852                display_write_string
+                0x00000826       0x26 hmi.o
+                0x00000826                display_write_string
  .text.display_clear
-                0x00000878       0x20 hmi.o
-                0x00000878                display_clear
+                0x0000084c       0x20 hmi.o
+                0x0000084c                display_clear
+ .text.dimmer_init
+                0x0000086c       0x20 hmi.o
+                0x0000086c                dimmer_init
  .text.back_to_main_menu
-                0x00000898        0xe menu.o
-                0x00000898                back_to_main_menu
+                0x0000088c        0xe menu.o
+                0x0000088c                back_to_main_menu
  .text.show_main_menu
-                0x000008a6       0x22 menu.o
-                0x000008a6                show_main_menu
+                0x0000089a       0x22 menu.o
+                0x0000089a                show_main_menu
  .text.show_menu_actions
-                0x000008c8       0x2e menu.o
-                0x000008c8                show_menu_actions
+                0x000008bc       0x2e menu.o
+                0x000008bc                show_menu_actions
  .text.show_menu_timestamp
-                0x000008f6       0x2a menu.o
-                0x000008f6                show_menu_timestamp
+                0x000008ea       0x32 menu.o
+                0x000008ea                show_menu_timestamp
  .text.wake_bcu_and_do_backup_now
-                0x00000920       0x18 menu.o
-                0x00000920                wake_bcu_and_do_backup_now
+                0x0000091c       0x18 menu.o
+                0x0000091c                wake_bcu_and_do_backup_now
  .text.wake_bcu
-                0x00000938       0x12 menu.o
-                0x00000938                wake_bcu
+                0x00000934       0x12 menu.o
+                0x00000934                wake_bcu
  .text.enable_5v0_smps
-                0x0000094a       0x12 powerpath_control.o
-                0x0000094a                enable_5v0_smps
+                0x00000946       0x12 powerpath_control.o
+                0x00000946                enable_5v0_smps
  .text.disable_5v0_smps
-                0x0000095c       0x10 powerpath_control.o
-                0x0000095c                disable_5v0_smps
+                0x00000958       0x10 powerpath_control.o
+                0x00000958                disable_5v0_smps
  .text.enable_bpi_sply
-                0x0000096c       0x12 powerpath_control.o
-                0x0000096c                enable_bpi_sply
+                0x00000968       0x12 powerpath_control.o
+                0x00000968                enable_bpi_sply
  .text.disable_bpi_sply
-                0x0000097e       0x10 powerpath_control.o
-                0x0000097e                disable_bpi_sply
+                0x0000097a       0x10 powerpath_control.o
+                0x0000097a                disable_bpi_sply
  .text.wait_until_bpi_ready_for_shutdown
-                0x0000098e       0x22 powerpath_control.o
-                0x0000098e                wait_until_bpi_ready_for_shutdown
- .text.goto_pwr_state
-                0x000009b0       0x74 powerpath_control.o
-                0x000009b0                goto_pwr_state
+                0x0000098a       0x22 powerpath_control.o
+                0x0000098a                wait_until_bpi_ready_for_shutdown
+ .text.transition_to_pwr_state
+                0x000009ac       0x7c powerpath_control.o
+                0x000009ac                transition_to_pwr_state
  .text.rtc_reset_counter
-                0x00000a24        0xa rtc.o
-                0x00000a24                rtc_reset_counter
+                0x00000a28        0xa rtc.o
+                0x00000a28                rtc_reset_counter
  .text.rtc_wait_for_all_status_bits_zero
-                0x00000a2e        0xc rtc.o
-                0x00000a2e                rtc_wait_for_all_status_bits_zero
+                0x00000a32        0xc rtc.o
+                0x00000a32                rtc_wait_for_all_status_bits_zero
  .text.rtc_setup
-                0x00000a3a       0x14 rtc.o
-                0x00000a3a                rtc_setup
+                0x00000a3e       0x18 rtc.o
+                0x00000a3e                rtc_setup
  .text.rtc_write_seconds_to_cmp
-                0x00000a4e       0x78 rtc.o
-                0x00000a4e                rtc_write_seconds_to_cmp
+                0x00000a56       0x78 rtc.o
+                0x00000a56                rtc_write_seconds_to_cmp
  .text.__vector_6
-                0x00000ac6       0x5e rtc.o
-                0x00000ac6                __vector_6
+                0x00000ace       0x60 rtc.o
+                0x00000ace                __vector_6
  .text.USART0_enable_rx_complete_interrupt
-                0x00000b24        0xc usart.o
-                0x00000b24                USART0_enable_rx_complete_interrupt
+                0x00000b2e        0xc usart.o
+                0x00000b2e                USART0_enable_rx_complete_interrupt
  .text.init_uart
-                0x00000b30       0x16 usart.o
-                0x00000b30                init_uart
+                0x00000b3a       0x16 usart.o
+                0x00000b3a                init_uart
  .text.USART0_sendChar
-                0x00000b46       0x10 usart.o
-                0x00000b46                USART0_sendChar
+                0x00000b50       0x10 usart.o
+                0x00000b50                USART0_sendChar
  .text.USART0_sendString
-                0x00000b56       0x42 usart.o
-                0x00000b56                USART0_sendString
+                0x00000b60       0x42 usart.o
+                0x00000b60                USART0_sendString
  .text.USART0_sendString_w_eol
-                0x00000b98        0x8 usart.o
-                0x00000b98                USART0_sendString_w_eol
+                0x00000ba2        0x8 usart.o
+                0x00000ba2                USART0_sendString_w_eol
  .text.USART0_read
-                0x00000ba0       0x10 usart.o
-                0x00000ba0                USART0_read
+                0x00000baa       0x10 usart.o
+                0x00000baa                USART0_read
  .text.USART0_read_string
-                0x00000bb0       0x6c usart.o
-                0x00000bb0                USART0_read_string
+                0x00000bba       0x6c usart.o
+                0x00000bba                USART0_read_string
  .text.convert_str_to_long
-                0x00000c1c       0x46 usart.o
-                0x00000c1c                convert_str_to_long
+                0x00000c26       0x46 usart.o
+                0x00000c26                convert_str_to_long
  .text.USART0_process_incoming_message
-                0x00000c62      0x19a usart.o
-                0x00000c62                USART0_process_incoming_message
+                0x00000c6c      0x1e8 usart.o
+                0x00000c6c                USART0_process_incoming_message
  .text.__vector_22
-                0x00000dfc       0x54 usart.o
-                0x00000dfc                __vector_22
+                0x00000e54       0x54 usart.o
+                0x00000e54                __vector_22
  .text.avr-libc
-                0x00000e50      0x222 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtol.o)
-                0x00000e50                strtol
+                0x00000ea8      0x222 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtol.o)
+                0x00000ea8                strtol
  .text.avr-libc
-                0x00001072       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(isspace.o)
-                0x00001072                isspace
+                0x000010ca       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(isspace.o)
+                0x000010ca                isspace
  .text.avr-libc
-                0x00001084        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtok.o)
-                0x00001084                strtok
+                0x000010dc        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtok.o)
+                0x000010dc                strtok
  .text.avr-libc
-                0x0000108c       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strcmp.o)
-                0x0000108c                strcmp
+                0x000010e4       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strcmp.o)
+                0x000010e4                strcmp
  .text.avr-libc
-                0x0000109e        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strcpy.o)
-                0x0000109e                strcpy
+                0x000010f6        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strcpy.o)
+                0x000010f6                strcpy
  .text.avr-libc
-                0x000010ac       0x4e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtok_r.o)
-                0x000010ac                strtok_r
+                0x00001104       0x4e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtok_r.o)
+                0x00001104                strtok_r
  .text.avr-libc
-                0x000010fa       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(printf.o)
-                0x000010fa                printf
+                0x00001152       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(printf.o)
+                0x00001152                printf
  .text.avr-libc
-                0x00001120       0x3e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(sprintf.o)
-                0x00001120                sprintf
+                0x00001178       0x3e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(sprintf.o)
+                0x00001178                sprintf
  .text.avr-libc
-                0x0000115e      0x3a4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(vfprintf_std.o)
-                0x0000115e                vfprintf
+                0x000011b6      0x3a4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(vfprintf_std.o)
+                0x000011b6                vfprintf
  .text.avr-libc
-                0x00001502        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(cty_isfalse.o)
-                0x00001502                __ctype_isfalse
-                0x00001506                __ctype_istrue
+                0x0000155a        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(cty_isfalse.o)
+                0x0000155a                __ctype_isfalse
+                0x0000155e                __ctype_istrue
  .text.avr-libc
-                0x00001508       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strnlen_P.o)
-                0x00001508                strnlen_P
+                0x00001560       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strnlen_P.o)
+                0x00001560                strnlen_P
  .text.avr-libc
-                0x0000151e       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strnlen.o)
-                0x0000151e                strnlen
+                0x00001576       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strnlen.o)
+                0x00001576                strnlen
  .text.avr-libc
-                0x00001534       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(fputc.o)
-                0x00001534                fputc
+                0x0000158c       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(fputc.o)
+                0x0000158c                fputc
  .text.avr-libc
-                0x000015ac       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(ultoa_invert.o)
-                0x000015ac                __ultoa_invert
+                0x00001604       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(ultoa_invert.o)
+                0x00001604                __ultoa_invert
  .text.libgcc.mul
-                0x00001668       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_mulsi3.o)
-                0x00001668                __mulsi3
+                0x000016c0       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_mulsi3.o)
+                0x000016c0                __mulsi3
  .text.libgcc.div
-                0x00001686       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
-                0x00001686                __udivmodsi4
+                0x000016de       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+                0x000016de                __udivmodsi4
  .text.libgcc.mul
-                0x000016ca       0x14 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
-                0x000016ca                __muluhisi3
+                0x00001722       0x14 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
+                0x00001722                __muluhisi3
  .text.libgcc.prologue
-                0x000016de       0x32 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_prologue.o)
-                0x000016de                __prologue_saves__
+                0x00001736       0x32 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_prologue.o)
+                0x00001736                __prologue_saves__
  .text.libgcc.prologue
-                0x00001710       0x30 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_epilogue.o)
-                0x00001710                __epilogue_restores__
+                0x00001768       0x30 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_epilogue.o)
+                0x00001768                __epilogue_restores__
  .text.libgcc.mul
-                0x00001740       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
-                0x00001740                __umulhisi3
-                0x00001758                . = ALIGN (0x2)
+                0x00001798       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
+                0x00001798                __umulhisi3
+                0x000017b0                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001758        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
-                0x00001758                _exit
-                0x00001758                exit
+ .fini9         0x000017b0        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+                0x000017b0                _exit
+                0x000017b0                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -845,28 +852,29 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001758        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+ .fini0         0x000017b0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000175c                _etext = .
+                0x000017b4                _etext = .
 
-.rodata         0x0000975c      0x214 load address 0x0000175c
+.rodata         0x000097b4      0x224 load address 0x000017b4
  *(.rodata)
- .rodata        0x0000975c        0x2 usart.o
+ .rodata        0x000097b4        0x2 usart.o
  *(.rodata*)
  .rodata.str1.1
-                0x0000975e       0xd2 main.o
+                0x000097b6       0xb8 main.o
  .rodata.str1.1
-                0x00009830       0x64 menu.o
+                0x0000986e       0x64 menu.o
+                                 0x65 (size before relaxing)
  .rodata.str1.1
-                0x00009894       0x55 powerpath_control.o
+                0x000098d2       0x55 powerpath_control.o
  .rodata.str1.1
-                0x000098e9       0x22 rtc.o
+                0x00009927       0x22 rtc.o
  .rodata.str1.1
-                0x0000990b       0x65 usart.o
-                                 0x74 (size before relaxing)
+                0x00009949       0x8f usart.o
+                                 0xa1 (size before relaxing)
  *(.gnu.linkonce.r*)
 
-.data           0x00803e00        0x4 load address 0x00001970
+.data           0x00803e00        0x4 load address 0x000019d8
                 0x00803e00                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -884,7 +892,7 @@ END GROUP
                 0x00803e04                _edata = .
                 0x00803e04                PROVIDE (__data_end, .)
 
-.bss            0x00803e04       0xb7
+.bss            0x00803e04       0xb8
                 0x00803e04                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00803e04        0x2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(strtok.o)
@@ -895,72 +903,75 @@ END GROUP
  .bss.flag_schedule_backup_now
                 0x00803e07        0x1 flags.o
                 0x00803e07                flag_schedule_backup_now
- .bss.flag_request_3v3_measurement
+ .bss.flag_wakeup_by_rtc
                 0x00803e08        0x1 flags.o
-                0x00803e08                flag_request_3v3_measurement
- .bss.flag_request_temperature_measurement
+                0x00803e08                flag_wakeup_by_rtc
+ .bss.flag_request_3v3_measurement
                 0x00803e09        0x1 flags.o
-                0x00803e09                flag_request_temperature_measurement
- .bss.flag_request_current_measurement
+                0x00803e09                flag_request_3v3_measurement
+ .bss.flag_request_temperature_measurement
                 0x00803e0a        0x1 flags.o
-                0x00803e0a                flag_request_current_measurement
- .bss.flag_goto_sleep
+                0x00803e0a                flag_request_temperature_measurement
+ .bss.flag_request_current_measurement
                 0x00803e0b        0x1 flags.o
-                0x00803e0b                flag_goto_sleep
- .bss.flag_received_seconds_to_next_bu
+                0x00803e0b                flag_request_current_measurement
+ .bss.flag_goto_sleep
                 0x00803e0c        0x1 flags.o
-                0x00803e0c                flag_received_seconds_to_next_bu
- .bss.flag_human_readable_timestamp_next_bu_received
+                0x00803e0c                flag_goto_sleep
+ .bss.flag_received_seconds_to_next_bu
                 0x00803e0d        0x1 flags.o
-                0x00803e0d                flag_human_readable_timestamp_next_bu_received
- .bss.flag_pwr_state_change_request
+                0x00803e0d                flag_received_seconds_to_next_bu
+ .bss.flag_human_readable_timestamp_next_bu_received
                 0x00803e0e        0x1 flags.o
-                0x00803e0e                flag_pwr_state_change_request
- .bss.flag_string_for_display_received
+                0x00803e0e                flag_human_readable_timestamp_next_bu_received
+ .bss.flag_pwr_state_change_request
                 0x00803e0f        0x1 flags.o
-                0x00803e0f                flag_string_for_display_received
- .bss.flag_usart_string_receive_complete
+                0x00803e0f                flag_pwr_state_change_request
+ .bss.flag_string_for_display_received
                 0x00803e10        0x1 flags.o
-                0x00803e10                flag_usart_string_receive_complete
- .bss.flag_bpi_heartbeat_ok
+                0x00803e10                flag_string_for_display_received
+ .bss.flag_usart_string_receive_complete
                 0x00803e11        0x1 flags.o
-                0x00803e11                flag_bpi_heartbeat_ok
- .bss.flag_button_1_pressed
+                0x00803e11                flag_usart_string_receive_complete
+ .bss.flag_bpi_heartbeat_ok
                 0x00803e12        0x1 flags.o
-                0x00803e12                flag_button_1_pressed
+                0x00803e12                flag_bpi_heartbeat_ok
+ .bss.flag_button_1_pressed
+                0x00803e13        0x1 flags.o
+                0x00803e13                flag_button_1_pressed
  .bss.button1_action
-                0x00803e13        0x2 menu.o
-                0x00803e13                button1_action
+                0x00803e14        0x2 menu.o
+                0x00803e14                button1_action
  .bss.button0_action
-                0x00803e15        0x2 menu.o
-                0x00803e15                button0_action
+                0x00803e16        0x2 menu.o
+                0x00803e16                button0_action
  *(COMMON)
- COMMON         0x00803e17       0x4b adc.o
-                0x00803e17                flag_heartbeat
-                0x00803e18                flag_button_0_pressed
-                0x00803e19                current_pwr_state
-                0x00803e1a                human_readable_timestamp_next_bu
-                0x00803e3b                display_line2_content
-                0x00803e4c                seconds_to_next_bu
-                0x00803e50                next_pwr_state
-                0x00803e51                display_line1_content
- COMMON         0x00803e62       0x51 gpio_interface.o
-                0x00803e62                usart_receive_buffer
-                0x00803e82                buffer
-                0x00803eb2                temp_receive_buffer
- COMMON         0x00803eb3        0x2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(errno.o)
-                0x00803eb3                errno
- COMMON         0x00803eb5        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(iob.o)
-                0x00803eb5                __iob
-                0x00803ebb                PROVIDE (__bss_end, .)
-                0x00001970                __data_load_start = LOADADDR (.data)
-                0x00001974                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00803e18       0x4b adc.o
+                0x00803e18                flag_heartbeat
+                0x00803e19                flag_button_0_pressed
+                0x00803e1a                current_pwr_state
+                0x00803e1b                human_readable_timestamp_next_bu
+                0x00803e3c                display_line2_content
+                0x00803e4d                seconds_to_next_bu
+                0x00803e51                next_pwr_state
+                0x00803e52                display_line1_content
+ COMMON         0x00803e63       0x51 gpio_interface.o
+                0x00803e63                usart_receive_buffer
+                0x00803e83                buffer
+                0x00803eb3                temp_receive_buffer
+ COMMON         0x00803eb4        0x2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(errno.o)
+                0x00803eb4                errno
+ COMMON         0x00803eb6        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(iob.o)
+                0x00803eb6                __iob
+                0x00803ebc                PROVIDE (__bss_end, .)
+                0x000019d8                __data_load_start = LOADADDR (.data)
+                0x000019dc                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00803ebb        0x0
+.noinit         0x00803ebc        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00803ebb                _end = .
+                0x00803ebc                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -1043,7 +1054,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x3b8
+.debug_aranges  0x00000000      0x3d0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x70 adc.o
@@ -1056,108 +1067,108 @@ END GROUP
  .debug_aranges
                 0x000001a8       0x50 main.o
  .debug_aranges
-                0x000001f8       0x58 hmi.o
+                0x000001f8       0x68 hmi.o
  .debug_aranges
-                0x00000250       0x48 menu.o
+                0x00000260       0x48 menu.o
  .debug_aranges
-                0x00000298       0x48 powerpath_control.o
+                0x000002a8       0x48 powerpath_control.o
  .debug_aranges
-                0x000002e0       0x58 rtc.o
+                0x000002f0       0x60 rtc.o
  .debug_aranges
-                0x00000338       0x80 usart.o
+                0x00000350       0x80 usart.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x6dab
+.debug_info     0x00000000     0x79a9
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x16bc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
- .debug_info    0x000016bc      0x755 adc.o
- .debug_info    0x00001e11      0x2b0 flags.o
- .debug_info    0x000020c1      0x9d5 gpio_interface.o
- .debug_info    0x00002a96      0xdfe heartbeat.o
- .debug_info    0x00003894      0x75c main.o
- .debug_info    0x00003ff0      0xffa hmi.o
- .debug_info    0x00004fea      0x44d menu.o
- .debug_info    0x00005437      0x70a powerpath_control.o
- .debug_info    0x00005b41      0x7eb rtc.o
- .debug_info    0x0000632c      0xa7f usart.o
+ .debug_info    0x000016bc      0x767 adc.o
+ .debug_info    0x00001e23      0x2c2 flags.o
+ .debug_info    0x000020e5      0x9e7 gpio_interface.o
+ .debug_info    0x00002acc      0xe10 heartbeat.o
+ .debug_info    0x000038dc      0x75a main.o
+ .debug_info    0x00004036     0x1a32 hmi.o
+ .debug_info    0x00005a68      0x491 menu.o
+ .debug_info    0x00005ef9      0x725 powerpath_control.o
+ .debug_info    0x0000661e      0x836 rtc.o
+ .debug_info    0x00006e54      0xb55 usart.o
 
-.debug_abbrev   0x00000000     0x2796
+.debug_abbrev   0x00000000     0x27fe
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x1582 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
  .debug_abbrev  0x00001582      0x1e3 adc.o
  .debug_abbrev  0x00001765       0x92 flags.o
  .debug_abbrev  0x000017f7      0x25d gpio_interface.o
  .debug_abbrev  0x00001a54      0x1e6 heartbeat.o
- .debug_abbrev  0x00001c3a      0x24c main.o
- .debug_abbrev  0x00001e86      0x1df hmi.o
- .debug_abbrev  0x00002065       0xf4 menu.o
- .debug_abbrev  0x00002159      0x1c5 powerpath_control.o
- .debug_abbrev  0x0000231e      0x1f7 rtc.o
- .debug_abbrev  0x00002515      0x281 usart.o
+ .debug_abbrev  0x00001c3a      0x23a main.o
+ .debug_abbrev  0x00001e74      0x241 hmi.o
+ .debug_abbrev  0x000020b5       0xf4 menu.o
+ .debug_abbrev  0x000021a9      0x1c5 powerpath_control.o
+ .debug_abbrev  0x0000236e      0x20f rtc.o
+ .debug_abbrev  0x0000257d      0x281 usart.o
 
-.debug_line     0x00000000     0x1ee9
+.debug_line     0x00000000     0x1f99
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x136 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
  .debug_line    0x00000136      0x255 adc.o
  .debug_line    0x0000038b       0x51 flags.o
  .debug_line    0x000003dc      0x4ab gpio_interface.o
  .debug_line    0x00000887      0x205 heartbeat.o
- .debug_line    0x00000a8c      0x50b main.o
- .debug_line    0x00000f97      0x49c hmi.o
- .debug_line    0x00001433      0x144 menu.o
- .debug_line    0x00001577      0x2dd powerpath_control.o
- .debug_line    0x00001854      0x21b rtc.o
- .debug_line    0x00001a6f      0x47a usart.o
+ .debug_line    0x00000a8c      0x4f8 main.o
+ .debug_line    0x00000f84      0x4d6 hmi.o
+ .debug_line    0x0000145a      0x150 menu.o
+ .debug_line    0x000015aa      0x2e4 powerpath_control.o
+ .debug_line    0x0000188e      0x25b rtc.o
+ .debug_line    0x00001ae9      0x4b0 usart.o
 
-.debug_frame    0x00000000      0x944
+.debug_frame    0x00000000      0x960
  *(.debug_frame)
  .debug_frame   0x00000000       0xf8 adc.o
  .debug_frame   0x000000f8       0x24 flags.o
  .debug_frame   0x0000011c      0x1fc gpio_interface.o
  .debug_frame   0x00000318       0xb8 heartbeat.o
- .debug_frame   0x000003d0       0xfc main.o
- .debug_frame   0x000004cc       0xa8 hmi.o
- .debug_frame   0x00000574       0x74 menu.o
- .debug_frame   0x000005e8       0x7c powerpath_control.o
- .debug_frame   0x00000664      0x10c rtc.o
- .debug_frame   0x00000770      0x1d4 usart.o
+ .debug_frame   0x000003d0       0xe8 main.o
+ .debug_frame   0x000004b8       0xc8 hmi.o
+ .debug_frame   0x00000580       0x74 menu.o
+ .debug_frame   0x000005f4       0x7c powerpath_control.o
+ .debug_frame   0x00000670      0x11c rtc.o
+ .debug_frame   0x0000078c      0x1d4 usart.o
 
-.debug_str      0x00000000     0x21c1
+.debug_str      0x00000000     0x22de
  *(.debug_str)
  .debug_str     0x00000000      0x9a7 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
- .debug_str     0x000009a7      0x7d7 adc.o
-                                0x85c (size before relaxing)
- .debug_str     0x0000117e       0x18 flags.o
-                                0x41b (size before relaxing)
- .debug_str     0x00001196      0x3e1 gpio_interface.o
-                                0x896 (size before relaxing)
- .debug_str     0x00001577      0x413 heartbeat.o
-                                0x9f8 (size before relaxing)
- .debug_str     0x0000198a      0x13e main.o
-                                0x6d1 (size before relaxing)
- .debug_str     0x00001ac8      0x15f hmi.o
-                                0x7e0 (size before relaxing)
- .debug_str     0x00001c27       0x77 menu.o
-                                0x4fc (size before relaxing)
- .debug_str     0x00001c9e       0x7d powerpath_control.o
-                                0x70c (size before relaxing)
- .debug_str     0x00001d1b      0x328 rtc.o
-                                0x90a (size before relaxing)
- .debug_str     0x00002043      0x17e usart.o
-                                0x6d9 (size before relaxing)
+ .debug_str     0x000009a7      0x7ea adc.o
+                                0x86f (size before relaxing)
+ .debug_str     0x00001191       0x18 flags.o
+                                0x42e (size before relaxing)
+ .debug_str     0x000011a9      0x3e1 gpio_interface.o
+                                0x8a9 (size before relaxing)
+ .debug_str     0x0000158a      0x413 heartbeat.o
+                                0xa0b (size before relaxing)
+ .debug_str     0x0000199d      0x153 main.o
+                                0x6f1 (size before relaxing)
+ .debug_str     0x00001af0      0x248 hmi.o
+                                0xc7d (size before relaxing)
+ .debug_str     0x00001d38       0x77 menu.o
+                                0x52a (size before relaxing)
+ .debug_str     0x00001daf       0x7d powerpath_control.o
+                                0x728 (size before relaxing)
+ .debug_str     0x00001e2c      0x334 rtc.o
+                                0x941 (size before relaxing)
+ .debug_str     0x00002160      0x17e usart.o
+                                0x6ec (size before relaxing)
 
-.debug_loc      0x00000000     0x167d
+.debug_loc      0x00000000     0x15fc
  *(.debug_loc)
  .debug_loc     0x00000000       0xc9 adc.o
  .debug_loc     0x000000c9      0x40b gpio_interface.o
  .debug_loc     0x000004d4       0x9f heartbeat.o
- .debug_loc     0x00000573      0x295 main.o
- .debug_loc     0x00000808      0x773 hmi.o
- .debug_loc     0x00000f7b       0xbb powerpath_control.o
- .debug_loc     0x00001036      0x1a7 rtc.o
- .debug_loc     0x000011dd      0x4a0 usart.o
+ .debug_loc     0x00000573      0x22d main.o
+ .debug_loc     0x000007a0      0x773 hmi.o
+ .debug_loc     0x00000f13       0xa2 powerpath_control.o
+ .debug_loc     0x00000fb5      0x1a7 rtc.o
+ .debug_loc     0x0000115c      0x4a0 usart.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -1177,18 +1188,18 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x330
+.debug_ranges   0x00000000      0x348
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x60 adc.o
  .debug_ranges  0x00000060       0x10 flags.o
  .debug_ranges  0x00000070       0xc8 gpio_interface.o
  .debug_ranges  0x00000138       0x48 heartbeat.o
  .debug_ranges  0x00000180       0x40 main.o
- .debug_ranges  0x000001c0       0x48 hmi.o
- .debug_ranges  0x00000208       0x38 menu.o
- .debug_ranges  0x00000240       0x38 powerpath_control.o
- .debug_ranges  0x00000278       0x48 rtc.o
- .debug_ranges  0x000002c0       0x70 usart.o
+ .debug_ranges  0x000001c0       0x58 hmi.o
+ .debug_ranges  0x00000218       0x38 menu.o
+ .debug_ranges  0x00000250       0x38 powerpath_control.o
+ .debug_ranges  0x00000288       0x50 rtc.o
+ .debug_ranges  0x000002d8       0x70 usart.o
 
 .debug_macro
  *(.debug_macro)

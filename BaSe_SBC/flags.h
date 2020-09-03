@@ -27,6 +27,7 @@ bool flag_request_temperature_measurement;
 bool flag_request_3v3_measurement;
 bool flag_5v0_up;
 bool flag_bcu_sply_up;
+bool flag_wakeup_by_rtc;
 bool flag_schedule_backup_now;
 bool flag_entering_mainloop_display_on;
 
