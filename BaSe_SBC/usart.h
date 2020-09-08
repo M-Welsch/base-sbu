@@ -19,8 +19,9 @@ void USART0_enable_periperials();
 void USART0_enable_rx_complete_interrupt();
 
 void USART0_sendChar(char c);
+void USART0_send_ready();
 void USART0_sendString(char *s);
-void USART0_sendString_w_eol(char *s);
+void USART0_sendString_w_newline_eol(char *s);
 
 uint8_t USART0_read();
 void USART0_read_string(char *receive_buffer, int maxlen);

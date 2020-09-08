@@ -125,7 +125,7 @@ void mainloop_active()
 		display_write_string(display_line1_content);
 		display_next_line();
 		display_write_string(display_line2_content);
-		USART0_sendString_w_eol("ACK:New Display Content\n");
+		USART0_send_ready();
 	}
 	
 	if (flag_pwr_state_change_request == true) {
@@ -139,49 +139,53 @@ void mainloop_active()
 		display_clear();
 		display_write_string(human_readable_timestamp_next_bu);
 		flag_human_readable_timestamp_next_bu_received = false;
+		USART0_send_ready();
 	}
 	
 	if (flag_received_seconds_to_next_bu == true) {
 		sprintf(buffer, "Will wake up in %ld seconds\n", seconds_to_next_bu);
-		USART0_sendString_w_eol(buffer);
+		USART0_sendString_w_newline_eol(buffer);
 		flag_received_seconds_to_next_bu = false;
 		rtc_write_seconds_to_cmp();
 		rtc_setup();
+		USART0_send_ready();
 	}
 	
 	if (flag_goto_sleep == true) {
 		flag_goto_sleep = false;
-		USART0_sendString_w_eol("going to sleep ...\n");
+		USART0_sendString_w_newline_eol("going to sleep ...\n");
 		_delay_ms(100);
 		goto_sleep_standby();
-
 	}
 	
 	if (flag_request_current_measurement == true) {
 		flag_request_current_measurement = false;
 		uint16_t input_current = adc_measure_input_current();
-		sprintf(buffer,"Cur: %d", input_current);
-		USART0_sendString_w_eol(buffer);
-		display_clear();
-		display_write_string(buffer);
+		sprintf(buffer,"CC:%d", input_current);
+		USART0_sendString_w_newline_eol(buffer);
+		USART0_send_ready();
+		//display_clear();
+		//display_write_string(buffer);
 	}
 	
 	if	(flag_request_temperature_measurement == true) {
 		flag_request_temperature_measurement = false;
 		uint16_t temperature = adc_measure_temperature();
-		sprintf(buffer, "TMP: %d", temperature);
-		USART0_sendString_w_eol(buffer);
-		display_clear();
-		display_write_string(buffer);
+		sprintf(buffer, "TP:%d", temperature);
+		USART0_sendString_w_newline_eol(buffer);
+		USART0_send_ready();
+		//display_clear();
+		//display_write_string(buffer);
 	}
 	
 	if (flag_request_3v3_measurement == true) {
 		flag_request_3v3_measurement = false;
 		uint16_t voltage_3v3 = adc_measure_3v3();
-		sprintf(buffer, "3V3: %d", voltage_3v3);
-		USART0_sendString_w_eol(buffer);
-		display_clear();
-		display_write_string(buffer);
+		sprintf(buffer, "3V:%d", voltage_3v3);
+		USART0_sendString_w_newline_eol(buffer);
+		USART0_send_ready();
+		//display_clear();
+		//display_write_string(buffer);
 	}
 	
 	_delay_ms(100);

@@ -44,10 +44,16 @@ void USART0_sendChar(char c) {
 	USART0.TXDATAL = c;
 }
 
-void USART0_sendString_w_eol(char *s) {
+void USART0_sendString_w_newline_eol(char *s) {
 	USART0_sendString(s);
+	USART0_sendChar('\n');
 	USART0_sendChar('\0');
 }
+
+void USART0_send_ready() {
+	USART0_sendString_w_newline_eol("Ready");
+}
+
 void USART0_sendString(char *s) {
 	for(size_t i = 0; i < strlen(s); i++) {
 		USART0_sendChar(s[i]);
@@ -91,7 +97,7 @@ void USART0_process_incoming_message() {
 	char *message_code, *payload;
 	
 	if (strcmp(usart_receive_buffer, "Test") == 0) {
-		USART0_sendString_w_eol("Echo");
+		USART0_sendString_w_newline_eol("Echo");
 	}
 	
     message_code = strtok(usart_receive_buffer, ":");
@@ -99,12 +105,12 @@ void USART0_process_incoming_message() {
 	sprintf(buffer,"MC: %s, PL: %s\n",message_code, payload);
 	
 	if (strcmp(message_code, "D1") == 0) {
-		USART0_sendString_w_eol("ACK_D1");
+		USART0_sendString_w_newline_eol("ACK:D1");
 		strcpy(display_line1_content, payload);
 	}
 	
 	if (strcmp(message_code, "D2") == 0) {
-		USART0_sendString_w_eol("ACK_D2");
+		USART0_sendString_w_newline_eol("ACK:D2");
 		strcpy(display_line2_content, payload);
 		flag_string_for_display_received = true;
 	}
@@ -116,7 +122,7 @@ void USART0_process_incoming_message() {
 	
 	if (strcmp(message_code, "BU") == 0) {
 		sprintf(buffer,"ACK:BU:%s\n", payload);
-		USART0_sendString_w_eol(buffer);
+		USART0_sendString_w_newline_eol(buffer);
 		seconds_to_next_bu = convert_str_to_long(payload);
 		flag_received_seconds_to_next_bu = true;
 	}
@@ -133,35 +139,35 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "CC") == 0) {
-		USART0_sendString_w_eol("ACK:CC");
+		USART0_sendString_w_newline_eol("ACK:CC");
 		flag_request_current_measurement = true;
 	}
 	
 	if (strcmp(message_code, "TP") == 0) {
-		USART0_sendString_w_eol("ACK:TP");
+		USART0_sendString_w_newline_eol("ACK:TP");
 		flag_request_temperature_measurement = true;
 	}
 	
 	if (strcmp(message_code, "3V") == 0) {
-		USART0_sendString_w_eol("ACK:3V");
+		USART0_sendString_w_newline_eol("ACK:3V");
 		flag_request_3v3_measurement = true;
 	}
 	
 	if(strcmp(message_code, "ON") == 0) {
-		USART0_sendString_w_eol("ACK:ON\n");
+		USART0_sendString_w_newline_eol("ACK:ON\n");
 		if(flag_schedule_backup_now) {
 			flag_schedule_backup_now = false;
-			USART0_sendString_w_eol("User Backup\n");
+			USART0_sendString_w_newline_eol("User Backup\n");
 		}
 	}
 	
 	if(strcmp(message_code, "DB") == 0) {
-		USART0_sendString_w_eol("ACK:DB\n");
+		USART0_sendString_w_newline_eol("ACK:DB\n");
 		//dim display
 	}
 	
 	if(strcmp(message_code, "DL") == 0) {
-		USART0_sendString_w_eol("ACK:DL");
+		USART0_sendString_w_newline_eol("ACK:DL");
 	}
 }
 

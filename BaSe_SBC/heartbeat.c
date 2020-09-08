@@ -38,7 +38,7 @@ void reset_bpi_hb_timeout_timer() {
 
 void send_sbc_heartbeat_count_to_bpi() {
 	sprintf(buffer, "H:%i", increment_or_reset_sbc_heartbeat_count());
-	USART0_sendString_w_eol(buffer);
+	USART0_sendString_w_newline_eol(buffer);
 }
 
 int get_sbc_heartbeat_count() {
