@@ -5,6 +5,7 @@
  *  Author: Max
  */ 
 #include <stdbool.h>
+#include <avr/io.h>
 
 #ifndef INCFILE1_H_
 #define INCFILE1_H_
@@ -30,6 +31,8 @@ bool flag_bcu_sply_up;
 bool flag_wakeup_by_rtc;
 bool flag_schedule_backup_now;
 bool flag_entering_mainloop_display_on;
+bool flag_dim_display;
+bool flag_dim_hmi_led;
 
 /* globals */
 volatile bool flag_button_0_pressed;
@@ -38,6 +41,8 @@ long seconds_to_next_bu;
 char display_line1_content[17];
 char display_line2_content[17];
 char human_readable_timestamp_next_bu[33];
+uint16_t dimming_value_hmi_led;
+uint16_t dimming_value_display;
 
 /* function pointers */
 

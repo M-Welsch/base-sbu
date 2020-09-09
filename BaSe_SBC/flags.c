@@ -39,3 +39,6 @@ bool flag_wakeup_by_rtc = false;
 bool flag_schedule_backup_now = false;
 
 bool flag_entering_mainloop_display_on = false;
+
+bool flag_dim_display = false;
+bool flag_dim_hmi_led = false;

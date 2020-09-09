@@ -23,9 +23,15 @@ void display_write_string(char *s);
 void display_next_line(void);
 
 /* Dimming */
-
 void dimmer_init();
 void set_dimming_value_display_bl(uint8_t dimming_value);
 void set_dimming_value_led(uint8_t dimming_value);
+
+/* HMI LED */
+
+void set_hmi_led_dimming_value(uint16_t dimming_value);
+void led_hmi_on(void);
+void led_hmi_off(void);
+void toggle_hmi_led(void);
 
 #endif /* HMI_H_ */

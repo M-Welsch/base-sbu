@@ -154,20 +154,22 @@ void USART0_process_incoming_message() {
 	}
 	
 	if(strcmp(message_code, "ON") == 0) {
-		USART0_sendString_w_newline_eol("ACK:ON\n");
+		USART0_sendString_w_newline_eol("ACK:ON");
 		if(flag_schedule_backup_now) {
 			flag_schedule_backup_now = false;
-			USART0_sendString_w_newline_eol("User Backup\n");
+			USART0_sendString_w_newline_eol("User Backup");
 		}
 	}
 	
 	if(strcmp(message_code, "DB") == 0) {
-		USART0_sendString_w_newline_eol("ACK:DB\n");
-		//dim display
+		USART0_sendString_w_newline_eol("ACK:DB");
+		dimming_value_display = convert_str_to_long(payload);
+		flag_dim_display = true;
 	}
 	
 	if(strcmp(message_code, "DL") == 0) {
 		USART0_sendString_w_newline_eol("ACK:DL");
+		flag_dim_hmi_led = true;
 	}
 }
 

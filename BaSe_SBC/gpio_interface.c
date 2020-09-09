@@ -76,25 +76,25 @@ void set_interrupts_for_buttons(void) {
 	button_port.button_1_ctrl |= PORT_ISC_FALLING_gc;
 }
 
-/* HMI LED */
-
-void led_hmi_on(void) {
-	if(current_pwr_state != standby) {
-		PORTB.OUTSET = led_hmi;
-	}
-}
-
-void led_hmi_off(void) {
-	PORTB.OUTCLR = led_hmi;
-}
-
-void toggle_hmi_led(void) {
-	if(current_pwr_state != standby) {
-		PORTB.OUTTGL = led_hmi;
-	} else {
-		led_hmi_off();
-	}
-}
+///* HMI LED */
+//
+//void led_hmi_on(void) {
+	//if(current_pwr_state != standby) {
+		//PORTB.OUTSET = led_hmi;
+	//}
+//}
+//
+//void led_hmi_off(void) {
+	//PORTB.OUTCLR = led_hmi;
+//}
+//
+//void toggle_hmi_led(void) {
+	//if(current_pwr_state != standby) {
+		//PORTB.OUTTGL = led_hmi;
+	//} else {
+		//led_hmi_off();
+	//}
+//}
 
 /* HMI Display */
 
@@ -183,12 +183,6 @@ ISR(PORTB_PORT_vect)
 
 ISR(BADISR_vect)
 {
-	/* This routine is called if a non defined interrupt-vector is requested. It flashes the HMI_LED real fast */
-	for(int i = 0; i < 20; i++)
-	{
-		led_hmi_on();
-		_delay_ms(10);
-		led_hmi_off();
-		_delay_ms(10);	
-	}
+	/* This routine is called if a non defined interrupt-vector is requested */
+	USART0_sendString_w_newline_eol("bad ISR");
 }

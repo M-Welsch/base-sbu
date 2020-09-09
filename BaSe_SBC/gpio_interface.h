@@ -49,12 +49,6 @@ int button_1_pressed(void);
 
 void set_interrupts_for_buttons(void);
 
-/* HMI LED */
-
-void led_hmi_on(void);
-void led_hmi_off(void);
-void toggle_hmi_led(void);
-
 /* HMI Display */
 
 void dim_display(int dimming_value);

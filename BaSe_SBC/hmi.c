@@ -12,6 +12,7 @@
 #include <util/delay.h>
 #include "flags.h"
 #include "gpio_interface.h"
+#include "usart.h"
 
 /* Display Control */
 
@@ -156,21 +157,53 @@ void display_clear(void) {
 
 /* Dimming */
 
-void dimmer_init() {
-	/* WO0 (PB0) is used for the Display Backlight, WO1 (PB4) is used for the HMI LED. PB4 is not the default output pin for WO1 */
-	
-	
-	// wgmode in ctrla selects waveform generation
-	// 
-	TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV4_gc; // prescaler is 4 from fclk_per
-	TCA0.SINGLE.PERBUF = 0x01A0; // about 1kHz with prescaler = 4
-	TCA0.SINGLE.EVCTRL &= ~(TCA_SINGLE_CNTEI_bm); // count clock ticks instead of events
-	TCA0.SINGLE.CTRLB |= TCA_SINGLE_WGMODE_SINGLESLOPE_gc;
-	//TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP0EN_bm; // overide port output register for WO0 (PB0)
-	//TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP1EN_bm; // overide port output register for WO1 (PB4)
-	
-	//TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+uint16_t get_default_display_dimming_value_from_eeprom() {
+	return 0xFFFF;
 }
+
+void dimmer_init() {
+	
+	/* disable all TCA0 related interrupts */
+	TCA0.SINGLE.INTCTRL &= ~(TCA_SINGLE_CMP2EN_bm | TCA_SINGLE_CMP1EN_bm | TCA_SINGLE_CMP0EN_bm | TCA_SINGLE_OVF_bm);
+
+	/* following steps in datasheet from chapter 20.3.3.4.1 */
+	
+	/* step 1.0: select waveform generation mode (single-slope pwm) */
+	TCA0.SINGLE.CTRLB |= TCA_SINGLE_WGMODE_SINGLESLOPE_gc;
+	
+	/* step 1.1: setting up clock (prescaler = 4) */
+	TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV4_gc;
+	
+	/* step 1.2 setting up period time (maximum for max. resolution) */
+	TCA0.SINGLE.PERBUF = 0xFFFF;
+	
+	/* step 2: TCA is counting tick not events */
+	TCA0.SINGLE.EVCTRL &= ~(TCA_SINGLE_CNTEI_bm);
+	
+	/* step 3.1: map TCA0 WO1 to alternate hw-pin (for HMI LED)
+		         WO0 (PB0) is used for the Display Backlight
+	             WO1 (PB4) is used for the HMI LED
+				      default hw-pin would be PB1
+					  HMI led is connected to PB4 */
+	PORTMUX.CTRLC |= PORTMUX_TCA01_bm;
+	
+	/* step 3.2: override port output settings */
+	
+	TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP0EN_bm; // Display BL: WO0 (PB0)
+	TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP1EN_bm; // HMI LED: WO1 (PB4)
+	
+	/* initial dimming values for display and hmi led */
+	dimming_value_display = get_default_display_dimming_value_from_eeprom();
+	TCA0.SINGLE.CMP0 = dimming_value_display;
+	dimming_value_hmi_led = 0xFFFF;
+	TCA0.SINGLE.CMP1 = dimming_value_hmi_led;
+	
+	/* enable TCA */
+	TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+
+}
+
+
 
 void set_dimming_value_display_bl(uint16_t dimming_value) {
 	TCA0.SINGLE.CMP0 = dimming_value;
@@ -178,4 +211,26 @@ void set_dimming_value_display_bl(uint16_t dimming_value) {
 
 void set_dimming_value_led(uint16_t dimming_value) {
 	TCA0.SINGLE.CMP1 = dimming_value;
+}
+
+/* HMI LED */
+
+void set_hmi_led_dimming_value(uint16_t dimming_value) {
+	TCA0.SINGLE.CMP1 = dimming_value;
+}
+
+void led_hmi_on(void) {
+	set_hmi_led_dimming_value(dimming_value_hmi_led);
+}
+
+void led_hmi_off(void) {
+	set_hmi_led_dimming_value(0);
+}
+
+void toggle_hmi_led(void) {
+	if(TCA0.SINGLE.CMP1 == 0x0000) {
+		led_hmi_on();
+	} else {
+		led_hmi_off();
+	}
 }

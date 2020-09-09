@@ -188,6 +188,18 @@ void mainloop_active()
 		//display_write_string(buffer);
 	}
 	
+	if (flag_dim_display) {
+		set_hmi_led_dimming_value(dimming_value_hmi_led);
+		//Todo: update_default_display_dimming_value_in_eeprom();
+		flag_dim_display = false;
+		USART0_send_ready();
+	}
+	
+	if (flag_dim_hmi_led) {
+		flag_dim_hmi_led = false;
+		USART0_send_ready();
+	}
+	
 	_delay_ms(100);
 	
 	/* let hmi led toggle as a sbc heartbeat */
