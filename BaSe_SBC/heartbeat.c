@@ -19,6 +19,7 @@ void init_heatbeat_monitor(void) {
 }
 
 void setup_interrupt_timeout_detection() {
+	
 	TCA0.SINGLE.PER = 0xA2B; // with prescaler of 256 and fclk=3.333.333Hz this results to a period of 200ms. Means, every 200ms the timer throws an interrupt (unless it is resetted before)
 	
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm;

@@ -133,6 +133,7 @@ void mainloop_active()
 		display_write_string("Received Shut-\ndown Request!");
 		flag_pwr_state_change_request = false;
 		transition_to_pwr_state(next_pwr_state);
+		flag_goto_sleep = true;
 	}
 	
 	if (flag_human_readable_timestamp_next_bu_received == true) {
@@ -189,14 +190,19 @@ void mainloop_active()
 	}
 	
 	if (flag_dim_display) {
-		set_hmi_led_dimming_value(dimming_value_hmi_led);
+		/* setting dimming value happens in usart.c directly */
+		//set_dimming_value_display_bl(dimming_value_display);		
+		//display_clear();
+		//sprintf(buffer,"%u", dimming_value_display);
+		//display_write_string(buffer);
 		//Todo: update_default_display_dimming_value_in_eeprom();
 		flag_dim_display = false;
-		USART0_send_ready();
+		//USART0_send_ready();
 	}
 	
 	if (flag_dim_hmi_led) {
 		flag_dim_hmi_led = false;
+		set_hmi_led_dimming_value(dimming_value_hmi_led);
 		USART0_send_ready();
 	}
 	
@@ -217,6 +223,11 @@ void mainloop_standby() {
 	_delay_ms(100);
 }
 
+void reset_idle_timer() {
+	/* if timer matches, it brings the sbu back to standby. This function resetts the timer */
+	;
+}
+
 void mainloop_display_on() {
 	if (flag_entering_mainloop_display_on) {
 		flag_entering_mainloop_display_on = false;
@@ -225,11 +236,21 @@ void mainloop_display_on() {
 		button1_action = show_menu_actions;
 		dim_display(1);
 	}
+	reset_idle_timer();
 	show_menu();
-	_delay_ms(100); //debouncing 
+	_delay_ms(100); //debouncing
+	menu_show_counter = 0;
 	while(!flag_button_0_pressed & !button_1_pressed()) {
-		;
+		_delay_ms(10);
+		sprintf(buffer,"menu counter: %d\n", menu_show_counter);
+		USART0_sendString(buffer);
+		menu_show_counter++;
+		if (menu_show_counter > 300) { //should be 1000 without usart send statements
+			flag_goto_sleep = true;
+			break;
+		}
 	}
+	USART0_sendString("out of loop");
 	//goto_sleep_idle();
 	//Fixme: button1 press cannot wake mcu from standby!
 	
@@ -241,5 +262,12 @@ void mainloop_display_on() {
 	if (button_1_pressed()) {
 		flag_button_1_pressed = false;
 		button1_action();
+	}
+	
+	if (flag_goto_sleep) {
+		USART0_sendString("going to sleep ...\n");
+		flag_goto_sleep = false;
+		next_pwr_state = standby;
+		transition_to_pwr_state(next_pwr_state);
 	}
 }

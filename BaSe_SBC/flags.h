@@ -22,7 +22,7 @@ bool flag_pwr_state_change_request;
 bool flag_human_readable_timestamp_next_bu_received;
 bool flag_usart_string_receive_complete;
 bool flag_received_seconds_to_next_bu;
-bool flag_goto_sleep;
+volatile bool flag_goto_sleep;
 bool flag_request_current_measurement;
 bool flag_request_temperature_measurement;
 bool flag_request_3v3_measurement;
@@ -35,6 +35,7 @@ bool flag_dim_display;
 bool flag_dim_hmi_led;
 
 /* globals */
+char buffer[48];
 volatile bool flag_button_0_pressed;
 volatile bool flag_heartbeat;
 long seconds_to_next_bu;
@@ -43,6 +44,8 @@ char display_line2_content[17];
 char human_readable_timestamp_next_bu[33];
 uint16_t dimming_value_hmi_led;
 uint16_t dimming_value_display;
+char usart_receive_copy[64]; //remove after debugging
+uint16_t menu_show_counter;
 
 /* function pointers */
 

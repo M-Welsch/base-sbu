@@ -26,7 +26,7 @@ bool flag_human_readable_timestamp_next_bu_received = false;
 
 bool flag_usart_string_receive_complete = false;
 bool flag_received_seconds_to_next_bu = false;
-bool flag_goto_sleep = false;
+volatile bool flag_goto_sleep = false;
 
 bool flag_request_current_measurement = false;
 bool flag_request_temperature_measurement = false;

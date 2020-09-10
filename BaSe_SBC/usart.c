@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "gpio_interface.h"
+#include "hmi.h"
 #include "usart.h"
 #include "flags.h"
 #include "string.h"
@@ -96,6 +97,8 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 void USART0_process_incoming_message() {
 	char *message_code, *payload;
 	
+	strcpy(usart_receive_copy, usart_receive_buffer);
+	
 	if (strcmp(usart_receive_buffer, "Test") == 0) {
 		USART0_sendString_w_newline_eol("Echo");
 	}
@@ -163,19 +166,21 @@ void USART0_process_incoming_message() {
 	
 	if(strcmp(message_code, "DB") == 0) {
 		USART0_sendString_w_newline_eol("ACK:DB");
-		dimming_value_display = convert_str_to_long(payload);
+		dimming_value_display = atoi(payload);
+		set_dimming_value_display_bl(dimming_value_display);
 		flag_dim_display = true;
+		USART0_send_ready();
 	}
 	
 	if(strcmp(message_code, "DL") == 0) {
 		USART0_sendString_w_newline_eol("ACK:DL");
+		dimming_value_hmi_led = atoi(payload);
 		flag_dim_hmi_led = true;
 	}
 }
 
 long convert_str_to_long(char *str) {
 	char *ptr;
-	printf("Parsing '%s':\n", str);
 	long ret;
 
 	ret = strtol(str, &ptr, 10);

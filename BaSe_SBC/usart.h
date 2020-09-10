@@ -9,7 +9,6 @@
 #ifndef USART_H_
 #define USART_H_
 
-char buffer[48];
 char usart_receive_buffer[32];
 char temp_receive_buffer;
 

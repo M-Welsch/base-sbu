@@ -158,7 +158,7 @@ void display_clear(void) {
 /* Dimming */
 
 uint16_t get_default_display_dimming_value_from_eeprom() {
-	return 0xFFFF;
+	return 0x0100;
 }
 
 void dimmer_init() {
@@ -171,8 +171,8 @@ void dimmer_init() {
 	/* step 1.0: select waveform generation mode (single-slope pwm) */
 	TCA0.SINGLE.CTRLB |= TCA_SINGLE_WGMODE_SINGLESLOPE_gc;
 	
-	/* step 1.1: setting up clock (prescaler = 4) */
-	TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV4_gc;
+	/* step 1.1: setting up clock (prescaler = 1) */
+	TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV1_gc;
 	
 	/* step 1.2 setting up period time (maximum for max. resolution) */
 	TCA0.SINGLE.PERBUF = 0xFFFF;
@@ -200,7 +200,6 @@ void dimmer_init() {
 	
 	/* enable TCA */
 	TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
-
 }
 
 

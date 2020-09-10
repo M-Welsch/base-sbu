@@ -33,12 +33,14 @@ void disable_bpi_sply(void) {
 void transition_to_pwr_state(enum pwr_states pwr_state) {
 	switch(pwr_state) {
 		case standby:
-			wait_until_bpi_ready_for_shutdown();
+			if (current_pwr_state == active) {
+				wait_until_bpi_ready_for_shutdown();
+			}
 			disable_bpi_sply();
 			dim_display(0);
 			led_hmi_off();
 			disable_5v0_smps();
-			flag_goto_sleep = true;
+			//flag_goto_sleep = true; //why was that set true here??
 			current_pwr_state = standby;
 			break;
 		
