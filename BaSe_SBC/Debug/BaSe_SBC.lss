@@ -21,15 +21,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_abbrev 00002900  00000000  00000000  0000a6c1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   0000226a  00000000  00000000  0000cfc1  2**0
+  9 .debug_line   00002270  00000000  00000000  0000cfc1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000a24  00000000  00000000  0000f22c  2**2
+ 10 .debug_frame  00000a24  00000000  00000000  0000f234  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    0000244a  00000000  00000000  0000fc50  2**0
+ 11 .debug_str    0000244a  00000000  00000000  0000fc58  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00001a58  00000000  00000000  0001209a  2**0
+ 12 .debug_loc    00001a58  00000000  00000000  000120a2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000360  00000000  00000000  00013af2  2**0
+ 13 .debug_ranges 00000360  00000000  00000000  00013afa  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -691,8 +691,8 @@ void reset_idle_timer() {
 }
 
 void mainloop_display_on() {
-     362:	ef 92       	push	r14
-     364:	ff 92       	push	r15
+     362:	ff 92       	push	r15
+     364:	0f 93       	push	r16
      366:	1f 93       	push	r17
      368:	cf 93       	push	r28
      36a:	df 93       	push	r29
@@ -743,54 +743,56 @@ void mainloop_display_on() {
 	while(!flag_button_0_pressed & !button_1_pressed()) {
 		_delay_ms(10);
 		sprintf(buffer,"menu counter: %d\n", menu_show_counter);
-     3c6:	0f 2e       	mov	r0, r31
-     3c8:	f0 e5       	ldi	r31, 0x50	; 80
-     3ca:	ef 2e       	mov	r14, r31
-     3cc:	fb e9       	ldi	r31, 0x9B	; 155
-     3ce:	ff 2e       	mov	r15, r31
-     3d0:	f0 2d       	mov	r31, r0
-     3d2:	c1 e6       	ldi	r28, 0x61	; 97
-     3d4:	de e3       	ldi	r29, 0x3E	; 62
+     3c6:	00 e5       	ldi	r16, 0x50	; 80
+     3c8:	1b e9       	ldi	r17, 0x9B	; 155
+     3ca:	c1 e6       	ldi	r28, 0x61	; 97
+     3cc:	de e3       	ldi	r29, 0x3E	; 62
 	}
 	reset_idle_timer();
 	show_menu();
 	_delay_ms(100); //debouncing
 	menu_show_counter = 0;
 	while(!flag_button_0_pressed & !button_1_pressed()) {
-     3d6:	29 c0       	rjmp	.+82     	; 0x42a <__LOCK_REGION_LENGTH__+0x2a>
-     3d8:	8f e1       	ldi	r24, 0x1F	; 31
-     3da:	9e e4       	ldi	r25, 0x4E	; 78
-     3dc:	01 97       	sbiw	r24, 0x01	; 1
-     3de:	f1 f7       	brne	.-4      	; 0x3dc <mainloop_display_on+0x7a>
-     3e0:	00 c0       	rjmp	.+0      	; 0x3e2 <mainloop_display_on+0x80>
-     3e2:	00 00       	nop
+     3ce:	2d c0       	rjmp	.+90     	; 0x42a <__LOCK_REGION_LENGTH__+0x2a>
+     3d0:	8f e1       	ldi	r24, 0x1F	; 31
+     3d2:	9e e4       	ldi	r25, 0x4E	; 78
+     3d4:	01 97       	sbiw	r24, 0x01	; 1
+     3d6:	f1 f7       	brne	.-4      	; 0x3d4 <mainloop_display_on+0x72>
+     3d8:	00 c0       	rjmp	.+0      	; 0x3da <mainloop_display_on+0x78>
+     3da:	00 00       	nop
 		_delay_ms(10);
 		sprintf(buffer,"menu counter: %d\n", menu_show_counter);
-     3e4:	80 91 c9 3e 	lds	r24, 0x3EC9	; 0x803ec9 <menu_show_counter+0x1>
-     3e8:	8f 93       	push	r24
-     3ea:	80 91 c8 3e 	lds	r24, 0x3EC8	; 0x803ec8 <menu_show_counter>
-     3ee:	8f 93       	push	r24
-     3f0:	ff 92       	push	r15
-     3f2:	ef 92       	push	r14
-     3f4:	df 93       	push	r29
-     3f6:	cf 93       	push	r28
-     3f8:	aa d8       	rcall	.-3756   	; 0xfffff54e <__eeprom_end+0xff7ef54e>
+     3dc:	80 91 c9 3e 	lds	r24, 0x3EC9	; 0x803ec9 <menu_show_counter+0x1>
+     3e0:	8f 93       	push	r24
+     3e2:	80 91 c8 3e 	lds	r24, 0x3EC8	; 0x803ec8 <menu_show_counter>
+     3e6:	8f 93       	push	r24
+     3e8:	1f 93       	push	r17
+     3ea:	0f 93       	push	r16
+     3ec:	df 93       	push	r29
+     3ee:	cf 93       	push	r28
+     3f0:	ae d8       	rcall	.-3748   	; 0xfffff54e <__eeprom_end+0xff7ef54e>
 		USART0_sendString(buffer);
-     3fa:	ce 01       	movw	r24, r28
-     3fc:	59 d5       	rcall	.+2738   	; 0xeb0 <USART0_sendString>
+     3f2:	ce 01       	movw	r24, r28
+     3f4:	5d d5       	rcall	.+2746   	; 0xeb0 <USART0_sendString>
 		menu_show_counter++;
-     3fe:	80 91 c8 3e 	lds	r24, 0x3EC8	; 0x803ec8 <menu_show_counter>
-     402:	90 91 c9 3e 	lds	r25, 0x3EC9	; 0x803ec9 <menu_show_counter+0x1>
-     406:	01 96       	adiw	r24, 0x01	; 1
-     408:	80 93 c8 3e 	sts	0x3EC8, r24	; 0x803ec8 <menu_show_counter>
-     40c:	90 93 c9 3e 	sts	0x3EC9, r25	; 0x803ec9 <menu_show_counter+0x1>
-		if (menu_show_counter > 300) { //should be 1000 without usart send statements
+     3f6:	80 91 c8 3e 	lds	r24, 0x3EC8	; 0x803ec8 <menu_show_counter>
+     3fa:	90 91 c9 3e 	lds	r25, 0x3EC9	; 0x803ec9 <menu_show_counter+0x1>
+     3fe:	01 96       	adiw	r24, 0x01	; 1
+     400:	80 93 c8 3e 	sts	0x3EC8, r24	; 0x803ec8 <menu_show_counter>
+     404:	90 93 c9 3e 	sts	0x3EC9, r25	; 0x803ec9 <menu_show_counter+0x1>
+		if (flag_wakeup_by_rtc) {
+     408:	0f 90       	pop	r0
+     40a:	0f 90       	pop	r0
+     40c:	0f 90       	pop	r0
+     40e:	0f 90       	pop	r0
      410:	0f 90       	pop	r0
      412:	0f 90       	pop	r0
-     414:	0f 90       	pop	r0
-     416:	0f 90       	pop	r0
-     418:	0f 90       	pop	r0
-     41a:	0f 90       	pop	r0
+     414:	20 91 0a 3e 	lds	r18, 0x3E0A	; 0x803e0a <flag_wakeup_by_rtc>
+     418:	21 11       	cpse	r18, r1
+     41a:	10 c0       	rjmp	.+32     	; 0x43c <__LOCK_REGION_LENGTH__+0x3c>
+			break;
+		}
+		if (menu_show_counter > 300) { //should be 1000 without usart send statements
      41c:	8d 32       	cpi	r24, 0x2D	; 45
      41e:	91 40       	sbci	r25, 0x01	; 1
      420:	20 f0       	brcs	.+8      	; 0x42a <__LOCK_REGION_LENGTH__+0x2a>
@@ -805,14 +807,14 @@ void mainloop_display_on() {
 	_delay_ms(100); //debouncing
 	menu_show_counter = 0;
 	while(!flag_button_0_pressed & !button_1_pressed()) {
-     42a:	10 91 5d 3e 	lds	r17, 0x3E5D	; 0x803e5d <flag_button_0_pressed>
+     42a:	f0 90 5d 3e 	lds	r15, 0x3E5D	; 0x803e5d <flag_button_0_pressed>
      42e:	a6 de       	rcall	.-692    	; 0x17c <button_1_pressed>
      430:	21 e0       	ldi	r18, 0x01	; 1
      432:	89 2b       	or	r24, r25
      434:	09 f0       	breq	.+2      	; 0x438 <__LOCK_REGION_LENGTH__+0x38>
      436:	20 e0       	ldi	r18, 0x00	; 0
-     438:	12 17       	cp	r17, r18
-     43a:	70 f2       	brcs	.-100    	; 0x3d8 <mainloop_display_on+0x76>
+     438:	f2 16       	cp	r15, r18
+     43a:	50 f2       	brcs	.-108    	; 0x3d0 <mainloop_display_on+0x6e>
 		if (menu_show_counter > 300) { //should be 1000 without usart send statements
 			flag_goto_sleep = true;
 			break;
@@ -868,8 +870,8 @@ void mainloop_display_on() {
      486:	df 91       	pop	r29
      488:	cf 91       	pop	r28
      48a:	1f 91       	pop	r17
-     48c:	ff 90       	pop	r15
-     48e:	ef 90       	pop	r14
+     48c:	0f 91       	pop	r16
+     48e:	ff 90       	pop	r15
      490:	08 95       	ret
 
 00000492 <init_sbu>:
@@ -2427,7 +2429,7 @@ void rtc_set_prescaler_and_enable()
 {
 	/* active in standby mode, prescaler = 32768, periperial enabled */
 	//Todo: uncomment 32 seconds configuration !!
-	//RTC.CTRLA = RTC_RUNSTDBY_bm | RTC_PRESCALER_DIV32768_gc; // <- one counter increment represents 32 seconds
+	//RTC.CTRLA = RTC_RUNSTDBY_bm | RTC_PRESCALER_DIV32768_gc | RTC_RTCEN_bm; // <- one counter increment represents 32 seconds
 	RTC.CTRLA = RTC_RUNSTDBY_bm | RTC_PRESCALER_DIV1024_gc | RTC_RTCEN_bm; // <- 1 second
      d94:	e0 e4       	ldi	r30, 0x40	; 64
      d96:	f1 e0       	ldi	r31, 0x01	; 1

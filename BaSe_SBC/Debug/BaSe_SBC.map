@@ -1140,19 +1140,19 @@ END GROUP
  .debug_abbrev  0x00002458      0x20f rtc.o
  .debug_abbrev  0x00002667      0x299 usart.o
 
-.debug_line     0x00000000     0x226a
+.debug_line     0x00000000     0x2270
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x136 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.3.229/gcc/dev/attiny816/avrxmega3/short-calls/crtattiny816.o
  .debug_line    0x00000136      0x255 adc.o
  .debug_line    0x0000038b       0xb3 flags.o
  .debug_line    0x0000043e      0x410 gpio_interface.o
  .debug_line    0x0000084e      0x205 heartbeat.o
- .debug_line    0x00000a53      0x598 main.o
- .debug_line    0x00000feb      0x59c hmi.o
- .debug_line    0x00001587      0x2aa menu.o
- .debug_line    0x00001831      0x2e4 powerpath_control.o
- .debug_line    0x00001b15      0x25b rtc.o
- .debug_line    0x00001d70      0x4fa usart.o
+ .debug_line    0x00000a53      0x59e main.o
+ .debug_line    0x00000ff1      0x59c hmi.o
+ .debug_line    0x0000158d      0x2aa menu.o
+ .debug_line    0x00001837      0x2e4 powerpath_control.o
+ .debug_line    0x00001b1b      0x25b rtc.o
+ .debug_line    0x00001d76      0x4fa usart.o
 
 .debug_frame    0x00000000      0xa24
  *(.debug_frame)

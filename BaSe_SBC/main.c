@@ -245,6 +245,9 @@ void mainloop_display_on() {
 		sprintf(buffer,"menu counter: %d\n", menu_show_counter);
 		USART0_sendString(buffer);
 		menu_show_counter++;
+		if (flag_wakeup_by_rtc) {
+			break;
+		}
 		if (menu_show_counter > 300) { //should be 1000 without usart send statements
 			flag_goto_sleep = true;
 			break;
