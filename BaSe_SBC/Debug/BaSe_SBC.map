@@ -881,7 +881,7 @@ END GROUP
  *(.fini0)
                 0x00001b46                _etext = .
 
-.rodata         0x00009b46      0x2a9 load address 0x00001b46
+.rodata         0x00009b46      0x2aa load address 0x00001b46
  *(.rodata)
  .rodata        0x00009b46        0x2 usart.o
  *(.rodata*)
@@ -890,17 +890,17 @@ END GROUP
  .rodata.str1.1
                 0x00009b50       0xb7 main.o
  .rodata.str1.1
-                0x00009c07       0xf7 menu.o
+                0x00009c07       0xf8 menu.o
  .rodata.str1.1
-                0x00009cfe       0x55 powerpath_control.o
+                0x00009cff       0x55 powerpath_control.o
  .rodata.str1.1
-                0x00009d53       0x22 rtc.o
+                0x00009d54       0x22 rtc.o
  .rodata.str1.1
-                0x00009d75       0x7a usart.o
+                0x00009d76       0x7a usart.o
                                  0x95 (size before relaxing)
  *(.gnu.linkonce.r*)
 
-.data           0x00803e00        0x4 load address 0x00001def
+.data           0x00803e00        0x4 load address 0x00001df0
                 0x00803e00                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -998,8 +998,8 @@ END GROUP
  COMMON         0x00803efc        0x2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3/short-calls\libc.a(errno.o)
                 0x00803efc                errno
                 0x00803efe                PROVIDE (__bss_end, .)
-                0x00001def                __data_load_start = LOADADDR (.data)
-                0x00001df3                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00001df0                __data_load_start = LOADADDR (.data)
+                0x00001df4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00803efe        0x0
                 [!provide]                PROVIDE (__noinit_start, .)

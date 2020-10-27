@@ -3,15 +3,15 @@ BaSe_SBC.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000004  00803e00  00001def  00001ea3  2**0
+  0 .data         00000004  00803e00  00001df0  00001ea4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         00001b46  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000002a9  00009b46  00001b46  00001bfa  2**0
+  2 .rodata       000002aa  00009b46  00001b46  00001bfa  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .bss          000000fa  00803e04  00803e04  00001ea7  2**0
+  3 .bss          000000fa  00803e04  00803e04  00001ea8  2**0
                   ALLOC
-  4 .comment      0000005c  00000000  00000000  00001ea7  2**0
+  4 .comment      0000005c  00000000  00000000  00001ea8  2**0
                   CONTENTS, READONLY
   5 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00001f04  2**2
                   CONTENTS, READONLY
@@ -74,7 +74,7 @@ Disassembly of section .text:
       40:	1e e3       	ldi	r17, 0x3E	; 62
       42:	a0 e0       	ldi	r26, 0x00	; 0
       44:	be e3       	ldi	r27, 0x3E	; 62
-      46:	ef ee       	ldi	r30, 0xEF	; 239
+      46:	e0 ef       	ldi	r30, 0xF0	; 240
       48:	fd e1       	ldi	r31, 0x1D	; 29
       4a:	02 c0       	rjmp	.+4      	; 0x50 <__do_copy_data+0x10>
       4c:	05 90       	lpm	r0, Z+
@@ -2044,7 +2044,7 @@ void show_menu_timestamp() {
      ba8:	de bf       	out	0x3e, r29	; 62
      baa:	1d c0       	rjmp	.+58     	; 0xbe6 <show_menu_timestamp+0x1d2>
 		default:
-			sprintf(buffer, "ETA %lu %02lu:%02lu:%02lu", days, hours, minutes, seconds);
+			sprintf(buffer, "ETA %lud %02lu:%02lu:%02lu", days, hours, minutes, seconds);
      bac:	9f 93       	push	r25
      bae:	8f 93       	push	r24
      bb0:	7f 93       	push	r23
@@ -2171,7 +2171,7 @@ void wake_bcu_and_do_backup_now() {
 	display_clear();
      c6a:	11 de       	rcall	.-990    	; 0x88e <display_clear>
 	display_write_string("Waking BCU and\ndo Backup now ..");
-     c6c:	8e ed       	ldi	r24, 0xDE	; 222
+     c6c:	8f ed       	ldi	r24, 0xDF	; 223
      c6e:	9c e9       	ldi	r25, 0x9C	; 156
      c70:	fb dd       	rcall	.-1034   	; 0x868 <display_write_string>
 	flag_schedule_backup_now = true;
@@ -2191,7 +2191,7 @@ void wake_bcu() {
 	display_clear();
      c82:	05 de       	rcall	.-1014   	; 0x88e <display_clear>
 	display_write_string("Waking BCU and\ndo Backup now ..");
-     c84:	8e ed       	ldi	r24, 0xDE	; 222
+     c84:	8f ed       	ldi	r24, 0xDF	; 223
      c86:	9c e9       	ldi	r25, 0x9C	; 156
      c88:	ef dd       	rcall	.-1058   	; 0x868 <display_write_string>
 	next_pwr_state = active;
@@ -2270,7 +2270,7 @@ bool wait_until_bpi_ready_for_shutdown() {
 	display_clear();
      cd8:	da dd       	rcall	.-1100   	; 0x88e <display_clear>
 	display_write_string("Waiting for BCU\nHB to stop");
-     cda:	8e ef       	ldi	r24, 0xFE	; 254
+     cda:	8f ef       	ldi	r24, 0xFF	; 255
      cdc:	9c e9       	ldi	r25, 0x9C	; 156
      cde:	c4 dd       	rcall	.-1144   	; 0x868 <display_write_string>
 	while (flag_bpi_heartbeat_ok == true) {
@@ -2282,7 +2282,7 @@ bool wait_until_bpi_ready_for_shutdown() {
 	display_clear();
      ce8:	d2 dd       	rcall	.-1116   	; 0x88e <display_clear>
 	display_write_string("Waiting for 3V3\nto go low");
-     cea:	89 e1       	ldi	r24, 0x19	; 25
+     cea:	8a e1       	ldi	r24, 0x1A	; 26
      cec:	9d e9       	ldi	r25, 0x9D	; 157
      cee:	bc dd       	rcall	.-1160   	; 0x868 <display_write_string>
 	while (vcc3v3_present() == true) {
@@ -2363,7 +2363,7 @@ void transition_to_pwr_state(enum pwr_states pwr_state) {
 			// Todo: check if conditions for save startup are met ... if there are any
 			strcpy(display_line1_content,"BCU starting up");
      d46:	80 e1       	ldi	r24, 0x10	; 16
-     d48:	e3 e3       	ldi	r30, 0x33	; 51
+     d48:	e4 e3       	ldi	r30, 0x34	; 52
      d4a:	fd e9       	ldi	r31, 0x9D	; 157
      d4c:	aa ec       	ldi	r26, 0xCA	; 202
      d4e:	be e3       	ldi	r27, 0x3E	; 62
@@ -2373,7 +2373,7 @@ void transition_to_pwr_state(enum pwr_states pwr_state) {
      d56:	e1 f7       	brne	.-8      	; 0xd50 <transition_to_pwr_state+0x56>
 			strcpy(display_line2_content,"Please wait ...");
      d58:	80 e1       	ldi	r24, 0x10	; 16
-     d5a:	e3 e4       	ldi	r30, 0x43	; 67
+     d5a:	e4 e4       	ldi	r30, 0x44	; 68
      d5c:	fd e9       	ldi	r31, 0x9D	; 157
      d5e:	a2 eb       	ldi	r26, 0xB2	; 178
      d60:	be e3       	ldi	r27, 0x3E	; 62
@@ -2487,7 +2487,7 @@ void rtc_write_seconds_to_cmp() {
      dde:	ef 92       	push	r14
      de0:	df 92       	push	r13
      de2:	cf 92       	push	r12
-     de4:	83 e5       	ldi	r24, 0x53	; 83
+     de4:	84 e5       	ldi	r24, 0x54	; 84
      de6:	9d e9       	ldi	r25, 0x9D	; 157
      de8:	9f 93       	push	r25
      dea:	8f 93       	push	r24
@@ -2548,7 +2548,7 @@ ISR(RTC_CNT_vect) {
      e46:	82 60       	ori	r24, 0x02	; 2
      e48:	83 83       	std	Z+3, r24	; 0x03
 	USART0_sendString("CMP\n");
-     e4a:	80 e7       	ldi	r24, 0x70	; 112
+     e4a:	81 e7       	ldi	r24, 0x71	; 113
      e4c:	9d e9       	ldi	r25, 0x9D	; 157
      e4e:	30 d0       	rcall	.+96     	; 0xeb0 <USART0_sendString>
 	flag_wakeup_by_rtc = true;
@@ -2656,7 +2656,7 @@ uint8_t USART0_receive_complete() {
      efc:	08 95       	ret
 
 00000efe <USART0_send_ready>:
-     efe:	85 e7       	ldi	r24, 0x75	; 117
+     efe:	86 e7       	ldi	r24, 0x76	; 118
      f00:	9d e9       	ldi	r25, 0x9D	; 157
      f02:	f7 df       	rcall	.-18     	; 0xef2 <USART0_sendString_w_newline_eol>
      f04:	08 95       	ret
@@ -2813,7 +2813,7 @@ void USART0_process_incoming_message() {
      fb2:	97 d2       	rcall	.+1326   	; 0x14e2 <strcpy>
 	
 	if (strcmp(usart_receive_buffer, "Test") == 0) {
-     fb4:	6b e7       	ldi	r22, 0x7B	; 123
+     fb4:	6c e7       	ldi	r22, 0x7C	; 124
      fb6:	7d e9       	ldi	r23, 0x9D	; 157
      fb8:	8b ed       	ldi	r24, 0xDB	; 219
      fba:	9e e3       	ldi	r25, 0x3E	; 62
@@ -2821,13 +2821,13 @@ void USART0_process_incoming_message() {
      fbe:	89 2b       	or	r24, r25
      fc0:	19 f4       	brne	.+6      	; 0xfc8 <USART0_process_incoming_message+0x26>
 		USART0_sendString_w_newline_eol("Echo");
-     fc2:	80 e8       	ldi	r24, 0x80	; 128
+     fc2:	81 e8       	ldi	r24, 0x81	; 129
      fc4:	9d e9       	ldi	r25, 0x9D	; 157
      fc6:	95 df       	rcall	.-214    	; 0xef2 <USART0_sendString_w_newline_eol>
 	}
 	
     message_code = strtok(usart_receive_buffer, ":");
-     fc8:	65 e8       	ldi	r22, 0x85	; 133
+     fc8:	66 e8       	ldi	r22, 0x86	; 134
      fca:	7d e9       	ldi	r23, 0x9D	; 157
      fcc:	8b ed       	ldi	r24, 0xDB	; 219
      fce:	9e e3       	ldi	r25, 0x3E	; 62
@@ -2847,7 +2847,7 @@ void USART0_process_incoming_message() {
      fe6:	8f 93       	push	r24
      fe8:	cf 93       	push	r28
      fea:	df 93       	push	r29
-     fec:	87 e8       	ldi	r24, 0x87	; 135
+     fec:	88 e8       	ldi	r24, 0x88	; 136
      fee:	9d e9       	ldi	r25, 0x9D	; 157
      ff0:	9f 93       	push	r25
      ff2:	8f 93       	push	r24
@@ -2858,7 +2858,7 @@ void USART0_process_incoming_message() {
      ffc:	a8 d2       	rcall	.+1360   	; 0x154e <sprintf>
 	
 	if (strcmp(message_code, "D1") == 0) {
-     ffe:	6b e9       	ldi	r22, 0x9B	; 155
+     ffe:	6c e9       	ldi	r22, 0x9C	; 156
     1000:	7d e9       	ldi	r23, 0x9D	; 157
     1002:	8d 2f       	mov	r24, r29
     1004:	9c 2f       	mov	r25, r28
@@ -2872,7 +2872,7 @@ void USART0_process_incoming_message() {
     1014:	89 2b       	or	r24, r25
     1016:	41 f4       	brne	.+16     	; 0x1028 <USART0_process_incoming_message+0x86>
 		USART0_sendString_w_newline_eol("ACK:D1");
-    1018:	87 e9       	ldi	r24, 0x97	; 151
+    1018:	88 e9       	ldi	r24, 0x98	; 152
     101a:	9d e9       	ldi	r25, 0x9D	; 157
     101c:	6a df       	rcall	.-300    	; 0xef2 <USART0_sendString_w_newline_eol>
 		strcpy(display_line1_content, payload);
@@ -2884,7 +2884,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "D2") == 0) {
-    1028:	62 ea       	ldi	r22, 0xA2	; 162
+    1028:	63 ea       	ldi	r22, 0xA3	; 163
     102a:	7d e9       	ldi	r23, 0x9D	; 157
     102c:	8d 2f       	mov	r24, r29
     102e:	9c 2f       	mov	r25, r28
@@ -2892,7 +2892,7 @@ void USART0_process_incoming_message() {
     1032:	89 2b       	or	r24, r25
     1034:	59 f4       	brne	.+22     	; 0x104c <USART0_process_incoming_message+0xaa>
 		USART0_sendString_w_newline_eol("ACK:D2");
-    1036:	8e e9       	ldi	r24, 0x9E	; 158
+    1036:	8f e9       	ldi	r24, 0x9F	; 159
     1038:	9d e9       	ldi	r25, 0x9D	; 157
     103a:	5b df       	rcall	.-330    	; 0xef2 <USART0_sendString_w_newline_eol>
 		strcpy(display_line2_content, payload);
@@ -2922,7 +2922,7 @@ void USART0_process_incoming_message() {
 	}	
 	
 	if (strcmp(message_code, "BU") == 0) {
-    1064:	65 ea       	ldi	r22, 0xA5	; 165
+    1064:	66 ea       	ldi	r22, 0xA6	; 166
     1066:	7d e9       	ldi	r23, 0x9D	; 157
     1068:	8d 2f       	mov	r24, r29
     106a:	9c 2f       	mov	r25, r28
@@ -2932,7 +2932,7 @@ void USART0_process_incoming_message() {
 		sprintf(buffer,"ACK:BU:%s\n", payload);
     1072:	1f 93       	push	r17
     1074:	0f 93       	push	r16
-    1076:	88 ea       	ldi	r24, 0xA8	; 168
+    1076:	89 ea       	ldi	r24, 0xA9	; 169
     1078:	9d e9       	ldi	r25, 0x9D	; 157
     107a:	9f 93       	push	r25
     107c:	8f 93       	push	r24
@@ -2965,7 +2965,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "BR") == 0) {
-    10b6:	63 eb       	ldi	r22, 0xB3	; 179
+    10b6:	64 eb       	ldi	r22, 0xB4	; 180
     10b8:	7d e9       	ldi	r23, 0x9D	; 157
     10ba:	8d 2f       	mov	r24, r29
     10bc:	9c 2f       	mov	r25, r28
@@ -2988,7 +2988,7 @@ void USART0_process_incoming_message() {
 	}	
 	
 	if (strcmp(message_code, "SB") == 0) {
-    10da:	66 eb       	ldi	r22, 0xB6	; 182
+    10da:	67 eb       	ldi	r22, 0xB7	; 183
     10dc:	7d e9       	ldi	r23, 0x9D	; 157
     10de:	8d 2f       	mov	r24, r29
     10e0:	9c 2f       	mov	r25, r28
@@ -3001,7 +3001,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "CC") == 0) {
-    10ee:	6d eb       	ldi	r22, 0xBD	; 189
+    10ee:	6e eb       	ldi	r22, 0xBE	; 190
     10f0:	7d e9       	ldi	r23, 0x9D	; 157
     10f2:	8d 2f       	mov	r24, r29
     10f4:	9c 2f       	mov	r25, r28
@@ -3009,7 +3009,7 @@ void USART0_process_incoming_message() {
     10f8:	89 2b       	or	r24, r25
     10fa:	31 f4       	brne	.+12     	; 0x1108 <USART0_process_incoming_message+0x166>
 		USART0_sendString_w_newline_eol("ACK:CC");
-    10fc:	89 eb       	ldi	r24, 0xB9	; 185
+    10fc:	8a eb       	ldi	r24, 0xBA	; 186
     10fe:	9d e9       	ldi	r25, 0x9D	; 157
     1100:	f8 de       	rcall	.-528    	; 0xef2 <USART0_sendString_w_newline_eol>
 		flag_request_current_measurement = true;
@@ -3018,7 +3018,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "TP") == 0) {
-    1108:	64 ec       	ldi	r22, 0xC4	; 196
+    1108:	65 ec       	ldi	r22, 0xC5	; 197
     110a:	7d e9       	ldi	r23, 0x9D	; 157
     110c:	8d 2f       	mov	r24, r29
     110e:	9c 2f       	mov	r25, r28
@@ -3026,7 +3026,7 @@ void USART0_process_incoming_message() {
     1112:	89 2b       	or	r24, r25
     1114:	31 f4       	brne	.+12     	; 0x1122 <USART0_process_incoming_message+0x180>
 		USART0_sendString_w_newline_eol("ACK:TP");
-    1116:	80 ec       	ldi	r24, 0xC0	; 192
+    1116:	81 ec       	ldi	r24, 0xC1	; 193
     1118:	9d e9       	ldi	r25, 0x9D	; 157
     111a:	eb de       	rcall	.-554    	; 0xef2 <USART0_sendString_w_newline_eol>
 		flag_request_temperature_measurement = true;
@@ -3035,7 +3035,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "3V") == 0) {
-    1122:	6b ec       	ldi	r22, 0xCB	; 203
+    1122:	6c ec       	ldi	r22, 0xCC	; 204
     1124:	7d e9       	ldi	r23, 0x9D	; 157
     1126:	8d 2f       	mov	r24, r29
     1128:	9c 2f       	mov	r25, r28
@@ -3043,7 +3043,7 @@ void USART0_process_incoming_message() {
     112c:	89 2b       	or	r24, r25
     112e:	31 f4       	brne	.+12     	; 0x113c <USART0_process_incoming_message+0x19a>
 		USART0_sendString_w_newline_eol("ACK:3V");
-    1130:	87 ec       	ldi	r24, 0xC7	; 199
+    1130:	88 ec       	ldi	r24, 0xC8	; 200
     1132:	9d e9       	ldi	r25, 0x9D	; 157
     1134:	de de       	rcall	.-580    	; 0xef2 <USART0_sendString_w_newline_eol>
 		flag_request_3v3_measurement = true;
@@ -3052,7 +3052,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if(strcmp(message_code, "ON") == 0) {
-    113c:	62 ed       	ldi	r22, 0xD2	; 210
+    113c:	63 ed       	ldi	r22, 0xD3	; 211
     113e:	7d e9       	ldi	r23, 0x9D	; 157
     1140:	8d 2f       	mov	r24, r29
     1142:	9c 2f       	mov	r25, r28
@@ -3060,7 +3060,7 @@ void USART0_process_incoming_message() {
     1146:	89 2b       	or	r24, r25
     1148:	61 f4       	brne	.+24     	; 0x1162 <USART0_process_incoming_message+0x1c0>
 		USART0_sendString_w_newline_eol("ACK:ON");
-    114a:	8e ec       	ldi	r24, 0xCE	; 206
+    114a:	8f ec       	ldi	r24, 0xCF	; 207
     114c:	9d e9       	ldi	r25, 0x9D	; 157
     114e:	d1 de       	rcall	.-606    	; 0xef2 <USART0_sendString_w_newline_eol>
 		if(flag_schedule_backup_now) {
@@ -3070,14 +3070,14 @@ void USART0_process_incoming_message() {
 			flag_schedule_backup_now = false;
     1158:	10 92 09 3e 	sts	0x3E09, r1	; 0x803e09 <flag_schedule_backup_now>
 			USART0_sendString_w_newline_eol("User Backup");
-    115c:	85 ed       	ldi	r24, 0xD5	; 213
+    115c:	86 ed       	ldi	r24, 0xD6	; 214
     115e:	9d e9       	ldi	r25, 0x9D	; 157
     1160:	c8 de       	rcall	.-624    	; 0xef2 <USART0_sendString_w_newline_eol>
 		}
 	}
 	
 	if(strcmp(message_code, "DB") == 0) {
-    1162:	65 ee       	ldi	r22, 0xE5	; 229
+    1162:	66 ee       	ldi	r22, 0xE6	; 230
     1164:	7d e9       	ldi	r23, 0x9D	; 157
     1166:	8d 2f       	mov	r24, r29
     1168:	9c 2f       	mov	r25, r28
@@ -3085,7 +3085,7 @@ void USART0_process_incoming_message() {
     116c:	89 2b       	or	r24, r25
     116e:	79 f4       	brne	.+30     	; 0x118e <USART0_process_incoming_message+0x1ec>
 		USART0_sendString_w_newline_eol("ACK:DB");
-    1170:	81 ee       	ldi	r24, 0xE1	; 225
+    1170:	82 ee       	ldi	r24, 0xE2	; 226
     1172:	9d e9       	ldi	r25, 0x9D	; 157
     1174:	be de       	rcall	.-644    	; 0xef2 <USART0_sendString_w_newline_eol>
 		dimming_value_display = atoi(payload);
@@ -3104,7 +3104,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if(strcmp(message_code, "DL") == 0) {
-    118e:	6c ee       	ldi	r22, 0xEC	; 236
+    118e:	6d ee       	ldi	r22, 0xED	; 237
     1190:	7d e9       	ldi	r23, 0x9D	; 157
     1192:	8d 2f       	mov	r24, r29
     1194:	9c 2f       	mov	r25, r28
@@ -3112,7 +3112,7 @@ void USART0_process_incoming_message() {
     1198:	89 2b       	or	r24, r25
     119a:	69 f4       	brne	.+26     	; 0x11b6 <USART0_process_incoming_message+0x214>
 		USART0_sendString_w_newline_eol("ACK:DL");
-    119c:	88 ee       	ldi	r24, 0xE8	; 232
+    119c:	89 ee       	ldi	r24, 0xE9	; 233
     119e:	9d e9       	ldi	r25, 0x9D	; 157
     11a0:	a8 de       	rcall	.-688    	; 0xef2 <USART0_sendString_w_newline_eol>
 		dimming_value_hmi_led = atoi(payload);
