@@ -13,6 +13,7 @@ void init_flags(void) {
 }
 
 bool flag_bpi_ready_for_shutdown = false;
+bool flag_abort_shutdown = false;
 bool flag_bpi_shutdown_timer_elapsed = false;
 
 bool flag_button_1_pressed = false;

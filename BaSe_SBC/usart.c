@@ -119,9 +119,16 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "SR") == 0) {
+		// Fixme: shutdown request doesnt work anymore!
+		USART0_sendString_w_newline_eol("ACK:SR");
 		flag_pwr_state_change_request = true;
 		next_pwr_state = standby;
-	}	
+	}
+	
+	if (strcmp(message_code, "SA") == 0) {
+		USART0_sendString_w_newline_eol("ACK:SA");
+		flag_abort_shutdown = true;
+	}
 	
 	if (strcmp(message_code, "BU") == 0) {
 		sprintf(buffer,"ACK:BU:%s\n", payload);

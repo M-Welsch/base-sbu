@@ -19,6 +19,7 @@ bool flag_bpi_heartbeat_ok;
 bool flag_usart_string_receive_complete;
 bool flag_string_for_display_received;
 bool flag_pwr_state_change_request;
+bool flag_abort_shutdown;
 bool flag_human_readable_timestamp_next_bu_received;
 bool flag_usart_string_receive_complete;
 bool flag_received_seconds_to_next_bu;

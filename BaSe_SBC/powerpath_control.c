@@ -34,7 +34,10 @@ void transition_to_pwr_state(enum pwr_states pwr_state) {
 	switch(pwr_state) {
 		case standby:
 			if (current_pwr_state == active) {
-				wait_until_bpi_ready_for_shutdown();
+				if(!wait_until_bpi_ready_for_shutdown()) {
+					/* shutdown aborted */
+					break;
+				}
 			}
 			disable_bpi_sply();
 			dim_display(0);
@@ -73,12 +76,16 @@ bool wait_until_bpi_ready_for_shutdown() {
 	display_clear();
 	display_write_string("Waiting for BCU\nHB to stop");
 	while (flag_bpi_heartbeat_ok == true) {
-		;
+		if(flag_abort_shutdown) {
+			return false;
+		}
 	}
 	display_clear();
 	display_write_string("Waiting for 3V3\nto go low");
 	while (vcc3v3_present() == true) {
-		;
+		if(flag_abort_shutdown) {
+			return false;
+		}
 	}
 	return true;
 }
