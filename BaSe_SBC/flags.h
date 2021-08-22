@@ -47,6 +47,7 @@ uint16_t dimming_value_hmi_led;
 uint16_t dimming_value_display;
 char usart_receive_copy[64]; //remove after debugging
 uint16_t menu_show_counter;
+char wakeup_reason[16];
 
 /* function pointers */
 

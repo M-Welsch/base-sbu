@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <stdio.h>
+#include <string.h>
 #include "menu.h"
 #include "flags.h"
 #include "hmi.h"
@@ -89,13 +90,15 @@ void wake_bcu_and_do_backup_now() {
 	display_clear();
 	display_write_string("Waking BCU and\ndo Backup now ..");
 	flag_schedule_backup_now = true;
+	strcpy(wakeup_reason, "WR_BACKUP");
 	next_pwr_state = active;
 	transition_to_pwr_state(next_pwr_state);
 }
 
 void wake_bcu() {
 	display_clear();
-	display_write_string("Waking BCU and\ndo Backup now ..");
+	display_write_string("Waking BCU for\nConfiguration..");
 	next_pwr_state = active;
+	strcpy(wakeup_reason, "WR_CONFIG");
 	transition_to_pwr_state(next_pwr_state);
 }

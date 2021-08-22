@@ -184,6 +184,19 @@ void USART0_process_incoming_message() {
 		dimming_value_hmi_led = atoi(payload);
 		flag_dim_hmi_led = true;
 	}
+	
+	if(strcmp(message_code, "WR") == 0) {
+		USART0_sendString_w_newline_eol("ACK:WR");
+		USART0_sendString_w_newline_eol(wakeup_reason);
+		strcpy(wakeup_reason, "");
+		USART0_send_ready();
+	}
+	
+	if(strcmp(message_code, "WD") == 0) {
+		USART0_sendString_w_newline_eol("ACK:WR");
+		strcpy(wakeup_reason, payload);
+		USART0_send_ready();
+	}
 }
 
 long convert_str_to_long(char *str) {
