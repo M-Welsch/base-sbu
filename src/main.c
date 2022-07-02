@@ -5,14 +5,15 @@
 #include "hal_display.h"
 #include "statemachine.h"
 #include "usart.h"
+#include "logging.h"
 
 
 void mainloop(void) {
+  loggingPutDebug("Mainloop");
   ledOn();
   _delay_ms(100);
   ledOff();
   _delay_ms(100);
-  USART0_sendString_w_newline_eol("Stuff!");
 }
 
 int main(void) 
@@ -20,6 +21,7 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
+  powerpathInit();
   _delay_ms(100);
   displayInit();
   displayWriteString("Test");

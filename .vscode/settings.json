@@ -4,6 +4,7 @@
         "unity.h": "c",
         "hal_led.h": "c",
         "hal.h": "c",
-        "hal_powerpath.h": "c"
+        "hal_powerpath.h": "c",
+        "mock_usart.h": "c"
     }
 }

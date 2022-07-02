@@ -1,7 +1,7 @@
-#include <avr/delay.h>
-
 #include "statemachine.h"
 #include "hal_powerpath.h"
+#include "logging.h"
+#include "delay.h"
 
 void statemachineInit() {
     g_currentState = stateBcuRunning;
@@ -12,6 +12,7 @@ void statemachineInit() {
  * @details activates bcu supply. Can transfer from state5vActive only.
  */
 statemachineError statemachineGotoBcuRunning(void) {
+    loggingPutDebug("requested stateBcuRunning");
     statemachineError retval = invalid_transfer;
     if (g_currentState == state5vActive) {
         activateBcuSupply();
@@ -26,6 +27,7 @@ statemachineError statemachineGotoBcuRunning(void) {
  * @details activates 5v supply. Can only be transfered to if in standby.
  */
 statemachineError statemachineGoto5vActive(void) {
+    loggingPutDebug("requested state5vActive");
     statemachineError retval = invalid_transfer;
     if (g_currentState == stateStandby) {
         activate5vRail();
@@ -40,8 +42,9 @@ statemachineError statemachineGoto5vActive(void) {
  * @details deactivates 5v and bcu supply. Can transfer from all other states.
  */
 statemachineError statemachineGotoStandby(void) {
+    loggingPutDebug("requested stateStandby");
     deactivateBcuSupply();
-    _delay_ms(100);
+    delayMs(100);
     deactivate5vRail();
     g_currentState = stateStandby;
     return success;
