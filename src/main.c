@@ -12,18 +12,15 @@ void mainloop(void) {
   _delay_ms(100);
   ledOff();
   _delay_ms(100);
-  g_currentState = stateStandby;
   USART0_sendString_w_newline_eol("Stuff!");
-  ledOn();
-  _delay_ms(500);
-  g_currentState = stateBcuRunning;
 }
 
 int main(void) 
 {
-  g_currentState = stateBcuRunning;
+  statemachineInit();
   halInit();
   usartInit();
+  _delay_ms(100);
   displayInit();
   displayWriteString("Test");
   

@@ -96,7 +96,7 @@ void displayNextLine(void) {
 
 void displayDim(uint16_t value) {
     if (g_currentState != stateStandby)
-        setDisplayPWM(value);
+        setDisplayPwm(value);
 }
 
 void displayWriteString(char *s) {

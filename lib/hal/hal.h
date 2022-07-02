@@ -32,16 +32,34 @@
 #define dis_db6 PIN2_bm
 #define dis_db7 PIN3_bm
 
+#define SPLY_5V_EN_PORT PORTA
+#define SPLY_5V_EN_PIN PIN4_bm
+
+#define SPLY_BCU_DIS_PORT PORTB
+#define SPLY_BCU_DIS_PIN PIN1_bm
+
+#define BUTTON_PORT PORTA
+#define BUTTON_0 PIN2_bm //PA2
+#define BUTTON_0_CTRL PIN2CTRL //PA2
+#define BUTTON_1 PIN3_bm //PA3
+#define BUTTON_1_CTRL PIN3CTRL //PA3
+
 
 void halInit();
 
 void ledPinHigh(void);
 void ledPinLow(void);
 
-void setDisplayPWM(uint16_t dimming_value);
+void setDisplayPwm(uint16_t dimming_value);
 void displayEnable(uint8_t duration_ms);
 void displayDataPins(uint8_t data_nibble);
 void displaySetRs(void);
 void displayClearRs(void);
+
+void disableBpiSplyToHigh();
+void disableBpiSplyToLow();
+
+void pin5vEnToHigh();
+void pin5vEnToLow();
 
 #endif

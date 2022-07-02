@@ -2,6 +2,9 @@
 
 #include "hal.h"
 
+uint16_t _ledDimmingValue = 0;
+uint16_t _displayDimmingValue = 0;
+
 void _disableDigitalInputBuffersForAdc() {
 	PORTA.PIN1CTRL &= ~PORT_ISC_gm;
 	PORTA.PIN1CTRL |= PORT_ISC_INPUT_DISABLE_gc;
@@ -12,14 +15,6 @@ void _disableDigitalInputBuffersForAdc() {
 void _configureUsartPins() {
     USART_PORT.DIRSET = USART_PIN_TX;
     USART_PORT.DIRCLR = USART_PIN_RX;
-}
-
-void ledPinHigh(void) {
-    LED_PORT.OUTSET = LED_PIN;
-}
-
-void ledPinLow(void) {
-    LED_PORT.OUTCLR = LED_PIN;
 }
 
 /* USART */
@@ -35,14 +30,23 @@ void disable_usart_tx(void) {
 
 /* Dimming */
 
-void setDisplayPWM(uint16_t dimming_value) {
-    TCA0.SINGLE.CMP0 = dimming_value;
+void setDisplayPwm(uint16_t dimming_value) {
+    _displayDimmingValue = dimming_value;
+    TCA0.SINGLE.CMP0 = _displayDimmingValue;
 }
 
-void setLedPWM(uint16_t dimming_value) {
-    TCA0.SINGLE.CMP1 = dimming_value;
+void setDisplayPwmOff() {
+    TCA0.SINGLE.CMP0 = 0;
 }
 
+void setLedPwm(uint16_t dimming_value) {
+    _ledDimmingValue = dimming_value;
+    TCA0.SINGLE.CMP1 = _ledDimmingValue;
+}
+
+void setLedPwmOff() {
+     TCA0.SINGLE.CMP1 = 0;
+}
 
 uint16_t _getDefaultDisplayDimmingValueFromEeprom() {
 	return 0xFFFF;
@@ -84,8 +88,8 @@ void _dimmerForLedAndDisplayInit() {
 	TCA0.SINGLE.CTRLB |= TCA_SINGLE_CMP1EN_bm; // HMI LED: WO1 (PB4)
 	
 	/* initial dimming values for display and hmi led */
-	setDisplayPWM(_getDefaultDisplayDimmingValueFromEeprom());
-	setLedPWM(_getDefaultLedDimmingValueFromEeprom());
+	setDisplayPwm(_getDefaultDisplayDimmingValueFromEeprom());
+	setLedPwm(_getDefaultLedDimmingValueFromEeprom());
 	
 	/* enable TCA */
 	TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
@@ -124,12 +128,66 @@ void displayClearRs(void) {
 	dis_rs_port.OUTCLR = dis_rs;
 }
 
+void displayPwmLow(void) {
+    setDisplayPwm(0);
+}
+
+void displayPwmHigh(void) {
+    setDisplayPwm(_displayDimmingValue);
+}
+
+/* LED */
+void _configureLedPin() {
+    LED_PORT.DIRSET = LED_PIN;
+}
+
+void ledPinHigh(void) {
+    setLedPwm(_ledDimmingValue);
+}
+
+void ledPinLow(void) {
+    setLedPwmOff();
+}
+
+/* Powerpath */
+
+void _configurePowerpathPins() {
+	SPLY_BCU_DIS_PORT.DIRSET = SPLY_BCU_DIS_PIN;
+	SPLY_5V_EN_PORT.DIRSET = SPLY_5V_EN_PIN;
+}
+
+void disableBpiSplyToHigh() {
+	SPLY_BCU_DIS_PORT.OUTSET = SPLY_BCU_DIS_PIN;
+}
+
+void disableBpiSplyToLow() {
+	SPLY_BCU_DIS_PORT.OUTCLR = SPLY_BCU_DIS_PIN;
+}
+
+void pin5vEnToHigh() {
+	SPLY_5V_EN_PORT.OUTSET = SPLY_5V_EN_PIN;
+}
+
+void pin5vEnToLow() {
+	SPLY_5V_EN_PORT.OUTCLR = SPLY_5V_EN_PIN;
+}
+
+/* Buttons */
+
+void _configureButtonPins() {
+	BUTTON_PORT.DIRCLR = (BUTTON_0 | BUTTON_1);
+	BUTTON_PORT.BUTTON_0_CTRL |= PORT_ISC_FALLING_gc;
+	BUTTON_PORT.BUTTON_1_CTRL |= PORT_ISC_FALLING_gc;
+}
+
 /* Interface */
 
 void halInit(void) {
-    LED_PORT.DIRSET = LED_PIN;
-    _disableDigitalInputBuffersForAdc();
+	_configureLedPin();
     _configureUsartPins();
     _configureDisplayPins();
+	_configurePowerpathPins();
+	_configureButtonPins();
+    _disableDigitalInputBuffersForAdc();
     _dimmerForLedAndDisplayInit();
 }
