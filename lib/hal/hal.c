@@ -18,12 +18,11 @@ void halSetup(void) {
     _setupUsartPins();
 }
 
-void ledOn(void) {
-    if (g_currentState == stateStandby) return;
+void ledPinHigh(void) {
     LED_PORT.OUTSET = LED_PIN;
 }
 
-void ledOff(void) {
+void ledPinLow(void) {
     LED_PORT.OUTCLR = LED_PIN;
 }
 

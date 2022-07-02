@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "statemachine.h": "c"
+        "statemachine.h": "c",
+        "unity.h": "c",
+        "hal_led.h": "c",
+        "hal.h": "c"
     }
 }
