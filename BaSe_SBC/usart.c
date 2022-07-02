@@ -98,18 +98,22 @@ void USART0_process_incoming_message() {
 	char *message_code, *payload;
 	
 	strcpy(usart_receive_copy, usart_receive_buffer);
-	
-	if (strcmp(usart_receive_buffer, "Test") == 0) {
-		USART0_sendString_w_newline_eol("Echo");
-	}
-	
+	1
+		
     message_code = strtok(usart_receive_buffer, ":");
     payload = strtok(NULL,"\0");
 	sprintf(buffer,"MC: %s, PL: %s\n",message_code, payload);
 	
+	if (strcmp(message_code, "Test") == 0) {
+		USART0_sendString_w_newline_eol("ACK:Test");
+		USART0_sendString_w_newline_eol("Echo");
+		USART0_send_ready();
+	}
+	
 	if (strcmp(message_code, "D1") == 0) {
 		USART0_sendString_w_newline_eol("ACK:D1");
 		strcpy(display_line1_content, payload);
+		USART0_send_ready();
 	}
 	
 	if (strcmp(message_code, "D2") == 0) {
@@ -119,15 +123,16 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "SR") == 0) {
-		// Fixme: shutdown request doesnt work anymore!
 		USART0_sendString_w_newline_eol("ACK:SR");
 		flag_pwr_state_change_request = true;
 		next_pwr_state = standby;
+		USART0_send_ready();
 	}
 	
 	if (strcmp(message_code, "SA") == 0) {
 		USART0_sendString_w_newline_eol("ACK:SA");
 		flag_abort_shutdown = true;
+		USART0_send_ready();
 	}
 	
 	if (strcmp(message_code, "BU") == 0) {
@@ -138,6 +143,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if (strcmp(message_code, "BR") == 0) {
+		USART0_sendString_w_newline_eol("ACK:BR");
 		/* received human readable timestamp for next backup */
 		strcpy(human_readable_timestamp_next_bu, payload);
 		human_readable_timestamp_next_bu[16] = '\n';
@@ -193,7 +199,7 @@ void USART0_process_incoming_message() {
 	}
 	
 	if(strcmp(message_code, "WD") == 0) {
-		USART0_sendString_w_newline_eol("ACK:WR");
+		USART0_sendString_w_newline_eol("ACK:WD");
 		strcpy(wakeup_reason, payload);
 		USART0_send_ready();
 	}
