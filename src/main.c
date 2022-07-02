@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include "hal.h"
+#include "hal_led.h"
+#include "hal_display.h"
 #include "statemachine.h"
 #include "usart.h"
 
@@ -20,9 +22,10 @@ void mainloop(void) {
 int main(void) 
 {
   g_currentState = stateBcuRunning;
-  halSetup();
+  halInit();
   usartInit();
-
+  displayInit();
+  displayWriteString("Test");
   
   while (1) {
     mainloop();

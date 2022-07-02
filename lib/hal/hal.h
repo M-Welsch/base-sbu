@@ -5,12 +5,6 @@
 
 #ifdef __AVR_ATtiny816__
 #include <avr/io.h>
-#else
-// struct port {
-//     uint8_t PIN1CTRL;
-//     uint8_t PIN5CTRL;
-// } PORTA, PORTB;
-
 #endif
 
 
@@ -21,9 +15,33 @@
 #define USART_PIN_TX PIN2_bm
 #define USART_PIN_RX PIN3_bm
 
-void halSetup();
+#define dis_rs_port PORTA
+#define dis_rs PIN6_bm //PA6
+
+#define DISPLAY_E_PORT PORTA
+#define DISPLAY_E_PIN PIN7_bm //PA7
+
+#define DISPLAY_PWM_PORT PORTB
+#define dis_pwm PIN0_bm //PB0
+
+
+/* PC0 - PC3: Display Data Bus */
+#define DISPLAY_DATA_PORT PORTC
+#define dis_db4 PIN0_bm
+#define dis_db5 PIN1_bm
+#define dis_db6 PIN2_bm
+#define dis_db7 PIN3_bm
+
+
+void halInit();
 
 void ledPinHigh(void);
 void ledPinLow(void);
+
+void setDisplayPWM(uint16_t dimming_value);
+void displayEnable(uint8_t duration_ms);
+void displayDataPins(uint8_t data_nibble);
+void displaySetRs(void);
+void displayClearRs(void);
 
 #endif
