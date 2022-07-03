@@ -66,4 +66,9 @@ void pin5vEnToLow();
 bool button0PinHigh(void);
 bool button1PinHigh(void);
 
+uint16_t adc_measure_3v3();
+uint16_t adc_measure_input_current();
+uint16_t adc_measure_temperature();
+bool vcc3v3_present();
+
 #endif

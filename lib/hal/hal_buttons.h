@@ -1,5 +1,5 @@
-#ifndef buttons_h__
-#define buttons_h__
+#ifndef hal_buttons_h__
+#define hal_buttons_h__
 
 typedef enum {
     pressed,

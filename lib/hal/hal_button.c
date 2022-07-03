@@ -1,4 +1,4 @@
-#include "buttons.h"
+#include "hal_buttons.h"
 #include "hal.h"
 
 buttonState_t button0(void) {
