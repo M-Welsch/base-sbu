@@ -1,3 +1,6 @@
+#ifndef logging_h__
+#define logging_h__
+
 #include "usart.h"
 
 #define loggingLevelDebug 'D'
@@ -13,3 +16,5 @@ void loggingPutMsg(char loglevel, char* msg);
 #define loggingPutWarning(msg) loggingPutMsg(loggingLevelWarning, msg)
 #define loggingPutError(msg) loggingPutMsg(loggingLevelError, msg)
 #define loggingPutCritical(msg) loggingPutMsg(loggingLevelCritical, msg)
+
+#endif

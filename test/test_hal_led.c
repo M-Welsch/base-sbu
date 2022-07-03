@@ -3,6 +3,7 @@
 #include "statemachine.h"
 #include "mock_hal.h"
 #include "mock_hal_powerpath.h"
+#include "mock_logging.h"
 
 void test_led_should_lightUp_if_stateIsBcuRunningOr5VActive() {
     g_currentState = stateBcuRunning;

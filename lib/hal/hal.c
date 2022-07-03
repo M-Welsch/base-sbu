@@ -1,4 +1,5 @@
 #include <avr/delay.h>
+#include <avr/interrupt.h>
 
 #include "hal.h"
 
@@ -176,8 +177,16 @@ void pin5vEnToLow() {
 
 void _configureButtonPins() {
 	BUTTON_PORT.DIRCLR = (BUTTON_0 | BUTTON_1);
-	BUTTON_PORT.BUTTON_0_CTRL |= PORT_ISC_FALLING_gc;
-	BUTTON_PORT.BUTTON_1_CTRL |= PORT_ISC_FALLING_gc;
+	BUTTON_PORT.BUTTON_0_CTRL |= (PORT_PULLUPEN_bm | PORT_ISC_FALLING_gc);
+	BUTTON_PORT.BUTTON_1_CTRL |= (PORT_PULLUPEN_bm | PORT_ISC_FALLING_gc);
+}
+
+bool button0PinHigh(void) {
+	return (BUTTON_PORT.IN & BUTTON_0);
+}
+
+bool button1PinHigh(void) {
+	return (BUTTON_PORT.IN & BUTTON_1);
 }
 
 /* Interface */
@@ -190,4 +199,12 @@ void halInit(void) {
 	_configureButtonPins();
     _disableDigitalInputBuffersForAdc();
     _dimmerForLedAndDisplayInit();
+}
+
+/* ISRs */
+
+ISR(BADISR_vect)
+{
+	/* This routine is called if a non defined interrupt-vector is requested */
+	//USART0_sendString_w_newline_eol("bad ISR");
 }

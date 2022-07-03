@@ -2,6 +2,7 @@
 #define hal_h__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __AVR_ATtiny816__
 #include <avr/io.h>
@@ -61,5 +62,8 @@ void disableBpiSplyToLow();
 
 void pin5vEnToHigh();
 void pin5vEnToLow();
+
+bool button0PinHigh(void);
+bool button1PinHigh(void);
 
 #endif
