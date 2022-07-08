@@ -23,14 +23,13 @@ void statemachineInit() {
  */
 statemachineError statemachineGotoBcuRunning(void) {
     loggingPutDebug("requested stateBcuRunning");
-    if ((g_currentState == stateInit) || (g_currentState == stateMenu) || (g_currentState == stateStandby)) {
-        activateBcuSupply();
-    }
-    if (g_currentState == stateStandby) {
+    if ((g_currentState == stateStandby) || (g_currentState == stateInit)) {
         activate5vRailAndDisplay();
     }
+    if (g_currentState != stateShutdownRequested) {
+        activateBcuSupply();
+    }
     g_currentState = stateBcuRunning;
-    g_mainloop = mainloopBcuRunning;
     return success;
 }
 
@@ -44,9 +43,9 @@ statemachineError statemachineGotoShutdownRequested(void) {
     statemachineError retval = invalid_transfer;
     if (g_currentState == stateBcuRunning) {
         g_currentState = stateShutdownRequested;
-        g_mainloop = mainloopShutdownRequested;
+        retval = success;
     }
-    return success;
+    return retval;
 }
 
 /**
@@ -54,25 +53,27 @@ statemachineError statemachineGotoShutdownRequested(void) {
  * @details deactivates 5v and bcu supply.
  */
 statemachineError statemachineGotoStandby(void) {
-    statemachineError retval = invalid_transfer;
-    states_t lastState = g_currentState;
     loggingPutDebug("requested stateStandby");
-    deactivateBcuSupply();
-    delayMs(100);
-    deactivate5vRail();
-    
-    g_currentState = stateStandby;
-    //activate interrupts, mask them if necessary
-    //go to sleep
-    switch (lastState) {
-        case stateBcuRunning:
-            retval = statemachineGotoBcuRunning();
-            break;
-        case stateMenu:
-            retval = statemachineGotoMenu();
-            break;
-        default:
-            loggingPutError("invalid transfer from state");
+    statemachineError retval = invalid_transfer;
+    if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
+        states_t lastState = g_currentState;
+        deactivateBcuSupply();
+        delayMs(100);
+        deactivate5vRail();
+        
+        g_currentState = stateStandby;
+        //activate interrupts, mask them if necessary
+        //go to sleep
+        switch (lastState) {
+            case stateShutdownRequested:
+                retval = statemachineGotoBcuRunning();
+                break;
+            case stateMenu:
+                retval = statemachineGotoMenu();
+                break;
+            default:
+                loggingPutError("uncatched invalid transfer from state");
+        }
     }
     return retval;
 }
@@ -87,17 +88,30 @@ statemachineError statemachineGotoMenu(void) {
     if (g_currentState == stateStandby) {
         activate5vRailAndDisplay();
         g_currentState = stateMenu;
-        g_mainloop = mainloopMenu;
         retval = success;
     }
     return retval;
 }
+    
+char _myBuffer[33];
 
-void mainloopBcuRunning() {
-}
-
-void mainloopShutdownRequested() {
-}
-
-void mainloopMenu() {
+char *stringifyCurrentState() {
+    switch (g_currentState) {
+        case stateInit:
+            sprintf(_myBuffer, "Init (%i)", g_currentState);
+            break;
+        case stateBcuRunning:
+            sprintf(_myBuffer, "BcuR (%i)", g_currentState);
+            break;
+        case stateShutdownRequested:
+            sprintf(_myBuffer, "SdRes (%i)", g_currentState);
+            break;
+        case stateStandby:
+            sprintf(_myBuffer, "Stby (%i)", g_currentState);
+            break;
+        case stateMenu :
+            sprintf(_myBuffer, "Menu (%i)", g_currentState);
+            break;
+    }
+    return _myBuffer;
 }

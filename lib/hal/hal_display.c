@@ -100,6 +100,7 @@ void displayDim(uint16_t value) {
 }
 
 void displayWriteString(char *s) {
+	displayClear();
     if (g_currentState != stateStandby) {
         displaySetRs();
         while(*s!='\0') {

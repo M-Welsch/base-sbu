@@ -1,0 +1,62 @@
+[
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libbd0/usart/usart.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/usart lib/usart/usart.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/usart/usart.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/lib836/logging/logging.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/logging -Ilib/usart lib/logging/logging.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/logging/logging.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/lib7ea/statemachine/statemachine.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/statemachine/statemachine.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/statemachine/statemachine.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_adc.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_adc.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_adc.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_button.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_button.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_button.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_display.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_display.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_display.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_led.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_led.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_led.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_powerpath.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_powerpath.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_powerpath.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/libc11/hal/hal_rtc.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart lib/hal/hal_rtc.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/lib/hal/hal_rtc.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/src/main.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Iinclude -Isrc -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart src/main.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/src/main.c"
+    },
+    {
+        "command": "/home/max/.platformio/packages/toolchain-atmelavr@1.70300.191015/bin/avr-gcc -o .pio/build/ATtiny816/src/mainloops.o -c -std=gnu11 -fno-fat-lto-objects -mmcu=attiny816 -Os -w -ffunction-sections -fdata-sections -flto -DF_CPU=16000000L -DPLATFORMIO=60100 -DARDUINO_attinyxy6 -DMILLIS_USE_TIMERD0 -DUARTBAUD5V -Iinclude -Isrc -Ilib/statemachine -Ilib/hal -Ilib/logging -Ilib/usart src/mainloops.c",
+        "directory": "/home/max/Workspaces/platformio/base-sbu",
+        "file": "/home/max/Workspaces/platformio/base-sbu/src/mainloops.c"
+    }
+]

@@ -12,6 +12,9 @@
         "mock_hal_display.h": "c",
         "logging.h": "c",
         "delay.h": "c",
-        "mock_statemachine.h": "c"
-    }
+        "mock_statemachine.h": "c",
+        "mainloops.h": "c",
+        "hal_adc.h": "c"
+    },
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }

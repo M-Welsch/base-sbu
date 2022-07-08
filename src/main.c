@@ -9,26 +9,36 @@
 #include "usart.h"
 #include "logging.h"
 #include "hal_buttons.h"
+#include "mainloops.h"
 
-char buffer2[40];
-
-void mainloop(void) {
-  loggingPutDebug("Mainloop");
-  sprintf(buffer2, "3v3: %i\nIin: %i", adcResult3v3(), adcResultInCur());
-  displayClear();
-  displayWriteString(buffer2);
-  _delay_ms(100);
-}
 
 int main(void) 
 {
   statemachineInit();
   halInit();
   usartInit();
-  statemachineGoto5vActive();
+
   statemachineGotoBcuRunning();
 
+  char _buffer[48];
   while (1) {
-    mainloop();
+  sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
+  loggingPutDebug(_buffer);
+    switch (g_currentState)
+    {
+    case stateBcuRunning:
+      mainloopBcuRunning();
+      break;
+    case stateMenu:
+      mainloopMenu();
+      break;
+    case stateShutdownRequested:
+      mainloopShutdownRequested();
+      break;
+    default:
+      loggingPutCritical("Shouldn't ever be here!\n");
+      break;
+    }
+    _delay_ms(500);
   }
 }
