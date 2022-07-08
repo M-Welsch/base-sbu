@@ -45,6 +45,10 @@
 #define BUTTON_1 PIN3_bm //PA3
 #define BUTTON_1_CTRL PIN3CTRL //PA3
 
+typedef enum {
+    hardware_call_accepted,
+    hardware_call_refused
+} hwAccessError_t;
 
 void halInit();
 
@@ -70,5 +74,7 @@ uint16_t adc_measure_3v3();
 uint16_t adc_measure_input_current();
 uint16_t adc_measure_temperature();
 bool vcc3v3_present();
+
+void rtcSetCmpRegister(uint16_t register_value_next_bu);
 
 #endif

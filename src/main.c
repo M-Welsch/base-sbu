@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include "hal.h"
+#include "hal_rtc.h"
 #include "hal_led.h"
 #include "hal_adc.h"
 #include "hal_display.h"
@@ -24,11 +25,9 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
-  powerpathInit();
-  _delay_ms(100);
-  displayInit();
-  displayWriteString("Test");
-  
+  statemachineGoto5vActive();
+  statemachineGotoBcuRunning();
+
   while (1) {
     mainloop();
   }

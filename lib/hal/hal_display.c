@@ -120,7 +120,7 @@ void display_return_home(void) {
 	displayEnable(1);
 	displayDataPins(0x02);
 	displayEnable(1);
-	_delay_ms(5);
+	_delay_ms(1);
 }
 
 void displayClear(void) {
@@ -129,5 +129,5 @@ void displayClear(void) {
 	displayEnable(1);
 	displayDataPins(0x01);
 	displayEnable(1);
-	_delay_ms(5);
+	_delay_ms(1);
 }

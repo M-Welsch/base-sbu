@@ -1,11 +1,13 @@
 #include "statemachine.h"
 #include "hal.h"
 
-void ledOn(void) {
-    if (g_currentState == stateStandby) return;
+hwAccessError_t ledOn(void) {
+    if (g_currentState == stateStandby) return hardware_call_refused;
     ledPinHigh();
+    return hardware_call_accepted;
 }
 
-void ledOff(void) {
+hwAccessError_t ledOff(void) {
     ledPinLow();
+    return hardware_call_accepted;
 }

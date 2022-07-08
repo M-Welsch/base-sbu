@@ -4,21 +4,26 @@
 #include "mock_hal.h"
 #include "mock_hal_powerpath.h"
 #include "mock_logging.h"
+#include "mock_hal_display.h"
 
 void test_led_should_lightUp_if_stateIsBcuRunningOr5VActive() {
     g_currentState = stateBcuRunning;
     ledPinHigh_Expect();
-    ledOn();
+    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
 
-    g_currentState = state5vActive;
+    g_currentState = stateShutdownRequested;
     ledPinHigh_Expect();
-    ledOn();
+    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
+
+    g_currentState = stateMenu;
+    ledPinHigh_Expect();
+    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
 }
 
 void test_led_shouldNot_lightUp_if_stateIsStandBy() {
     g_currentState = stateStandby;
     ledPinHigh_Ignore();
-    ledOn();
+    TEST_ASSERT_EQUAL_INT(hardware_call_refused, ledOn());
 }
 
 void setUp(void) {
