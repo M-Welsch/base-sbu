@@ -1,5 +1,5 @@
 #include "statemachine.h"
-//#include "mock_statemachine.h"
+#include "flags.h"
 #include "mock_hal_powerpath.h"
 #include "mock_hal_display.h"
 #include "mock_logging.h"
@@ -134,7 +134,7 @@ void test_statemachineGotoShutdownRequested_shouldNot_gotoShutdownRequestedFromM
 
 /* test transitions to standby */
 
-void test_statemachineGotoStandby_should_gotoStandbyFromShutdownRequested() {
+void _test_statemachineGotoStandby_should_gotoStandbyFromShutdownRequested() {
     loggingPutMsg_Ignore();
     deactivateBcuSupply_Expect();
     deactivate5vRail_Expect();
@@ -145,7 +145,7 @@ void test_statemachineGotoStandby_should_gotoStandbyFromShutdownRequested() {
     TEST_ASSERT_EQUAL_INT(stateStandby, g_currentState);
 }
 
-void test_statemachineGotoStandby_should_gotoStandbyFromShutdownMenu() {
+void _test_statemachineGotoStandby_should_gotoStandbyFromShutdownMenu() {
     loggingPutMsg_Ignore();
     deactivateBcuSupply_Expect();
     deactivate5vRail_Expect();

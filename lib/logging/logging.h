@@ -1,7 +1,7 @@
 #ifndef logging_h__
 #define logging_h__
 
-#include "usart.h"
+#include "hal_usart.h"
 
 #define loggingLevelDebug 'D'
 #define loggingLevelInfo 'I'

@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -73,7 +72,7 @@ usartCommandsStruct usartCommands[] = {
     {set_wakeup_reason, "WD", "", callback_set_wakeup_reason}
 };
 
-int test(void) {
+int main(void) {
     uint8_t lenCommands = sizeof(usartCommands)/sizeof(usartCommands[0]);
     for (uint8_t c = 0; c < lenCommands; c++) {
         usartCommandsStruct cur = usartCommands[c];
