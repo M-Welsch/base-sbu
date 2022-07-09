@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <avr/delay.h>
+#include <avr/interrupt.h>
 #include "hal.h"
 #include "hal_rtc.h"
 #include "hal_led.h"
@@ -10,6 +11,7 @@
 #include "logging.h"
 #include "hal_buttons.h"
 #include "mainloops.h"
+#include "flags.h"
 
 
 int main(void) 
@@ -17,13 +19,19 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
+  flagsInit();
 
   statemachineGotoBcuRunning();
 
   char _buffer[48];
   while (1) {
-  sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
-  loggingPutDebug(_buffer);
+    if (g_usart0Receive) {
+      g_usart0Receive = false;
+      loggingPutInfo("received something");
+    }
+    loggingPutDebug(usart_receive_buffer);
+    sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
+    loggingPutDebug(_buffer);
     switch (g_currentState)
     {
     case stateBcuRunning:
@@ -36,7 +44,7 @@ int main(void)
       mainloopShutdownRequested();
       break;
     default:
-      loggingPutCritical("Shouldn't ever be here!\n");
+      loggingPutCritical("Shouldn't ever be here!");
       break;
     }
     _delay_ms(500);

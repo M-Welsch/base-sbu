@@ -2,7 +2,7 @@
 
 #include "hal.h"
 #include "hal_display.h"
-#include "statemachine.h"
+#include "flags.h"
 
 void displayInit(void) {
 	/* refering to datasheet SPLC780D and (more importantly) lcd.py of "old" BaSe implementation*/

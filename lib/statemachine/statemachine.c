@@ -3,6 +3,7 @@
 #include "hal_display.h"
 #include "logging.h"
 #include "delay.h"
+#include "flags.h"
 
 void activate5vRailAndDisplay() {
     activate5vRail();

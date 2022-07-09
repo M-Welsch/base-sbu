@@ -6,16 +6,6 @@ typedef enum {
     invalid_transfer
 } statemachineError;
 
-typedef enum {
-    stateInit,
-    stateBcuRunning,
-    stateShutdownRequested,
-    stateStandby,
-    stateMenu
-} states_t;
-
-volatile states_t g_currentState;
-
 void statemachineInit();
 
 statemachineError statemachineGotoBcuRunning(void);

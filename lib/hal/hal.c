@@ -20,13 +20,8 @@ void _configureUsartPins() {
 
 /* USART */
 
-void set_pb2_txd_and_pb3_rxd(void) {
-	PORTB.OUTSET = PIN2_bm;
-	PORTB.DIRSET = PIN2_bm;
-}
-
 void disable_usart_tx(void) {
-	PORTB.OUTCLR = PIN2_bm;
+	PORTB.DIRCLR = PIN2_bm;
 }
 
 /* Dimming */
@@ -362,10 +357,15 @@ void halInit(void) {
 
 /* ISRs */
 
-ISR(BADISR_vect)
-{
+ISR(BADISR_vect) {
 	/* This routine is called if a non defined interrupt-vector is requested */
 	//USART0_sendString_w_newline_eol("bad ISR");
+	for(uint8_t c = 0; c <10; c++ ) {
+		ledPinHigh();
+		_delay_ms(10);
+		ledPinLow();
+	_delay_ms(100);
+	}
 }
 
 ISR(RTC_CNT_vect) {
