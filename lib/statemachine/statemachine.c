@@ -3,7 +3,6 @@
 #include "hal_display.h"
 #include "logging.h"
 #include "delay.h"
-#include "flags.h"
 
 void activate5vRailAndDisplay() {
     activate5vRail();
@@ -22,7 +21,7 @@ void statemachineInit() {
  * @brief sets state to BcuRunning
  * @details activates bcu supply. Can transfer here from any other state
  */
-statemachineError statemachineGotoBcuRunning(void) {
+baseSbuError_t statemachineGotoBcuRunning(void) {
     loggingPutDebug("requested stateBcuRunning");
     if ((g_currentState == stateStandby) || (g_currentState == stateInit)) {
         activate5vRailAndDisplay();
@@ -39,9 +38,9 @@ statemachineError statemachineGotoBcuRunning(void) {
  * @details waits for break away of bcu's 3.3V rail (full shutdown of bananapi sbc) or 
  *          for command to leave the state and go to BcuRunning again
  */
-statemachineError statemachineGotoShutdownRequested(void) {
+baseSbuError_t statemachineGotoShutdownRequested(void) {
     loggingPutInfo("requested stateShutdownRequested");
-    statemachineError retval = invalid_transfer;
+    baseSbuError_t retval = invalid_transfer;
     if (g_currentState == stateBcuRunning) {
         g_currentState = stateShutdownRequested;
         retval = success;
@@ -53,9 +52,9 @@ statemachineError statemachineGotoShutdownRequested(void) {
  * @brief sets state to StandBy
  * @details deactivates 5v and bcu supply.
  */
-statemachineError statemachineGotoStandby(void) {
+baseSbuError_t statemachineGotoStandby(void) {
     loggingPutDebug("requested stateStandby");
-    statemachineError retval = invalid_transfer;
+    baseSbuError_t retval = invalid_transfer;
     if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
         states_t lastState = g_currentState;
         deactivateBcuSupply();
@@ -83,8 +82,8 @@ statemachineError statemachineGotoStandby(void) {
  * @brief activates menu
  * @details activates 5v rail, initialises display and starts up the menu
  */
-statemachineError statemachineGotoMenu(void) {
-    statemachineError retval = invalid_transfer;
+baseSbuError_t statemachineGotoMenu(void) {
+    baseSbuError_t retval = invalid_transfer;
     loggingPutDebug("requested stateMenu");
     if (g_currentState == stateStandby) {
         activate5vRailAndDisplay();

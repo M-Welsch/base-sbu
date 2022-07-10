@@ -1,17 +1,14 @@
 #ifndef statemachine_h__
 #define statemachine_h__
 
-typedef enum {
-    success,
-    invalid_transfer
-} statemachineError;
+#include "flags.h"
 
 void statemachineInit();
 
-statemachineError statemachineGotoBcuRunning(void);
-statemachineError statemachineGotoShutdownRequested(void);
-statemachineError statemachineGotoStandby(void);
-statemachineError statemachineGotoMenu(void);
+baseSbuError_t statemachineGotoBcuRunning(void);
+baseSbuError_t statemachineGotoShutdownRequested(void);
+baseSbuError_t statemachineGotoStandby(void);
+baseSbuError_t statemachineGotoMenu(void);
 
 char *stringifyCurrentState();
 

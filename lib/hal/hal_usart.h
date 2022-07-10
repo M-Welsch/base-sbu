@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-char usart_receive_buffer[32];
+char usart_receive_buffer[38];
 char temp_receive_buffer;
 
 void usartInit(void);

@@ -1,6 +1,7 @@
 #include <unity.h>
 #include "hal_led.h"
 #include "statemachine.h"
+#include "flags.h"
 #include "mock_hal.h"
 #include "mock_hal_powerpath.h"
 #include "mock_logging.h"

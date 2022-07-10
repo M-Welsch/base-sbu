@@ -5,9 +5,12 @@
  *  Author: Max
  */ 
 
+#ifdef __AVR_ATtiny816__
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <avr/interrupt.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "hal_usart.h"
@@ -96,5 +99,8 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 
 ISR(USART0_RXC_vect) {
 	USART0_read_string(usart_receive_buffer, 32);
+	if(strcmp(usart_receive_buffer, "Test") == 0) {
+		USART0_sendString_w_newline_eol("Echo");
+	}
 	g_usart0Receive = true;
 } 

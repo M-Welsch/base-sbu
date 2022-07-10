@@ -18,6 +18,18 @@ typedef enum {
     NO_REASON 
 } wakeupReasons_t;
 
+/**
+ * @brief success or error return values
+ * @returns 0: success
+ *          <0: generic error (like some fail)
+ *          >0: specific error (like invalid_transfer)
+ */
+typedef enum {
+    success = 0,
+    fail = -1,
+    invalid_transfer = 1
+} baseSbuError_t;
+
 states_t g_currentState;
 wakeupReasons_t g_wakeupReason;
 volatile bool g_usart0Receive;
