@@ -2,8 +2,10 @@
 #define hal_led_h__
 
 #include "hal.h"
+#include "flags.h"
 
-hwAccessError_t ledOn(void);
-hwAccessError_t ledOff(void);
+baseSbuError_t ledDim(uint16_t dimmingValue);
+baseSbuError_t ledOn(void);
+baseSbuError_t ledOff(void);
 
 #endif

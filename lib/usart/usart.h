@@ -26,7 +26,7 @@ typedef struct {
     usartCommands_t usartCommand;
     char msgCode[5];
     char response_keyw[5];
-    void (*callback)(char* payload);
+    void (*callback)(const char* payload);
 }usartCommandsStruct ;
 
 typedef struct {
@@ -34,19 +34,19 @@ typedef struct {
     char payload[33];
 } usartDecodedMsg_t;
 
-void callback_write_to_display_line1(char* payload);
-void callback_write_to_display_line2(char* payload);
-void callback_set_display_brightness(char* payload);
-void callback_set_led_brightness(char* payload);
-void callback_set_seconds_to_next_bu(char* payload);
-void callback_send_readable_timestamp_of_next_bu(char* payload);
-void callback_measure_current(char* payload);
-void callback_measure_vcc3v(char* payload);
-void callback_measure_temperature(char* payload);
-void callback_request_shutdown(char* payload);
-void callback_abort_shutdown(char* payload);
-void callback_request_wakeup_reason(char* payload);
-void callback_set_wakeup_reason(char* payload);
+void callback_write_to_display_line1(const char* payload);
+void callback_write_to_display_line2(const char* payload);
+void callback_set_display_brightness(const char* payload);
+void callback_set_led_brightness(const char* payload);
+void callback_set_seconds_to_next_bu(const char* payload);
+void callback_send_readable_timestamp_of_next_bu(const char* payload);
+void callback_measure_current(const char* payload);
+void callback_measure_vcc3v(const char* payload);
+void callback_measure_temperature(const char* payload);
+void callback_request_shutdown(const char* payload);
+void callback_abort_shutdown(const char* payload);
+void callback_request_wakeup_reason(const char* payload);
+void callback_set_wakeup_reason(const char* payload);
 
 baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg);
 

@@ -131,6 +131,7 @@ void displayPwmHigh(void) {
 }
 
 /* LED */
+
 void _configureLedPin() {
     LED_PORT.DIRSET = LED_PIN;
 }
@@ -359,7 +360,7 @@ void halInit(void) {
 
 ISR(BADISR_vect) {
 	/* This routine is called if a non defined interrupt-vector is requested */
-	//USART0_sendString_w_newline_eol("bad ISR");
+	USART0_sendString_w_newline_eol("bad ISR");
 	for(uint8_t c = 0; c <10; c++ ) {
 		ledPinHigh();
 		_delay_ms(10);

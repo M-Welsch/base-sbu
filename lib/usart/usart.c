@@ -6,15 +6,23 @@
 #include "hal_usart.h"
 #include "usart.h"
 #include "hal_display.h"
+#include "hal_led.h"
+#include "hal_rtc.h"
+#include "hal_adc.h"
+#include "statemachine.h"
+#include "logging.h"
+
+#define UNUSED_PARAM(x) (void)(x)
 
 char _displayLine1Buffer[17];
+char _returnBuffer[33];
 
-void callback_write_to_display_line1(char* payload) {
+void callback_write_to_display_line1(const char* payload) {
     strcpy(_displayLine1Buffer, payload);
     USART0_send_ready();
 }
 
-void callback_write_to_display_line2(char* payload) {
+void callback_write_to_display_line2(const char* payload) {
     char displaybuffer[34];
     sprintf(displaybuffer, "%s\n%s", _displayLine1Buffer, payload);
     displayClear();
@@ -22,47 +30,91 @@ void callback_write_to_display_line2(char* payload) {
     USART0_send_ready();
 }
 
-void callback_set_display_brightness(char* payload) {
+void callback_set_display_brightness(const char* payload) {
+    uint16_t _dimmingValue = atoi(payload);
+    displayDim(_dimmingValue);
     USART0_send_ready();
 }
 
-void callback_set_led_brightness(char* payload) {
+void callback_set_led_brightness(const char* payload) {
+    uint16_t _dimmingValue = atoi(payload);
+    ledDim(_dimmingValue);
     USART0_send_ready();
 }
 
-void callback_set_seconds_to_next_bu(char* payload) {
+void callback_set_seconds_to_next_bu(const char* payload) {
+    uint16_t _seconds = atoi(payload);
+    rtcSetWakeupInSeconds(_seconds);
+    g_nextBackupInfo.secondsToWakeupReceived = true;
+    USART0_sendString_w_newline_eol("CMP:123");  // Todo: get rid of this. BCU shouldn't rely on that.
     USART0_send_ready();
 }
 
-void callback_send_readable_timestamp_of_next_bu(char* payload) {
+void callback_send_readable_timestamp_of_next_bu(const char* payload) {
+    strcpy(g_nextBackupInfo.humanReadableTimestamp, payload);
+    g_nextBackupInfo.humanReadableTimestampReceived = true;
     USART0_send_ready();
 }
 
-void callback_measure_current(char* payload) {
+void callback_measure_current(const char* payload) {
+    UNUSED_PARAM(payload);
+    sprintf(_returnBuffer, "CC:%d", adcResultInCur());
+    USART0_sendString_w_newline_eol(_returnBuffer);
     USART0_send_ready();
 }
 
-void callback_measure_vcc3v(char* payload) {
+void callback_measure_vcc3v(const char* payload) {
+    UNUSED_PARAM(payload);
+    sprintf(_returnBuffer, "3V:%d", adcResult3v3());
+    USART0_sendString_w_newline_eol(_returnBuffer);
     USART0_send_ready();
 }
 
-void callback_measure_temperature(char* payload) {
+void callback_measure_temperature(const char* payload) {
+    UNUSED_PARAM(payload);
+    sprintf(_returnBuffer, "TP:%d", adcResult3v3());
+    USART0_sendString_w_newline_eol(_returnBuffer);
     USART0_send_ready();
 }
 
-void callback_request_shutdown(char* payload) {
+void callback_request_shutdown(const char* payload) {
+    UNUSED_PARAM(payload);
+    statemachineGotoShutdownRequested();
     USART0_send_ready();
 }
 
-void callback_abort_shutdown(char* payload) {
+void callback_abort_shutdown(const char* payload) {
+    UNUSED_PARAM(payload);
+    statemachineGotoBcuRunning();
     USART0_send_ready();
 }
 
-void callback_request_wakeup_reason(char* payload) {
-    USART0_send_ready();
+wakeupReasonsMap_t wakeupReasonMap[] = {
+    {BACKUP_NOW, "BACKUP_NOW"},
+    {SCHEDULED_BACKUP, "SCHEDULED_BACKUP"},
+    {CONFIGURATION, "CONFIGURATION"},
+    {HEARTBEAT_TIMEOUT, "HEARTBEAT_TIMEOUT"},
+    {NO_REASON,  "NO_REASON"}
+};
+
+void callback_request_wakeup_reason(const char* payload) {
+    UNUSED_PARAM(payload);
+    USART0_send_ready(wakeupReasonMap[g_wakeupReason].keyword);
 }
 
-void callback_set_wakeup_reason(char* payload) {
+void callback_set_wakeup_reason(const char* payload) {
+    char _buffer[32];
+    for (uint8_t c = 0; c < DIMENSION_OF(wakeupReasonMap); c++) {
+        if (strcmp(payload, wakeupReasonMap[c].keyword) == 0) {
+            g_wakeupReason = wakeupReasonMap[c].reason;
+            sprintf(_buffer, "set %s (%d) as Wakeup Reason", wakeupReasonMap[c].keyword, wakeupReasonMap[c].reason);
+            USART0_sendString_w_newline_eol(_buffer);
+            USART0_send_ready();
+            return;
+        }
+    }
+    sprintf(_buffer, "no such WakeupReason as %s", payload);
+    loggingPutWarning(_buffer);
     USART0_send_ready();
 }
 

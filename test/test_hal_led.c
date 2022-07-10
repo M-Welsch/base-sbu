@@ -10,15 +10,15 @@
 void test_led_should_lightUp_if_stateIsBcuRunningOr5VActive() {
     g_currentState = stateBcuRunning;
     ledPinHigh_Expect();
-    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
+    TEST_ASSERT_EQUAL_INT(success, ledOn());
 
     g_currentState = stateShutdownRequested;
     ledPinHigh_Expect();
-    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
+    TEST_ASSERT_EQUAL_INT(success, ledOn());
 
     g_currentState = stateMenu;
     ledPinHigh_Expect();
-    TEST_ASSERT_EQUAL_INT(hardware_call_accepted, ledOn());
+    TEST_ASSERT_EQUAL_INT(success, ledOn());
 }
 
 void test_led_shouldNot_lightUp_if_stateIsStandBy() {

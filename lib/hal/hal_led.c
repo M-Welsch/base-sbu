@@ -1,13 +1,19 @@
 #include "flags.h"
 #include "hal.h"
 
-hwAccessError_t ledOn(void) {
+baseSbuError_t ledDim(uint16_t dimmingValue) {
     if (g_currentState == stateStandby) return hardware_call_refused;
-    ledPinHigh();
-    return hardware_call_accepted;
+    setLedPwm(dimmingValue);
+    return success;
 }
 
-hwAccessError_t ledOff(void) {
+baseSbuError_t ledOn(void) {
+    if (g_currentState == stateStandby) return hardware_call_refused;
+    ledPinHigh();
+    return success;
+}
+
+baseSbuError_t ledOff(void) {
     ledPinLow();
-    return hardware_call_accepted;
+    return success;
 }

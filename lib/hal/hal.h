@@ -45,15 +45,11 @@
 #define BUTTON_1 PIN3_bm //PA3
 #define BUTTON_1_CTRL PIN3CTRL //PA3
 
-typedef enum {
-    hardware_call_accepted,
-    hardware_call_refused
-} hwAccessError_t;
-
 void halInit();
 
 void ledPinHigh(void);
 void ledPinLow(void);
+void setLedPwm(uint16_t dimming_value); 
 
 void setDisplayPwm(uint16_t dimming_value);
 void displayEnable(uint8_t duration_ms);
