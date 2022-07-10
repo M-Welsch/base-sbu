@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,14 +5,20 @@
 #include <string.h>
 #include "hal_usart.h"
 #include "usart.h"
+#include "hal_display.h"
 
-char _usartLocalBuffer[38];
+char _displayLine1Buffer[17];
 
 void callback_write_to_display_line1(char* payload) {
+    strcpy(_displayLine1Buffer, payload);
     USART0_send_ready();
 }
 
 void callback_write_to_display_line2(char* payload) {
+    char displaybuffer[34];
+    sprintf(displaybuffer, "%s\n%s", _displayLine1Buffer, payload);
+    displayClear();
+    displayWriteString(displaybuffer);
     USART0_send_ready();
 }
 
@@ -84,6 +89,7 @@ usartCommandsStruct usartCommands[] = {
  * @param[in] msgCode 2-letter message code of the message that shall be acknowledged
  */
 void _Acknowledge(char *msgCode) {
+    static char _usartLocalBuffer[38];
     sprintf(_usartLocalBuffer, "ACK:%s", msgCode);
     USART0_sendString_w_newline_eol(_usartLocalBuffer);
 }
@@ -103,7 +109,7 @@ baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg) {
     char const *payload;
     char usart_receive_copy[33];
 
-    strcpy(usart_receive_copy, usart_receive_buffer);
+    strcpy(usart_receive_copy, g_usartReceiveBuffer);
 
     messageCode = strtok(usart_receive_copy, ":");
     for (uint8_t i = 0; i < DIMENSION_OF(usartCommands); i++) {

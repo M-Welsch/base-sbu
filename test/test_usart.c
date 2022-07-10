@@ -5,11 +5,12 @@
 #include "hal_usart.h"
 #include "mock_hal_led.h"
 #include "mock_hal_usart.h"
+#include "mock_hal_display.h"
 
 #define DIMENSION_OF(a) (sizeof(a) / sizeof(a[0]) )
 void test_usartDecodeIncomingMessage_should_returnSuccessAndValidStuff_if_Match() {
     char incomingMessage[] = "3V:";
-    strcpy(usart_receive_buffer, incomingMessage);
+    strcpy(g_usartReceiveBuffer, incomingMessage);
     USART0_sendString_w_newline_eol_Ignore();
     usartDecodedMsg_t outputMsg;
 
@@ -20,7 +21,7 @@ void test_usartDecodeIncomingMessage_should_returnSuccessAndValidStuff_if_Match(
 
 void test_usartDecodeIncomingMessage_should_returnSuccess_if_noColonTolken() {
     char incomingMessage[] = "3V";
-    strcpy(usart_receive_buffer, incomingMessage);
+    strcpy(g_usartReceiveBuffer, incomingMessage);
     USART0_sendString_w_newline_eol_Ignore();
     usartDecodedMsg_t outputMsg;
 
@@ -30,7 +31,7 @@ void test_usartDecodeIncomingMessage_should_returnSuccess_if_noColonTolken() {
 
 void test_usartDecodeIncomingMessage_should_returnFail_if_noMatch() {
     char incomingMessage[] = "nix:pl";
-    strcpy(usart_receive_buffer, incomingMessage);
+    strcpy(g_usartReceiveBuffer, incomingMessage);
     USART0_sendString_w_newline_eol_Ignore();
     usartDecodedMsg_t outputMsg;
 
@@ -39,7 +40,7 @@ void test_usartDecodeIncomingMessage_should_returnFail_if_noMatch() {
 
 void test_usartDecodeIncomingMessage_should_returnFail_if_noMatchAndNoColonTolken() {
     char incomingMessage[] = "sdf";
-    strcpy(usart_receive_buffer, incomingMessage);
+    strcpy(g_usartReceiveBuffer, incomingMessage);
     USART0_sendString_w_newline_eol_Ignore();
     usartDecodedMsg_t outputMsg;
 
@@ -67,7 +68,7 @@ void test_usartDecodeIncomingMessage_should_returnSuccessAndValidStuff_if_Matche
     for (uint8_t c = 0; c < DIMENSION_OF(usartCommands); c++) {
         usartCommandsStruct cur = usartCommands[c];
         strcpy(incomingPayload, "myPayload");
-        sprintf(usart_receive_buffer, "%s:%s", cur.msgCode, incomingPayload);
+        sprintf(g_usartReceiveBuffer, "%s:%s", cur.msgCode, incomingPayload);
         USART0_sendString_w_newline_eol_Ignore();
 
         TEST_ASSERT_EQUAL_INT(success, usartDecodeIncomingMessage(&outputMsg));

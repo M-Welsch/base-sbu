@@ -4,6 +4,8 @@
 #include "hal_display.h"
 #include "flags.h"
 
+char _displayLine1Buffer[17];
+
 void displayInit(void) {
 	/* refering to datasheet SPLC780D and (more importantly) lcd.py of "old" BaSe implementation*/
 	_delay_ms(100);
@@ -99,7 +101,18 @@ void displayDim(uint16_t value) {
         setDisplayPwm(value);
 }
 
-void displayWriteString(char *s) {
+void displayBufferLine1(const char *line1) {
+	strcpy(_displayLine1Buffer, line1);
+}
+
+void displayWriteBothLines(const char *line2) {
+	char buffer[33];
+	sprintf(buffer, "%s\n%s", _displayLine1Buffer, line2);
+	displayClear();
+	displayWriteString(buffer);
+}
+
+void displayWriteString(const char *s) {
 	displayClear();
     if (g_currentState != stateStandby) {
         displaySetRs();

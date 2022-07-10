@@ -13,9 +13,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "hal_usart.h"
-#include "string.h"
 #include <string.h>
+#include "hal_usart.h"
 #include "flags.h"
 
 #define F_CPU 3333333
@@ -84,7 +83,7 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 	while(i <= maxlen) {
 		i++;
 		*receive_buffer = USART0_read();
-		if ((*receive_buffer == '\n') || (*receive_buffer == '\0') || (*receive_buffer == '\r')) {
+		if ((*receive_buffer == '\n') || (*receive_buffer == '\0')) { // || (*receive_buffer == '\r')) {  //remove this \r stuff when HIL Tests run
 			*receive_buffer = '\0';
 			break;
 		}
@@ -98,9 +97,10 @@ void USART0_read_string(char *receive_buffer, int maxlen) {
 /* Interrupts */
 
 ISR(USART0_RXC_vect) {
-	USART0_read_string(usart_receive_buffer, 32);
-	if(strcmp(usart_receive_buffer, "Test") == 0) {
+	USART0_read_string(g_usartReceiveBuffer, 32);
+	if(strcmp(g_usartReceiveBuffer, "Test") == 0) {
 		USART0_sendString_w_newline_eol("Echo");
 	}
-	g_usart0Receive = true;
+    USART0_sendString_w_newline_eol(g_usartReceiveBuffer);
+	g_usart0ReceiveComplete = true;
 } 

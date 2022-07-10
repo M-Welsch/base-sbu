@@ -25,11 +25,6 @@ int main(void)
 
   char _buffer[48];
   while (1) {
-    if (g_usart0Receive) {
-      g_usart0Receive = false;
-      loggingPutInfo("received something");
-    }
-    loggingPutDebug(usart_receive_buffer);
     sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
     loggingPutDebug(_buffer);
     switch (g_currentState)
@@ -47,6 +42,5 @@ int main(void)
       loggingPutCritical("Shouldn't ever be here!");
       break;
     }
-    _delay_ms(500);
   }
 }

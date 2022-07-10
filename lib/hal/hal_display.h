@@ -3,6 +3,6 @@
 
 void displayInit(void);
 void displayClear(void);
-void displayWriteString(char *s);
+void displayWriteString(const char *s);
 
 #endif

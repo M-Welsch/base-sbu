@@ -32,5 +32,5 @@ typedef enum {
 
 states_t g_currentState;
 wakeupReasons_t g_wakeupReason;
-volatile bool g_usart0Receive;
+volatile bool g_usart0ReceiveComplete;
 #endif
