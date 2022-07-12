@@ -39,7 +39,7 @@ typedef enum {
 
 typedef struct {
     uint16_t secondsToWakeup;
-    char humanReadableTimestamp;
+    char* humanReadableTimestamp;
     bool secondsToWakeupReceived;
     bool humanReadableTimestampReceived;
 } nextBackupInfo_t;

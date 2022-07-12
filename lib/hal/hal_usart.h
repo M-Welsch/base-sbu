@@ -5,7 +5,6 @@
 #include <stdbool.h>
 
 char g_usartReceiveBuffer[38];
-char temp_receive_buffer;
 
 void usartInit(void);
 
