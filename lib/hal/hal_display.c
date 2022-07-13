@@ -1,4 +1,6 @@
 #include <avr/delay.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "hal.h"
 #include "hal_display.h"

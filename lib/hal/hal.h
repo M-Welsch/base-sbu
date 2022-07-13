@@ -8,7 +8,6 @@
 #include <avr/io.h>
 #endif
 
-
 #define LED_PORT PORTB
 #define LED_PIN PIN4_bm
 
@@ -47,12 +46,15 @@
 
 void halInit();
 
+void USART0_sendChar(const char c);
+void USART0_sendString(const char *s);
+
 void ledPinHigh(void);
 void ledPinLow(void);
 void setLedPwm(uint16_t dimming_value); 
 
 void setDisplayPwm(uint16_t dimming_value);
-void displayEnable(uint8_t duration_ms);
+void displayEnable();
 void displayDataPins(uint8_t data_nibble);
 void displaySetRs(void);
 void displayClearRs(void);

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "statemachine.h"
 #include "hal_powerpath.h"
 #include "hal_display.h"

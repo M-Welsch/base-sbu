@@ -1,5 +1,8 @@
 #include <avr/delay.h>
 #include <avr/interrupt.h>
+#include <avr/sleep.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "hal.h"
 
@@ -19,6 +22,18 @@ void _configureUsartPins() {
 }
 
 /* USART */
+
+void USART0_sendChar(const char c) {
+	while((USART0.STATUS & USART_DREIF_bm) == 0)
+		;
+	USART0.TXDATAL = c;
+}
+
+void USART0_sendString(const char *s) {
+	for(uint16_t i = 0; i < strlen(s); i++) {
+		USART0_sendChar(s[i]);
+	}
+}
 
 void disable_usart_tx(void) {
 	PORTB.DIRCLR = PIN2_bm;
@@ -100,7 +115,7 @@ void _configureDisplayPins(void) {
     DISPLAY_DATA_PORT.DIRSET = (dis_db4 | dis_db5 | dis_db6 | dis_db7);
 }
 
-void displayEnable(uint8_t duration_ms) {
+void displayEnable() {
 	DISPLAY_E_PORT.OUTSET = DISPLAY_E_PIN;
 	_delay_us(10);
 	DISPLAY_E_PORT.OUTCLR = DISPLAY_E_PIN;
@@ -360,7 +375,9 @@ void halInit(void) {
 
 ISR(BADISR_vect) {
 	/* This routine is called if a non defined interrupt-vector is requested */
-	USART0_sendString_w_newline_eol("bad ISR");
+	char _buffer[32];
+	sprintf(_buffer, "bad ISR: %x\n", CPUINT_LVL0PRI);
+	USART0_sendString(_buffer);
 	for(uint8_t c = 0; c <10; c++ ) {
 		ledPinHigh();
 		_delay_ms(10);

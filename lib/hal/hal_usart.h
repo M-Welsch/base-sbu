@@ -4,13 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-char g_usartReceiveBuffer[38];
-
 void usartInit(void);
 
 void USART0_send_ready();
-void USART0_sendString(char *s);
-void USART0_sendString_w_newline_eol(char *s);
+void USART0_sendString_w_newline_eol(const char *s);
 
 uint8_t USART0_read();
 void USART0_read_string(char *receive_buffer, int maxlen);

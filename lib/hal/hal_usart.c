@@ -15,17 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hal_usart.h"
+#include "hal.h"
 #include "flags.h"
 
 #define F_CPU 3333333
 #define BAUD_RATE 9600
 #define UROUND(x) ((2UL*(x)+1)/2)
-
-void usartInit(void) {
-	USART0_set_baud_rate();
-	USART0_enable_periperials();
-	USART0_enable_rx_complete_interrupt();
-}
 
 void USART0_set_baud_rate() {
 	USART0.BAUD = UROUND(64UL*F_CPU/16/BAUD_RATE);
@@ -39,13 +34,7 @@ void USART0_enable_rx_complete_interrupt() {
 	USART0.CTRLA |= USART_RXCIE_bm;
 }
 
-void USART0_sendChar(char c) {
-	while((USART0.STATUS & USART_DREIF_bm) == 0)
-	;
-	USART0.TXDATAL = c;
-}
-
-void USART0_sendString_w_newline_eol(char *s) {
+void USART0_sendString_w_newline_eol(const char *s) {
 	USART0_sendString(s);
 	USART0_sendChar('\n');
 	//USART0_sendChar('\0');  // might be necessary for bcu
@@ -55,10 +44,10 @@ void USART0_send_ready() {
 	USART0_sendString_w_newline_eol("Ready");
 }
 
-void USART0_sendString(char *s) {
-	for(size_t i = 0; i < strlen(s); i++) {
-		USART0_sendChar(s[i]);
-	}
+void usartInit(void) {
+	USART0_set_baud_rate();
+	USART0_enable_periperials();
+	USART0_enable_rx_complete_interrupt();
 }
 
 uint8_t USART0_receive_complete() {
@@ -101,6 +90,5 @@ ISR(USART0_RXC_vect) {
 	if(strcmp(g_usartReceiveBuffer, "Test") == 0) {
 		USART0_sendString_w_newline_eol("Echo");
 	}
-    USART0_sendString_w_newline_eol(g_usartReceiveBuffer);
 	g_usart0ReceiveComplete = true;
 } 

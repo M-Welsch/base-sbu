@@ -39,11 +39,13 @@ typedef enum {
 
 typedef struct {
     uint16_t secondsToWakeup;
-    char* humanReadableTimestamp;
+    char humanReadableTimestamp[33];
     bool secondsToWakeupReceived;
     bool humanReadableTimestampReceived;
 } nextBackupInfo_t;
 
+void flagsInit();
+char g_usartReceiveBuffer[38];
 states_t g_currentState;
 wakeupReasons_t g_wakeupReason;
 volatile bool g_usart0ReceiveComplete;

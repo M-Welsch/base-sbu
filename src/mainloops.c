@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "mainloops.h"
 #include "logging.h"
 #include "statemachine.h"
@@ -18,9 +20,6 @@ void mainloopBcuRunning() {
             decodedMsg.callback(decodedMsg.payload);
         }
     }
-    //loggingPutDebug(stringifyCurrentState());
-    //displayWriteString(stringifyCurrentState());
-    //statemachineGotoShutdownRequested();
 }
 
 void mainloopShutdownRequested() {

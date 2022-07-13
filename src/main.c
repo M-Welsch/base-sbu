@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <avr/interrupt.h>
+#include <stdio.h>
 #include "hal.h"
 #include "hal_rtc.h"
 #include "hal_led.h"
@@ -12,6 +13,7 @@
 #include "hal_buttons.h"
 #include "mainloops.h"
 #include "flags.h"
+#include "hal_usart.h"
 
 
 int main(void) 
@@ -19,11 +21,11 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
-  flagsInit();
+  flagsInit();  // caused hardfault
 
   statemachineGotoBcuRunning();
 
-  char _buffer[48];
+  char _buffer[128];
   while (1) {
     sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
     loggingPutDebug(_buffer);
@@ -39,8 +41,9 @@ int main(void)
       mainloopShutdownRequested();
       break;
     default:
-      loggingPutCritical("Shouldn't ever be here!");
+      loggingPutCritical("Shouldn't ever get here!");
       break;
     }
+    _delay_ms(100);
   }
 }

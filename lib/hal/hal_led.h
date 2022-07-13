@@ -1,7 +1,6 @@
 #ifndef hal_led_h__
 #define hal_led_h__
 
-#include "hal.h"
 #include "flags.h"
 
 baseSbuError_t ledDim(uint16_t dimmingValue);
