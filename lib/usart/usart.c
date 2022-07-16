@@ -144,7 +144,7 @@ void callback_set_wakeup_reason(const char* payload) {
  * @param[in] msgCode 2-letter message code of the message that shall be acknowledged
  */
 void _Acknowledge(char *msgCode) {
-    static char _usartLocalBuffer[38];
+    static char _usartLocalBuffer[7];
     sprintf(_usartLocalBuffer, "ACK:%s", msgCode);
     USART0_sendString_w_newline_eol(_usartLocalBuffer);
 }
@@ -160,17 +160,15 @@ void _Acknowledge(char *msgCode) {
  * @return struct with the callback function pointer and the payload.
  */
 baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg) {
-    char msgCode[5];
-    char const *messageCode; 
-    char const *payload;
-    char usart_receive_copy[33];
-    messageCode = msgCode;
+    char messageCode[3]; 
+    char *payload;
     sprintf(_returnBuffer, "processing: %s", g_usartReceiveBuffer);
     USART0_sendString_w_newline_eol(_returnBuffer);
 
-    strcpy(usart_receive_copy, g_usartReceiveBuffer);
+    messageCode[0] = g_usartReceiveBuffer[0];
+    messageCode[1] = g_usartReceiveBuffer[1];
+    messageCode[2] = '\0';
 
-    messageCode = strtok(usart_receive_copy, ":");
     for (uint8_t i = 0; i < DIMENSION_OF(usartCommands); i++) {
         usartCommandsStruct cur = usartCommands[i];
         if(strcmp(messageCode, cur.msgCode) == 0) {

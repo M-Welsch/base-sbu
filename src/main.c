@@ -21,6 +21,7 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
+  USART0_sendString_w_newline_eol("Init");
   flagsInit();
 
   statemachineGotoBcuRunning();
