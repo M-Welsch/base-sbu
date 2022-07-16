@@ -9,7 +9,6 @@
 
 usartDecodedMsg_t decodedMsg;
 
-char _localBuffer[45];
 
 void mainloopBcuRunning() {
     if (g_usart0ReceiveComplete) {
@@ -21,14 +20,8 @@ void mainloopBcuRunning() {
 }
 
 void mainloopShutdownRequested() {
-    stringifyCurrentState(_localBuffer);
-    loggingPutDebug(_localBuffer);
-    displayWriteString(_localBuffer);
     statemachineGotoBcuRunning();
 }
 
 void mainloopMenu() {
-    stringifyCurrentState(_localBuffer);
-    loggingPutDebug(_localBuffer);
-    displayWriteString(_localBuffer);
 }
