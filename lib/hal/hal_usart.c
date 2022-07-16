@@ -64,11 +64,11 @@ uint8_t USART0_read()
 	return USART0.RXDATAL;
 }
 
-void USART0_read_string(char *receive_buffer, int maxlen) {
+void USART0_read_string(char *receive_buffer, uint8_t maxlen) {
 	if (maxlen > 32) {
 		maxlen = 32; //increase size of receive buffer in uart.h if you want to have more space!
 	}
-	int i = 0;
+	uint8_t i = 0;
 	while(i <= maxlen) {
 		i++;
 		*receive_buffer = USART0_read();

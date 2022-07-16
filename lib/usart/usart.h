@@ -24,14 +24,13 @@ typedef enum {
 
 typedef struct {
     usartCommands_t usartCommand;
-    char msgCode[5];
-    char response_keyw[5];
+    char msgCode[3];
     void (*callback)(const char* payload);
 }usartCommandsStruct ;
 
 typedef struct {
     void (*callback)();
-    char payload[33];
+    char payload[34];
 } usartDecodedMsg_t;
 
 void callback_write_to_display_line1(const char* payload);

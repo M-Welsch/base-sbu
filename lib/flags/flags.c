@@ -9,4 +9,5 @@ void flagsInit() {
     g_nextBackupInfo.humanReadableTimestampReceived = false;
     g_nextBackupInfo.secondsToWakeupReceived = false;
     g_nextBackupInfo.secondsToWakeup = 0;
+
 }

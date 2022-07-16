@@ -21,14 +21,16 @@ int main(void)
   statemachineInit();
   halInit();
   usartInit();
-  flagsInit();  // caused hardfault
+  flagsInit();
 
   statemachineGotoBcuRunning();
 
   char _buffer[128];
+  char _smallBuffer[33];
   while (1) {
-    sprintf(_buffer, "While Loop: %s", stringifyCurrentState());
-    loggingPutDebug(_buffer);
+    stringifyCurrentState(_smallBuffer);
+    sprintf(_buffer, "While Loop: %s", _smallBuffer);
+    USART0_sendString_w_newline_eol(_buffer);
     switch (g_currentState)
     {
     case stateBcuRunning:

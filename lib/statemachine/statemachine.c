@@ -95,25 +95,23 @@ baseSbuError_t statemachineGotoMenu(void) {
     return retval;
 }
     
-char _myBuffer[33];
 
-char *stringifyCurrentState() {
+void stringifyCurrentState(char *buffer) {
     switch (g_currentState) {
         case stateInit:
-            sprintf(_myBuffer, "Init (%i)", g_currentState);
+            sprintf(buffer, "Init (%i)", g_currentState);
             break;
         case stateBcuRunning:
-            sprintf(_myBuffer, "BcuR (%i)", g_currentState);
+            sprintf(buffer, "BcuR (%i)", g_currentState);
             break;
         case stateShutdownRequested:
-            sprintf(_myBuffer, "SdRes (%i)", g_currentState);
+            sprintf(buffer, "SdRes (%i)", g_currentState);
             break;
         case stateStandby:
-            sprintf(_myBuffer, "Stby (%i)", g_currentState);
+            sprintf(buffer, "Stby (%i)", g_currentState);
             break;
         case stateMenu :
-            sprintf(_myBuffer, "Menu (%i)", g_currentState);
+            sprintf(buffer, "Menu (%i)", g_currentState);
             break;
     }
-    return _myBuffer;
 }

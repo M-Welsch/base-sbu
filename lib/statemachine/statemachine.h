@@ -10,6 +10,6 @@ baseSbuError_t statemachineGotoShutdownRequested(void);
 baseSbuError_t statemachineGotoStandby(void);
 baseSbuError_t statemachineGotoMenu(void);
 
-char *stringifyCurrentState();
+void stringifyCurrentState(char *buffer);
 
 #endif

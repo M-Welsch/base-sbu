@@ -13,8 +13,6 @@ char _localBuffer[45];
 
 void mainloopBcuRunning() {
     if (g_usart0ReceiveComplete) {
-        sprintf(_localBuffer, "received: %s\n", g_usartReceiveBuffer);
-        loggingPutDebug(_localBuffer);
         g_usart0ReceiveComplete = false;
         if(usartDecodeIncomingMessage(&decodedMsg) == success) {
             decodedMsg.callback(decodedMsg.payload);
@@ -23,12 +21,14 @@ void mainloopBcuRunning() {
 }
 
 void mainloopShutdownRequested() {
-    loggingPutDebug(stringifyCurrentState());
-    displayWriteString(stringifyCurrentState());
+    stringifyCurrentState(_localBuffer);
+    loggingPutDebug(_localBuffer);
+    displayWriteString(_localBuffer);
     statemachineGotoBcuRunning();
 }
 
 void mainloopMenu() {
-    loggingPutDebug(stringifyCurrentState());
-    displayWriteString(stringifyCurrentState());
+    stringifyCurrentState(_localBuffer);
+    loggingPutDebug(_localBuffer);
+    displayWriteString(_localBuffer);
 }

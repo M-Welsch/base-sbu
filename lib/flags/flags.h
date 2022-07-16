@@ -19,11 +19,6 @@ typedef enum {
     NO_REASON 
 } wakeupReasons_t;
 
-typedef struct {
-    wakeupReasons_t reason;
-    char* keyword;
-} wakeupReasonsMap_t;
-
 /**
  * @brief success or error return values
  * @returns 0: success
@@ -45,7 +40,7 @@ typedef struct {
 } nextBackupInfo_t;
 
 void flagsInit();
-char g_usartReceiveBuffer[38];
+volatile char g_usartReceiveBuffer[38];
 states_t g_currentState;
 wakeupReasons_t g_wakeupReason;
 volatile bool g_usart0ReceiveComplete;
