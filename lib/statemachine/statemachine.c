@@ -1,5 +1,10 @@
 #include <stdio.h>
+
+#ifdef __AVR_ATtiny816__
 #include <avr/sleep.h>
+#else
+uint8_t SLPCTRL_SMODE_STDBY_gc, SLPCTRL_SEN_bm;
+#endif
 
 #include "statemachine.h"
 #include "hal_powerpath.h"

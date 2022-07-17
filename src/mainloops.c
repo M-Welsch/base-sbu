@@ -8,6 +8,7 @@
 #include "usart.h"
 #include "hal_usart.h"
 #include "hal_buttons.h"
+#include "menu.h"
 
 usartDecodedMsg_t decodedMsg;
 
@@ -40,6 +41,6 @@ void mainloopShutdownRequested() {
 }
 
 void mainloopMenu() {
-	displayWriteString("Show next BU   >\nActions        >");
     USART0_sendString_w_newline_eol("menu");
+    menuShow();
 }

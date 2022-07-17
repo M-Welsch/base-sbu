@@ -2,7 +2,10 @@
 #define hal_display_h__
 
 #include <stdint.h>
+
+#ifdef __AVR_ATtiny816__
 #include <avr/io.h>
+#endif
 
 #define dis_rs_port PORTA
 #define dis_rs PIN6_bm //PA6

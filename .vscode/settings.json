@@ -18,7 +18,8 @@
         "hal_display.h": "c",
         "flags.h": "c",
         "usart.h": "c",
-        "hal_usart.h": "c"
+        "hal_usart.h": "c",
+        "menu.h": "c"
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }

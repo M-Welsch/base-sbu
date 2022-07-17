@@ -1,3 +1,6 @@
+#define norun
+#ifndef norun
+
 #include <string.h>
 
 #include "usart.h"
@@ -96,3 +99,5 @@ void test_usartDecodeIncomingMessage_should_returnSuccessAndValidStuff_if_Matche
         TEST_ASSERT_EQUAL_PTR(cur.callback, outputMsg.callback);
     }
 }
+
+#endif

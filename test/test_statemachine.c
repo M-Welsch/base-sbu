@@ -1,8 +1,11 @@
+#define norun
+
+#ifndef norun
+
 #include "statemachine.h"
 #include "flags.h"
 #include "mock_hal_powerpath.h"
 #include "mock_hal_display.h"
-#include "mock_logging.h"
 
 /* test transitions to menu */
 
@@ -182,4 +185,4 @@ void test_statemachineGotoStandby_shouldNot_gotoStandbyFromStandby() {
     TEST_ASSERT_EQUAL_INT(invalid_transfer, statemachineGotoStandby());
     TEST_ASSERT_EQUAL_INT(stateStandby, g_currentState);
 }
-                                                                           
+#endif                                                                          
