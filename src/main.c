@@ -9,7 +9,6 @@
 #include "hal_display.h"
 #include "statemachine.h"
 #include "usart.h"
-#include "logging.h"
 #include "hal_buttons.h"
 #include "mainloops.h"
 #include "flags.h"
@@ -20,17 +19,14 @@ int main(void)
 {
   statemachineInit();
   halInit();
-  usartInit();
   USART0_sendString_w_newline_eol("Init");
   flagsInit();
 
   statemachineGotoBcuRunning();
 
   char _buffer[128];
-  char _smallBuffer[33];
   while (1) {
-    stringifyCurrentState(_smallBuffer);
-    sprintf(_buffer, "While Loop: %s", _smallBuffer);
+    stringifyCurrentState(_buffer);
     USART0_sendString_w_newline_eol(_buffer);
     switch (g_currentState)
     {
@@ -44,7 +40,7 @@ int main(void)
       mainloopShutdownRequested();
       break;
     default:
-      loggingPutCritical("Shouldn't ever get here!");
+      USART0_sendString_w_newline_eol("Bad State!");
       break;
     }
     _delay_ms(100);

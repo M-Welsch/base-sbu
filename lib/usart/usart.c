@@ -10,33 +10,36 @@
 #include "hal_rtc.h"
 #include "hal_adc.h"
 #include "statemachine.h"
-#include "logging.h"
 #include "flags.h"
 
 #define UNUSED_PARAM(x) (void)(x)
 
 char _returnBuffer[33];
 
+void _usartSendReady() {
+	USART0_sendString_w_newline_eol("Ready");
+}
+
 void callback_write_to_display_line1(const char* payload) {
     displayBufferLine1(payload);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_write_to_display_line2(const char* payload) {
     displayWriteBothLines(payload);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_set_display_brightness(const char* payload) {
     uint16_t _dimmingValue = atoi(payload);
     displayDim(_dimmingValue);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_set_led_brightness(const char* payload) {
     uint16_t _dimmingValue = atoi(payload);
     ledDim(_dimmingValue);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_set_seconds_to_next_bu(const char* payload) {
@@ -44,46 +47,46 @@ void callback_set_seconds_to_next_bu(const char* payload) {
     rtcSetWakeupInSeconds(_seconds);
     g_nextBackupInfo.secondsToWakeupReceived = true;
     USART0_sendString_w_newline_eol("CMP:123");  // Todo: get rid of this. BCU shouldn't rely on that.
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_send_readable_timestamp_of_next_bu(const char* payload) {
     strcpy(g_nextBackupInfo.humanReadableTimestamp, payload);
     g_nextBackupInfo.humanReadableTimestampReceived = true;
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_measure_current(const char* payload) {
     UNUSED_PARAM(payload);
     sprintf(_returnBuffer, "CC:%d", adcResultInCur());
     USART0_sendString_w_newline_eol(_returnBuffer);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_measure_vcc3v(const char* payload) {
     UNUSED_PARAM(payload);
     sprintf(_returnBuffer, "3V:%d", adcResult3v3());
     USART0_sendString_w_newline_eol(_returnBuffer);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_measure_temperature(const char* payload) {
     UNUSED_PARAM(payload);
     sprintf(_returnBuffer, "TP:%d", adcResult3v3());
     USART0_sendString_w_newline_eol(_returnBuffer);
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_request_shutdown(const char* payload) {
     UNUSED_PARAM(payload);
     statemachineGotoShutdownRequested();
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 void callback_abort_shutdown(const char* payload) {
     UNUSED_PARAM(payload);
     statemachineGotoBcuRunning();
-    USART0_send_ready();
+    _usartSendReady();
 }
 
 typedef struct {
@@ -117,7 +120,8 @@ usartCommandsStruct usartCommands[13] = {
 
 void callback_request_wakeup_reason(const char* payload) {
     UNUSED_PARAM(payload);
-    USART0_send_ready(wakeupReasonMap[g_wakeupReason].keyword);
+    USART0_sendString_w_newline_eol(wakeupReasonMap[g_wakeupReason].keyword);
+    _usartSendReady();
 }
 
 void callback_set_wakeup_reason(const char* payload) {
@@ -127,13 +131,13 @@ void callback_set_wakeup_reason(const char* payload) {
             g_wakeupReason = wakeupReasonMap[c].reason;
             sprintf(_buffer, "set %s (%d) as Wakeup Reason", wakeupReasonMap[c].keyword, wakeupReasonMap[c].reason);
             USART0_sendString_w_newline_eol(_buffer);
-            USART0_send_ready();
+            _usartSendReady();
             return;
         }
     }
-    sprintf(_buffer, "no such WakeupReason as %s", payload);
-    loggingPutWarning(_buffer);
-    USART0_send_ready();
+    sprintf(_buffer, "ival. WR: %s", payload);
+    USART0_sendString_w_newline_eol(_buffer);
+    _usartSendReady();
 }
 
 
@@ -143,7 +147,7 @@ void callback_set_wakeup_reason(const char* payload) {
  * 
  * @param[in] msgCode 2-letter message code of the message that shall be acknowledged
  */
-void _Acknowledge(char *msgCode) {
+void _acknowledge(char *msgCode) {
     static char _usartLocalBuffer[7];
     sprintf(_usartLocalBuffer, "ACK:%s", msgCode);
     USART0_sendString_w_newline_eol(_usartLocalBuffer);
@@ -162,7 +166,7 @@ void _Acknowledge(char *msgCode) {
 baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg) {
     char messageCode[3]; 
     char *payload;
-    sprintf(_returnBuffer, "processing: %s", g_usartReceiveBuffer);
+    sprintf(_returnBuffer, "proc: %s", g_usartReceiveBuffer);
     USART0_sendString_w_newline_eol(_returnBuffer);
 
     messageCode[0] = g_usartReceiveBuffer[0];
@@ -174,7 +178,7 @@ baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg) {
         if(strcmp(messageCode, cur.msgCode) == 0) {
             sprintf(_returnBuffer, "checking %s against %s", cur.msgCode, messageCode);
             USART0_sendString_w_newline_eol(_returnBuffer);
-            _Acknowledge(cur.msgCode);
+            _acknowledge(cur.msgCode);
             decodedMsg->callback = cur.callback;
             payload = g_usartReceiveBuffer+3;
             if (*payload != '\0')

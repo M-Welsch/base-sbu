@@ -1,8 +1,10 @@
 #ifndef hal_adc_h__
 #define hal_adc_h__
 
+#include <stdint.h>
 #include <stdbool.h>
 
+void adcInit();
 uint16_t adcResult3v3();
 uint16_t adcResultInCur();
 uint16_t adcTemperature();

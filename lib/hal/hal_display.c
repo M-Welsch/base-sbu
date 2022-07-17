@@ -2,11 +2,53 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "hal.h"
 #include "hal_display.h"
 #include "flags.h"
 
 char _displayLine1Buffer[17];
+uint16_t _displayDimmingValue = 0;
+
+void setDisplayPwm(uint16_t dimming_value) {
+    _displayDimmingValue = dimming_value;
+    TCA0.SINGLE.CMP0 = _displayDimmingValue;
+}
+
+void configureDisplayPins(void) {
+    DISPLAY_PWM_PORT.DIRSET = dis_pwm;
+    DISPLAY_E_PORT.DIRSET = DISPLAY_E_PIN;
+    dis_rs_port.DIRSET = dis_rs;
+    DISPLAY_DATA_PORT.DIRSET = (dis_db4 | dis_db5 | dis_db6 | dis_db7);
+}
+
+void displayEnable() {
+	DISPLAY_E_PORT.OUTSET = DISPLAY_E_PIN;
+	_delay_us(10);
+	DISPLAY_E_PORT.OUTCLR = DISPLAY_E_PIN;
+	_delay_us(10);
+}
+
+#define DISPLAY_DATA_MASK 0x0f //Display Data Pins are connected to PORTC0-3
+
+void displayDataPins(uint8_t data_nibble) {
+	DISPLAY_DATA_PORT.OUT &= ~DISPLAY_DATA_MASK;
+	DISPLAY_DATA_PORT.OUT |= (data_nibble & DISPLAY_DATA_MASK);
+}
+
+void displaySetRs(void) {
+	dis_rs_port.OUTSET = dis_rs;
+}
+
+void displayClearRs(void) {
+	dis_rs_port.OUTCLR = dis_rs;
+}
+
+void displayPwmLow(void) {
+    setDisplayPwm(0);
+}
+
+void displayPwmHigh(void) {
+    setDisplayPwm(_displayDimmingValue);
+}
 
 void displayInit(void) {
 	/* refering to datasheet SPLC780D and (more importantly) lcd.py of "old" BaSe implementation*/

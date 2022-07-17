@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define USART_PORT PORTB
+#define USART_PIN_TX PIN2_bm
+#define USART_PIN_RX PIN3_bm
+
 void usartInit(void);
 
 void USART0_send_ready();

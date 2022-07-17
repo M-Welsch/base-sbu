@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "mainloops.h"
-#include "logging.h"
 #include "statemachine.h"
 #include "hal_display.h"
 #include "flags.h"

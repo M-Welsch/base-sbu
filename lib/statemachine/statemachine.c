@@ -3,7 +3,7 @@
 #include "statemachine.h"
 #include "hal_powerpath.h"
 #include "hal_display.h"
-#include "logging.h"
+#include "usart.h"
 #include "delay.h"
 
 void activate5vRailAndDisplay() {
@@ -24,7 +24,7 @@ void statemachineInit() {
  * @details activates bcu supply. Can transfer here from any other state
  */
 baseSbuError_t statemachineGotoBcuRunning(void) {
-    loggingPutDebug("requested stateBcuRunning");
+    USART0_sendString("req stateBcuRunning\n");
     if ((g_currentState == stateStandby) || (g_currentState == stateInit)) {
         activate5vRailAndDisplay();
     }
@@ -41,7 +41,7 @@ baseSbuError_t statemachineGotoBcuRunning(void) {
  *          for command to leave the state and go to BcuRunning again
  */
 baseSbuError_t statemachineGotoShutdownRequested(void) {
-    loggingPutInfo("requested stateShutdownRequested");
+    USART0_sendString("req stateShutdownRequested\n");
     baseSbuError_t retval = invalid_transfer;
     if (g_currentState == stateBcuRunning) {
         g_currentState = stateShutdownRequested;
@@ -55,7 +55,7 @@ baseSbuError_t statemachineGotoShutdownRequested(void) {
  * @details deactivates 5v and bcu supply.
  */
 baseSbuError_t statemachineGotoStandby(void) {
-    loggingPutDebug("requested stateStandby");
+    USART0_sendString("req stateStandby\n");
     baseSbuError_t retval = invalid_transfer;
     if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
         states_t lastState = g_currentState;
@@ -74,7 +74,7 @@ baseSbuError_t statemachineGotoStandby(void) {
                 retval = statemachineGotoMenu();
                 break;
             default:
-                loggingPutError("uncatched invalid transfer from state");
+                USART0_sendString("inval. transfer\n");
         }
     }
     return retval;
@@ -86,7 +86,7 @@ baseSbuError_t statemachineGotoStandby(void) {
  */
 baseSbuError_t statemachineGotoMenu(void) {
     baseSbuError_t retval = invalid_transfer;
-    loggingPutDebug("requested stateMenu");
+    USART0_sendString("req stateMenu\n");
     if (g_currentState == stateStandby) {
         activate5vRailAndDisplay();
         g_currentState = stateMenu;
