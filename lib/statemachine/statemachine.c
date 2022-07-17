@@ -1,10 +1,18 @@
 #include <stdio.h>
+#include <avr/sleep.h>
 
 #include "statemachine.h"
 #include "hal_powerpath.h"
 #include "hal_display.h"
 #include "usart.h"
 #include "delay.h"
+
+void _gotoSleepStandby()
+{
+	SLPCTRL.CTRLA |= SLPCTRL_SMODE_STDBY_gc;
+	SLPCTRL.CTRLA |= SLPCTRL_SEN_bm;
+	sleep_cpu();
+}
 
 void activate5vRailAndDisplay() {
     activate5vRail();
@@ -62,20 +70,12 @@ baseSbuError_t statemachineGotoStandby(void) {
         deactivateBcuSupply();
         delayMs(100);
         deactivate5vRail();
+        delayMs(100);
         
         g_currentState = stateStandby;
         //activate interrupts, mask them if necessary
-        //go to sleep
-        switch (lastState) {
-            case stateShutdownRequested:
-                retval = statemachineGotoBcuRunning();
-                break;
-            case stateMenu:
-                retval = statemachineGotoMenu();
-                break;
-            default:
-                USART0_sendString("inval. transfer\n");
-        }
+        _gotoSleepStandby();
+        delayMs(100);  // important but probably more than sufficient
     }
     return retval;
 }

@@ -1,6 +1,5 @@
 #include <avr/delay.h>
 #include <avr/interrupt.h>
-#include <avr/sleep.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -12,6 +11,7 @@
 #include "hal_buttons.h"
 #include "hal_rtc.h"
 #include "hal_usart.h"
+#include "flags.h"
 
 /* Dimming */
 
@@ -62,15 +62,6 @@ void _dimmerForLedAndDisplayInit() {
 	TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
 }
 
-/* Sleep */
-
-void goto_sleep_standby()
-{
-	SLPCTRL.CTRLA |= SLPCTRL_SMODE_STDBY_gc;
-	SLPCTRL.CTRLA |= SLPCTRL_SEN_bm;
-	sleep_cpu();
-}
-
 /* Interface */
 
 void halInit(void) {
@@ -90,21 +81,19 @@ void halInit(void) {
 ISR(BADISR_vect) {
 	/* This routine is called if a non defined interrupt-vector is requested */
 	char _buffer[32];
-	sprintf(_buffer, "bad ISR: %x\n", CPUINT_LVL0PRI);
-	USART0_sendString(_buffer);
+	sprintf(_buffer, "bad ISR: %x", CPUINT_LVL0PRI);
+	USART0_sendString_w_newline_eol(_buffer);
 	for(uint8_t c = 0; c <10; c++ ) {
-		ledPinHigh();
+		ledOn();
 		_delay_ms(10);
-		ledPinLow();
+		ledOff();
 	_delay_ms(100);
 	}
 }
 
 ISR(RTC_CNT_vect) {
 	RTC.INTFLAGS |= RTC_CMP_bm;
-	ledPinHigh();
-	//USART0_sendString("CMP\n");
-	//flag_wakeup_by_rtc = true;
-	//next_pwr_state = display_on;
-	//transition_to_pwr_state(next_pwr_state);
+	ledOn();
+	USART0_sendString_w_newline_eol("CMP");
+	g_wakeupReason = SCHEDULED_BACKUP;
 }

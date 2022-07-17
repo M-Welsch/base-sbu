@@ -39,10 +39,12 @@ typedef struct {
     bool humanReadableTimestampReceived;
 } nextBackupInfo_t;
 
-void flagsInit();
-volatile char g_usartReceiveBuffer[38];
-states_t g_currentState;
 wakeupReasons_t g_wakeupReason;
-volatile bool g_usart0ReceiveComplete;
 nextBackupInfo_t g_nextBackupInfo;
+states_t g_currentState;
+
+volatile char g_usartReceiveBuffer[38];
+volatile bool g_usart0ReceiveComplete;
+
+void flagsInit();
 #endif

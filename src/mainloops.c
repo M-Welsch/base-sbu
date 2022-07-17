@@ -3,13 +3,15 @@
 #include "mainloops.h"
 #include "statemachine.h"
 #include "hal_display.h"
+#include "hal_adc.h"
 #include "flags.h"
 #include "usart.h"
+#include "hal_usart.h"
+#include "hal_buttons.h"
 
 usartDecodedMsg_t decodedMsg;
 
-
-void mainloopBcuRunning() {
+void _processCommunication() {
     if (g_usart0ReceiveComplete) {
         g_usart0ReceiveComplete = false;
         if(usartDecodeIncomingMessage(&decodedMsg) == success) {
@@ -18,9 +20,26 @@ void mainloopBcuRunning() {
     }
 }
 
+void mainloopBcuRunning() {
+    _processCommunication();
+}
+
 void mainloopShutdownRequested() {
-    statemachineGotoBcuRunning();
+    if (adc3v3present()) 
+        _processCommunication();
+    else {
+        statemachineGotoStandby();
+        // sleep here, wake up here. state=standby here
+
+        USART0_sendString_w_newline_eol("woke");
+        if (button0Pressed || button1Pressed)
+            statemachineGotoMenu();
+        else
+            statemachineGotoBcuRunning();
+    }
 }
 
 void mainloopMenu() {
+	displayWriteString("Show next BU   >\nActions        >");
+    USART0_sendString_w_newline_eol("menu");
 }

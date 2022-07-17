@@ -21,6 +21,7 @@
 #define dis_db7 PIN3_bm
 
 void configureDisplayPins(void); 
+void setDisplayPwm(uint16_t dimming_value); 
 void displayDim(uint16_t value);
 void displayBufferLine1(const char *line1);
 void displayWriteBothLines(const char *line2);

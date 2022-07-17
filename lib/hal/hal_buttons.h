@@ -18,5 +18,6 @@ typedef enum {
 void buttonsInit(); 
 buttonState_t button0(void);
 buttonState_t button1(void);
-
+volatile bool button0Pressed;
+volatile bool button1Pressed;
 #endif
