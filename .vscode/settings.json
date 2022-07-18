@@ -19,7 +19,10 @@
         "flags.h": "c",
         "usart.h": "c",
         "hal_usart.h": "c",
-        "menu.h": "c"
+        "menu.h": "c",
+        "mock_delay.h": "c",
+        "mock_hal_buttons.h": "c",
+        "mock_hal_usart.h": "c"
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }

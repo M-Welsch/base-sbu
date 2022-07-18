@@ -7,11 +7,13 @@
 #include "hal_display.h"
 #include "hal_buttons.h"
 #include "delay.h"
+#include "hal_usart.h"
 
 bool _redrawMenu = true;
 
+
 typedef enum {
-    main_menu, show_timestamp_menu, show_actions_menu
+    main_menu, show_timestamp_menu, show_actions_menu, confirm_wakeup_backup, confirm_wakeup_config
 } menus_t;
 
 menus_t _currentMenu = main_menu;
@@ -28,10 +30,12 @@ void mainMenuShow() {
 }
 
 void mainMenuButton0() {
+    USART0_sendString_w_newline_eol("mmb0");
     _currentMenu = show_timestamp_menu;
 }
 
 void mainMenuButton1() {
+    USART0_sendString_w_newline_eol("mmb1");
     _currentMenu = show_actions_menu;
 }
 
@@ -39,33 +43,64 @@ void showTimestampMenuShow() {
     displayWriteString("Timestamp!");
 }
 
-void showTimestampMenuButton0() {
-    _currentMenu = show_timestamp_menu;
+void gotoMainMenu() {
+    _currentMenu = main_menu;
 }
 
-void showTimestampMenuButton1() {
-    _currentMenu = show_actions_menu;
+void showActionsMenuShow() {
+    displayWriteString("Do Backup Now  >\nWake for config>");
 }
-menu_struct_t menus[3] = {
+
+void gotoConfirmBackup() {
+    _currentMenu = confirm_wakeup_backup;
+}
+
+void gotoConfirmConfig() {
+    _currentMenu = confirm_wakeup_backup;
+}
+
+void showConfirmWakeupBackupMenuShow() {
+    displayWriteString("Sure?       No >\n           Yes >");
+}
+
+void triggerBcuWakeupForBackup() {
+    USART0_sendString_w_newline_eol("BU");
+}
+
+void triggerBcuWakeupForConfig() {
+    USART0_sendString_w_newline_eol("Cfg");
+}
+
+void showConfirmWakeupConfigMenuShow() {
+    displayWriteString("Sure?      Yes >\n            No >"); 
+}
+
+menu_struct_t menus[5] = {
     {main_menu, mainMenuShow, mainMenuButton0, mainMenuButton1},
-    {show_timestamp_menu, showTimestampMenuShow, showTimestampMenuButton0, showTimestampMenuButton1},
-    {show_actions_menu, NULL, NULL, NULL}
+    {show_timestamp_menu, showTimestampMenuShow, gotoMainMenu, gotoMainMenu},
+    {show_actions_menu, showActionsMenuShow, gotoConfirmBackup, gotoConfirmConfig},
+    {confirm_wakeup_backup, showConfirmWakeupBackupMenuShow, gotoMainMenu, triggerBcuWakeupForBackup},
+    {confirm_wakeup_config, showConfirmWakeupConfigMenuShow, triggerBcuWakeupForConfig, gotoMainMenu}
 };
 
-void menuShow() {
-    button0Pressed = button1Pressed = false;
+void menuShow(uint16_t runs) {
     menus[_currentMenu].show_menu();
 
     uint16_t _timeoutCounter = 0;
-    while (_timeoutCounter < 1000) {
-        if (button0Pressed) {
-            menus[_currentMenu].button0_action();
-            break;
+    void (*action)() = NULL;
+    while (_timeoutCounter < runs) {
+        USART0_sendString_w_newline_eol("l");
+        if (button0() == pressed) {
+            action = menus[_currentMenu].button0_action;
         }
-        if (button1Pressed) {
-            menus[_currentMenu].button1_action();
+        if (button1() == pressed) {
+            action = menus[_currentMenu].button1_action;
+        }
+        if (action != NULL) {
+            action();
             break;
         }
         delayMs(10);
+        _timeoutCounter++;
     }
 }

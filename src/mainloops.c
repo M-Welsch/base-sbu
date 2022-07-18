@@ -42,5 +42,5 @@ void mainloopShutdownRequested() {
 
 void mainloopMenu() {
     USART0_sendString_w_newline_eol("menu");
-    menuShow();
+    menuShow(1000);
 }
