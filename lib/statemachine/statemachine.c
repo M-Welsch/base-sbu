@@ -78,6 +78,7 @@ baseSbuError_t statemachineGotoStandby(void) {
         delayMs(100);
         
         g_currentState = stateStandby;
+        g_wakeupReason = NO_REASON;
         //activate interrupts, mask them if necessary
         _gotoSleepStandby();
         delayMs(100);  // important but probably more than sufficient

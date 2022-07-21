@@ -8,6 +8,7 @@
 #include "hal_buttons.h"
 #include "delay.h"
 #include "hal_usart.h"
+#include "statemachine.h"
 
 bool _redrawMenu = true;
 
@@ -29,12 +30,12 @@ void mainMenuShow() {
     displayWriteString("Show next BU   >\nActions        >");
 }
 
-void mainMenuButton0() {
+void gotoTimestampMenu() {
     USART0_sendString_w_newline_eol("mmb0");
     _currentMenu = show_timestamp_menu;
 }
 
-void mainMenuButton1() {
+void gotoActionsMenu() {
     USART0_sendString_w_newline_eol("mmb1");
     _currentMenu = show_actions_menu;
 }
@@ -56,7 +57,7 @@ void gotoConfirmBackup() {
 }
 
 void gotoConfirmConfig() {
-    _currentMenu = confirm_wakeup_backup;
+    _currentMenu = confirm_wakeup_config;
 }
 
 void showConfirmWakeupBackupMenuShow() {
@@ -65,10 +66,14 @@ void showConfirmWakeupBackupMenuShow() {
 
 void triggerBcuWakeupForBackup() {
     USART0_sendString_w_newline_eol("BU");
+    g_wakeupReason = BACKUP_NOW;
+    statemachineGotoBcuRunning();
 }
 
 void triggerBcuWakeupForConfig() {
     USART0_sendString_w_newline_eol("Cfg");
+    g_wakeupReason = CONFIGURATION;
+    statemachineGotoBcuRunning();
 }
 
 void showConfirmWakeupConfigMenuShow() {
@@ -76,7 +81,7 @@ void showConfirmWakeupConfigMenuShow() {
 }
 
 menu_struct_t menus[5] = {
-    {main_menu, mainMenuShow, mainMenuButton0, mainMenuButton1},
+    {main_menu, mainMenuShow, gotoTimestampMenu, gotoActionsMenu},
     {show_timestamp_menu, showTimestampMenuShow, gotoMainMenu, gotoMainMenu},
     {show_actions_menu, showActionsMenuShow, gotoConfirmBackup, gotoConfirmConfig},
     {confirm_wakeup_backup, showConfirmWakeupBackupMenuShow, gotoMainMenu, triggerBcuWakeupForBackup},
@@ -102,5 +107,11 @@ void menuShow(uint16_t runs) {
         }
         delayMs(10);
         _timeoutCounter++;
+    }
+    if (_timeoutCounter == runs) {
+        USART0_sendString_w_newline_eol("sleep");
+        statemachineGotoStandby();
+        // sleeping here
+        statemachineGotoMenu();
     }
 }
