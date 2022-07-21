@@ -22,6 +22,7 @@ void _gotoSleepStandby()
 void activate5vRailAndDisplay() {
     activate5vRail();
     displayInit();
+    displayPwmHigh();
 }
 
 /**
@@ -45,6 +46,7 @@ baseSbuError_t statemachineGotoBcuRunning(void) {
         activateBcuSupply();
     }
     g_currentState = stateBcuRunning;
+    displayWriteString("Backup Server\nis booting ...");
     return success;
 }
 
@@ -72,6 +74,7 @@ baseSbuError_t statemachineGotoStandby(void) {
     baseSbuError_t retval = invalid_transfer;
     if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
         states_t lastState = g_currentState;
+        displayPinsAllLow();
         deactivateBcuSupply();
         delayMs(100);
         deactivate5vRail();

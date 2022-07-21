@@ -23,6 +23,8 @@
 #define dis_db6 PIN2_bm
 #define dis_db7 PIN3_bm
 
+void displayPinsAllLow(void);
+void displayPwmHigh(void);
 void configureDisplayPins(void); 
 void setDisplayPwm(uint16_t dimming_value); 
 void displayDim(uint16_t value);

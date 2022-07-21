@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <avr/io.h>
+
 #include "hal_display.h"
 #include "hal_buttons.h"
 #include "delay.h"
@@ -34,14 +36,42 @@ void gotoTimestampMenu() {
     USART0_sendString_w_newline_eol("mmb0");
     _currentMenu = show_timestamp_menu;
 }
-
 void gotoActionsMenu() {
     USART0_sendString_w_newline_eol("mmb1");
     _currentMenu = show_actions_menu;
 }
 
 void showTimestampMenuShow() {
-    displayWriteString("Timestamp!");
+	/* there are simpler ways ... on a not 8bit mcu */
+	uint32_t seconds = (uint32_t) (RTC_CMP - RTC_CNT) * 32;
+	uint32_t days = seconds / 3600;
+	days = days / 24;
+	for(int i = 0; i < days ; i++) {
+	   for(int j = 0; j < 24; j++) {
+		    seconds = seconds - 3600;
+	    }
+	}
+
+	uint32_t hours = seconds / 3600;
+	seconds = seconds % 3600;
+
+	uint32_t minutes = seconds / 60;
+	seconds = seconds % 60;
+    char buffer[17];
+	switch (days) {
+		case 0:
+			sprintf(buffer, "ETA:    %02lu:%02lu:%02lu", hours, minutes, seconds);
+			break;
+		case 1 ... 9:
+			sprintf(buffer, "ETA %lu  %02lu:%02lu:%02lu", days, hours, minutes, seconds);
+			break;
+		default:
+			sprintf(buffer, "ETA %lud %02lu:%02lu:%02lu", days, hours, minutes, seconds);
+	}
+	
+	displayClear();
+	displayBufferLine1(g_nextBackupInfo.humanReadableTimestamp);
+	displayWriteBothLines(buffer);
 }
 
 void gotoMainMenu() {
@@ -68,12 +98,14 @@ void triggerBcuWakeupForBackup() {
     USART0_sendString_w_newline_eol("BU");
     g_wakeupReason = BACKUP_NOW;
     statemachineGotoBcuRunning();
+    _currentMenu = main_menu;
 }
 
 void triggerBcuWakeupForConfig() {
     USART0_sendString_w_newline_eol("Cfg");
     g_wakeupReason = CONFIGURATION;
     statemachineGotoBcuRunning();
+    _currentMenu = main_menu;
 }
 
 void showConfirmWakeupConfigMenuShow() {
@@ -93,8 +125,10 @@ void menuShow(uint16_t runs) {
 
     uint16_t _timeoutCounter = 0;
     void (*action)() = NULL;
+    char loopbuffer[4];
     while (_timeoutCounter < runs) {
-        USART0_sendString_w_newline_eol("l");
+        sprintf(loopbuffer, "%d", _timeoutCounter);
+        USART0_sendString_w_newline_eol(loopbuffer);
         if (button0() == pressed) {
             action = menus[_currentMenu].button0_action;
         }
@@ -107,6 +141,11 @@ void menuShow(uint16_t runs) {
         }
         delayMs(10);
         _timeoutCounter++;
+        if (g_rtcTriggered) {
+            g_rtcTriggered = false;
+            statemachineGotoBcuRunning();
+            break;
+        }
     }
     if (_timeoutCounter == runs) {
         USART0_sendString_w_newline_eol("sleep");

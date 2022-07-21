@@ -93,7 +93,6 @@ ISR(BADISR_vect) {
 
 ISR(RTC_CNT_vect) {
 	RTC.INTFLAGS |= RTC_CMP_bm;
-	ledOn();
 	USART0_sendString_w_newline_eol("CMP");
-	g_wakeupReason = SCHEDULED_BACKUP;
+	g_rtcTriggered = true;
 }

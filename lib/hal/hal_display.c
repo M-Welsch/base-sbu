@@ -13,6 +13,7 @@ void setDisplayPwm(uint16_t dimming_value) {
     TCA0.SINGLE.CMP0 = _displayDimmingValue;
 }
 
+
 void configureDisplayPins(void) {
     DISPLAY_PWM_PORT.DIRSET = dis_pwm;
     DISPLAY_E_PORT.DIRSET = DISPLAY_E_PIN;
@@ -42,8 +43,15 @@ void displayClearRs(void) {
 	dis_rs_port.OUTCLR = dis_rs;
 }
 
+
 void displayPwmLow(void) {
-    setDisplayPwm(0);
+    TCA0.SINGLE.CMP0 = 0;
+}
+
+void displayPinsAllLow(void) {
+	displayClearRs();
+	displayDataPins(0x00);
+	displayPwmLow();
 }
 
 void displayPwmHigh(void) {

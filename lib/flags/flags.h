@@ -45,6 +45,7 @@ states_t g_currentState;
 
 volatile char g_usartReceiveBuffer[38];
 volatile bool g_usart0ReceiveComplete;
+volatile bool g_rtcTriggered;
 
 void flagsInit();
 #endif

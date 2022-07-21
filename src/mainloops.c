@@ -33,10 +33,13 @@ void mainloopShutdownRequested() {
         // sleep here, wake up here. state=standby here
 
         USART0_sendString_w_newline_eol("woke");
-        if (button0Pressed || button1Pressed)
-            statemachineGotoMenu();
-        else
+        if (g_rtcTriggered) {
+            g_rtcTriggered = false;
+            g_wakeupReason = SCHEDULED_BACKUP;
             statemachineGotoBcuRunning();
+        }
+        else
+            statemachineGotoMenu();
     }
 }
 
