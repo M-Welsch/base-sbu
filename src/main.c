@@ -21,8 +21,12 @@ int main(void)
   halInit();
   USART0_sendString_w_newline_eol("Init");
   flagsInit();
+  ledOn();
+  _delay_ms(100);
+  ledOff();
 
   statemachineGotoBcuRunning();
+  displayWriteString("Init");
 
   char _buffer[128];
   while (1) {

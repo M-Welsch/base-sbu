@@ -17,10 +17,6 @@
 #include "hal_usart.h"
 #include "flags.h"
 
-#define F_CPU 3333333
-#define BAUD_RATE 9600
-#define UROUND(x) ((2UL*(x)+1)/2)
-
 void _usartConfigurePins() {
     USART_PORT.DIRSET = USART_PIN_TX;
     USART_PORT.DIRCLR = USART_PIN_RX;
@@ -64,7 +60,7 @@ void USART0_sendString(const char *s) {
 void USART0_sendString_w_newline_eol(const char *s) {
 	USART0_sendString(s);
 	USART0_sendChar('\n');
-	//USART0_sendChar('\0');  // might be necessary for bcu
+	USART0_sendChar('\0');  // might be necessary for bcu
 }
 
 uint8_t USART0_receive_complete() {
@@ -82,8 +78,8 @@ uint8_t USART0_read()
 }
 
 void USART0_read_string(char *receive_buffer, uint8_t maxlen) {
-	if (maxlen > 32) {
-		maxlen = 32; //increase size of receive buffer in uart.h if you want to have more space!
+	if (maxlen >= LEN_USART_RECEIVE_BUFFER) {
+		maxlen = LEN_USART_RECEIVE_BUFFER-1;  // one byte is needed for '\0'
 	}
 	uint8_t i = 0;
 	while(i <= maxlen) {
@@ -103,9 +99,14 @@ void USART0_read_string(char *receive_buffer, uint8_t maxlen) {
 /* Interrupts */
 
 ISR(USART0_RXC_vect) {
-	USART0_read_string(g_usartReceiveBuffer, 32);
-	if(strcmp(g_usartReceiveBuffer, "Test") == 0) {
+	g_usartReceiveBuffer[0] = '\0';
+	USART0_read_string(g_usartReceiveBuffer, 20);
+	USART0_sendString_w_newline_eol(g_usartReceiveBuffer);
+	if(strcmp(g_usartReceiveBuffer, "Test:") == 0) {
+		_delay_ms(100);
+		USART0_sendString_w_newline_eol("ACK:Test");
 		USART0_sendString_w_newline_eol("Echo");
+		USART0_sendString_w_newline_eol("Ready");
 	}
 	g_usart0ReceiveComplete = true;
 } 

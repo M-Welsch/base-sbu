@@ -10,24 +10,28 @@
 #include "hal_buttons.h"
 #include "menu.h"
 
-usartDecodedMsg_t decodedMsg;
-
 void _processCommunication() {
     if (g_usart0ReceiveComplete) {
         g_usart0ReceiveComplete = false;
-        if(usartDecodeIncomingMessage(&decodedMsg) == success) {
-            decodedMsg.callback(decodedMsg.payload);
-        }
+        // if(usartDecodeIncomingMessage(&decodedMsg) == success) {
+        //     decodedMsg.callback(decodedMsg.payload);
+        // }
+        usartDecodeIncomingMessage();
     }
 }
 
 void mainloopBcuRunning() {
     _processCommunication();
+    if (g_rtcTriggered) {
+        g_rtcTriggered = false;
+        statemachineGotoBcuRunning();
+    }
 }
 
 void mainloopShutdownRequested() {
-    if (adc3v3present()) 
+    if (adc3v3present()) {
         _processCommunication();
+    }
     else {
         statemachineGotoStandby();
         // sleep here, wake up here. state=standby here
@@ -38,8 +42,9 @@ void mainloopShutdownRequested() {
             g_wakeupReason = SCHEDULED_BACKUP;
             statemachineGotoBcuRunning();
         }
-        else
+        else {
             statemachineGotoMenu();
+        }
     }
 }
 

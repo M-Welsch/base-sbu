@@ -3,5 +3,6 @@
 
 void rtcInit(void);
 void rtcSetWakeupInSeconds(uint16_t secondsToNextBackup);
+void rtcGetSecondsToNextBuAndCount(char *buffer);
 
 #endif

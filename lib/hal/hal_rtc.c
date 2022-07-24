@@ -61,3 +61,7 @@ void rtcSetWakeupInSeconds(uint16_t secondsToNextBackup) {
 	uint16_t register_value_next_bu = secondsToNextBackup / 32;
     _rtcSetCmpRegister(register_value_next_bu);
 }
+
+void rtcGetSecondsToNextBuAndCount(char *buffer) {
+    sprintf(buffer, "CMP:%d, CNT:%d", RTC.CMP, RTC.CNT);
+}

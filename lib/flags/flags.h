@@ -34,7 +34,7 @@ typedef enum {
 
 typedef struct {
     uint16_t secondsToWakeup;
-    char humanReadableTimestamp[33];
+    char humanReadableTimestamp[17];
     bool secondsToWakeupReceived;
     bool humanReadableTimestampReceived;
 } nextBackupInfo_t;
@@ -43,7 +43,9 @@ wakeupReasons_t g_wakeupReason;
 nextBackupInfo_t g_nextBackupInfo;
 states_t g_currentState;
 
-volatile char g_usartReceiveBuffer[38];
+#define LEN_USART_RECEIVE_BUFFER 38
+
+char g_usartReceiveBuffer[LEN_USART_RECEIVE_BUFFER];
 volatile bool g_usart0ReceiveComplete;
 volatile bool g_rtcTriggered;
 

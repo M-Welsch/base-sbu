@@ -22,7 +22,10 @@
         "menu.h": "c",
         "mock_delay.h": "c",
         "mock_hal_buttons.h": "c",
-        "mock_hal_usart.h": "c"
+        "mock_hal_usart.h": "c",
+        "interrupt.h": "c",
+        "io.h": "c",
+        "string.h": "c"
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }

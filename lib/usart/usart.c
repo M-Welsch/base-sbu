@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <avr/interrupt.h>
 #include "hal_usart.h"
 #include "usart.h"
 #include "hal_display.h"
@@ -10,11 +11,12 @@
 #include "hal_rtc.h"
 #include "hal_adc.h"
 #include "statemachine.h"
+#include "hal_rtc.h"
 #include "flags.h"
 
 #define UNUSED_PARAM(x) (void)(x)
 
-char _returnBuffer[33];
+char _returnBuffer[48];
 
 void _usartSendReady() {
 	USART0_sendString_w_newline_eol("Ready");
@@ -31,28 +33,41 @@ void callback_write_to_display_line2(const char* payload) {
 }
 
 void callback_set_display_brightness(const char* payload) {
-    uint16_t _dimmingValue = atoi(payload);
+    uint16_t _dimmingValue = (uint16_t) strtol(payload, NULL, 10);
     displayDim(_dimmingValue);
     _usartSendReady();
 }
 
 void callback_set_led_brightness(const char* payload) {
-    uint16_t _dimmingValue = atoi(payload);
+    uint16_t _dimmingValue = (uint16_t) strtol(payload, NULL, 10);
     ledDim(_dimmingValue);
     _usartSendReady();
 }
 
 void callback_set_seconds_to_next_bu(const char* payload) {
-    uint16_t _seconds = atoi(payload);
+    uint16_t _seconds = (uint16_t) strtol(payload, NULL, 10);
     rtcSetWakeupInSeconds(_seconds);
     g_nextBackupInfo.secondsToWakeupReceived = true;
     USART0_sendString_w_newline_eol("CMP:123");  // Todo: get rid of this. BCU shouldn't rely on that.
     _usartSendReady();
 }
 
+void callback_get_seconds_to_next_bu(const char* payload) {
+    char _buffer[48];
+    rtcGetSecondsToNextBuAndCount(_buffer);
+    USART0_sendString_w_newline_eol(_buffer);
+    _usartSendReady();
+}
+
 void callback_send_readable_timestamp_of_next_bu(const char* payload) {
     strcpy(g_nextBackupInfo.humanReadableTimestamp, payload);
+    g_nextBackupInfo.humanReadableTimestamp[16] = '\0';
     g_nextBackupInfo.humanReadableTimestampReceived = true;
+    _usartSendReady();
+}
+
+void callback_read_readable_timestamp_of_next_bu(const char* payload) {
+    USART0_sendString_w_newline_eol(g_nextBackupInfo.humanReadableTimestamp);
     _usartSendReady();
 }
 
@@ -102,21 +117,6 @@ wakeupReasonsMap_t wakeupReasonMap[] = {
     {NO_REASON,  "NO_REASON"}
 };
 
-usartCommandsStruct usartCommands[13] = {
-    {write_to_display_line1, "D1", callback_write_to_display_line1},
-    {write_to_display_line2, "D2", callback_write_to_display_line2},
-    {set_display_brightness, "DB", callback_set_display_brightness},
-    {set_led_brightness, "DL", callback_set_led_brightness},
-    {set_seconds_to_next_bu, "BU", callback_set_seconds_to_next_bu},
-    {send_readable_timestamp_of_next_bu, "BR", callback_send_readable_timestamp_of_next_bu},
-    {measure_current, "CC", callback_measure_current},
-    {measure_vcc3v, "3V", callback_measure_vcc3v},
-    {measure_temperature, "TP", callback_measure_temperature},
-    {request_shutdown, "SR", callback_request_shutdown},
-    {abort_shutdown, "SA", callback_abort_shutdown},
-    {request_wakeup_reason, "WR", callback_request_wakeup_reason},
-    {set_wakeup_reason, "WD", callback_set_wakeup_reason}
-};
 
 void callback_request_wakeup_reason(const char* payload) {
     UNUSED_PARAM(payload);
@@ -140,6 +140,23 @@ void callback_set_wakeup_reason(const char* payload) {
     _usartSendReady();
 }
 
+usartCommandsStruct usartCommands[13] = {
+    {write_to_display_line1, "D1", callback_write_to_display_line1},
+    {write_to_display_line2, "D2", callback_write_to_display_line2},
+    {set_display_brightness, "DB", callback_set_display_brightness},
+    {set_led_brightness, "DL", callback_set_led_brightness},
+    {set_seconds_to_next_bu, "BU", callback_set_seconds_to_next_bu},
+    {get_seconds_to_next_bu, "BG", callback_get_seconds_to_next_bu},
+    {send_readable_timestamp_of_next_bu, "BR", callback_send_readable_timestamp_of_next_bu},
+    {read_readable_timestamp_of_next_bu, "BS", callback_read_readable_timestamp_of_next_bu},
+    {measure_current, "CC", callback_measure_current},
+    {measure_vcc3v, "3V", callback_measure_vcc3v},
+    {measure_temperature, "TP", callback_measure_temperature},
+    {request_shutdown, "SR", callback_request_shutdown},
+    {abort_shutdown, "SA", callback_abort_shutdown},
+    {request_wakeup_reason, "WR", callback_request_wakeup_reason},
+    {set_wakeup_reason, "WD", callback_set_wakeup_reason}
+};
 
 /**
  * @brief sends an acknowledge back over usart 0
@@ -147,10 +164,9 @@ void callback_set_wakeup_reason(const char* payload) {
  * 
  * @param[in] msgCode 2-letter message code of the message that shall be acknowledged
  */
-void _acknowledge(char *msgCode) {
-    static char _usartLocalBuffer[7];
-    sprintf(_usartLocalBuffer, "ACK:%s", msgCode);
-    USART0_sendString_w_newline_eol(_usartLocalBuffer);
+void _acknowledge(const char *msgCode) {
+    USART0_sendString("ACK:");
+    USART0_sendString_w_newline_eol(msgCode);
 }
 
 /**
@@ -163,28 +179,29 @@ void _acknowledge(char *msgCode) {
  *          a struct with a callback function pointer and the payload is returned
  * @return struct with the callback function pointer and the payload.
  */
-baseSbuError_t usartDecodeIncomingMessage(usartDecodedMsg_t *decodedMsg) {
+baseSbuError_t usartDecodeIncomingMessage() {
+    baseSbuError_t retval = fail;
     char messageCode[3]; 
-    char *payload;
+    char payload[17];
+    cli();
+    strncpy(messageCode, g_usartReceiveBuffer, 2);
+    messageCode[2] = '\0';
+    strcpy(payload, g_usartReceiveBuffer+3);
+    payload[16] = '\0';
     sprintf(_returnBuffer, "proc: %s", g_usartReceiveBuffer);
     USART0_sendString_w_newline_eol(_returnBuffer);
 
-    messageCode[0] = g_usartReceiveBuffer[0];
-    messageCode[1] = g_usartReceiveBuffer[1];
-    messageCode[2] = '\0';
-
     for (uint8_t i = 0; i < DIMENSION_OF(usartCommands); i++) {
         usartCommandsStruct cur = usartCommands[i];
+        sprintf(_returnBuffer, "check %s == %s", cur.msgCode, messageCode);
+        USART0_sendString_w_newline_eol(_returnBuffer);
         if(strcmp(messageCode, cur.msgCode) == 0) {
-            sprintf(_returnBuffer, "checking %s against %s", cur.msgCode, messageCode);
-            USART0_sendString_w_newline_eol(_returnBuffer);
             _acknowledge(cur.msgCode);
-            decodedMsg->callback = cur.callback;
-            payload = g_usartReceiveBuffer+3;
-            if (*payload != '\0')
-                strcpy(decodedMsg->payload, payload);
-            return success;
+            cur.callback(payload);
+            retval = success;
+            break;
         }
     }
-    return fail;
+    sei();
+    return retval;
 }

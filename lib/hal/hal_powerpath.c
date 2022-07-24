@@ -1,10 +1,5 @@
 #include "hal_powerpath.h"
-#include "usart.h"
-
-void powerpathInit() {
-	SPLY_BCU_DIS_PORT.DIRSET = SPLY_BCU_DIS_PIN;
-	SPLY_5V_EN_PORT.DIRSET = SPLY_5V_EN_PIN;
-}
+#include "hal_usart.h"
 
 void disableBpiSplyToHigh() {
 	SPLY_BCU_DIS_PORT.OUTSET = SPLY_BCU_DIS_PIN;
@@ -23,21 +18,28 @@ void pin5vEnToLow() {
 }
 
 void activate5vRail() {
-    USART0_sendString("Activating 5V\n");
+    USART0_sendString_w_newline_eol("Activating 5V");
     pin5vEnToHigh();
 }
 
 void deactivate5vRail() {
-    USART0_sendString("Deactivating 5V\n");
+    USART0_sendString_w_newline_eol("Deactivating 5V");
     pin5vEnToLow();
 }
 
 void activateBcuSupply() {
-    USART0_sendString("Activating BCU\n");
+    USART0_sendString_w_newline_eol("Activating BCU");
     disableBpiSplyToLow();
 }
 
 void deactivateBcuSupply() {
-    USART0_sendString("Deactivating BCU\n");
+    USART0_sendString_w_newline_eol("Deactivating BCU");
     disableBpiSplyToHigh();
+}
+
+void powerpathInit() {
+    activate5vRail();
+    activateBcuSupply();
+	SPLY_BCU_DIS_PORT.DIRSET = SPLY_BCU_DIS_PIN;
+	SPLY_5V_EN_PORT.DIRSET = SPLY_5V_EN_PIN;
 }

@@ -65,10 +65,10 @@ void _dimmerForLedAndDisplayInit() {
 /* Interface */
 
 void halInit(void) {
+	powerpathInit();
 	ledInit();
     usartInit();
     configureDisplayPins();
-	powerpathInit();
 	buttonsInit();
     _dimmerForLedAndDisplayInit();
 	adcInit();

@@ -9,7 +9,7 @@ uint8_t SLPCTRL_SMODE_STDBY_gc, SLPCTRL_SEN_bm;
 #include "statemachine.h"
 #include "hal_powerpath.h"
 #include "hal_display.h"
-#include "usart.h"
+#include "hal_usart.h"
 #include "delay.h"
 
 void _gotoSleepStandby()
@@ -38,7 +38,7 @@ void statemachineInit() {
  * @details activates bcu supply. Can transfer here from any other state
  */
 baseSbuError_t statemachineGotoBcuRunning(void) {
-    USART0_sendString("req stateBcuRunning\n");
+    USART0_sendString_w_newline_eol("req stateBcuRunning");
     if ((g_currentState == stateStandby) || (g_currentState == stateInit)) {
         activate5vRailAndDisplay();
     }
@@ -46,7 +46,7 @@ baseSbuError_t statemachineGotoBcuRunning(void) {
         activateBcuSupply();
     }
     g_currentState = stateBcuRunning;
-    displayWriteString("Backup Server\nis booting ...");
+    //displayWriteString("Backup Server\nis booting ...");
     return success;
 }
 
@@ -56,7 +56,7 @@ baseSbuError_t statemachineGotoBcuRunning(void) {
  *          for command to leave the state and go to BcuRunning again
  */
 baseSbuError_t statemachineGotoShutdownRequested(void) {
-    USART0_sendString("req stateShutdownRequested\n");
+    USART0_sendString_w_newline_eol("req stateShutdownRequested");
     baseSbuError_t retval = invalid_transfer;
     if (g_currentState == stateBcuRunning) {
         g_currentState = stateShutdownRequested;
@@ -70,7 +70,7 @@ baseSbuError_t statemachineGotoShutdownRequested(void) {
  * @details deactivates 5v and bcu supply.
  */
 baseSbuError_t statemachineGotoStandby(void) {
-    USART0_sendString("req stateStandby\n");
+    USART0_sendString_w_newline_eol("req stateStandby");
     baseSbuError_t retval = invalid_transfer;
     if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
         states_t lastState = g_currentState;
@@ -95,7 +95,7 @@ baseSbuError_t statemachineGotoStandby(void) {
  */
 baseSbuError_t statemachineGotoMenu(void) {
     baseSbuError_t retval = invalid_transfer;
-    USART0_sendString("req stateMenu\n");
+    USART0_sendString_w_newline_eol("req stateMenu");
     if (g_currentState == stateStandby) {
         activate5vRailAndDisplay();
         g_currentState = stateMenu;
