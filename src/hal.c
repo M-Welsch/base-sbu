@@ -611,6 +611,9 @@ void rtcGetSecondsToNextBuAndCount(char *buffer) {
  * @return false 
  */
 bool rtcTimerDue() {
+	char _buffer[48];
+	sprintf(_buffer, "CMP:%d, CNT:%d, INT:%d", RTC.CMP, RTC.CNT, RTC.INTCTRL);
+	USART0_sendString_w_newline_eol(_buffer);
 	return (RTC.CNT > RTC.CMP) && (RTC.INTCTRL & RTC_CMP_bm);
 }
 
@@ -675,7 +678,7 @@ void halInit(void) {
 	sei();
 }
 
-/* ISRs */
+/* Interrupt Service Routines */
 
 ISR(BADISR_vect) {
 	/* This routine is called if a non defined interrupt-vector is requested */

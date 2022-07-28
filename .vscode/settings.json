@@ -25,7 +25,10 @@
         "mock_hal_usart.h": "c",
         "interrupt.h": "c",
         "io.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c"
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }
