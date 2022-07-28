@@ -1,1 +1,0 @@
-add_library(FLAGS flags.c)

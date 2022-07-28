@@ -6,7 +6,6 @@
 #endif
 
 #include <stdbool.h>
-#include "flags.h"
 
 /* USART */
 void USART0_send_ready();
@@ -44,9 +43,6 @@ void displayWriteString(const char *s);
 
 /* LED */
 void setLedPwm(uint16_t dimming_value);
-baseSbuError_t ledDim(uint16_t dimmingValue);
-baseSbuError_t ledOn(void);
-baseSbuError_t ledOff(void);
 
 /* Powerpath */
 void activate5vRail();

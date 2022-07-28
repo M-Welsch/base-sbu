@@ -1,5 +1,5 @@
-#ifndef flags_h__
-#define flags_h__
+#ifndef globals_h__
+#define globals_h__
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -18,19 +18,6 @@ typedef enum {
     HEARTBEAT_TIMEOUT,
     NO_REASON 
 } wakeupReasons_t;
-
-/**
- * @brief success or error return values
- * @returns 0: success
- *          <0: generic error (like some fail)
- *          >0: specific error (like invalid_transfer)
- */
-typedef enum {
-    success = 0,
-    fail = -1,
-    invalid_transfer = 1,
-    hardware_call_refused = 2
-} baseSbuError_t;
 
 typedef struct {
     uint16_t secondsToWakeup;
