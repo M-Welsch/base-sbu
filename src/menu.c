@@ -6,14 +6,9 @@
 
 #include <avr/io.h>
 
-#include "hal_display.h"
-#include "hal_buttons.h"
 #include "delay.h"
-#include "hal_usart.h"
 #include "statemachine.h"
-
-bool _redrawMenu = true;
-
+#include "hal.h"
 
 typedef enum {
     main_menu, show_timestamp_menu, show_actions_menu, confirm_wakeup_backup, confirm_wakeup_config
@@ -141,8 +136,8 @@ void menuShow(uint16_t runs) {
         }
         delayMs(10);
         _timeoutCounter++;
-        if (g_rtcTriggered) {
-            g_rtcTriggered = false;
+        if (rtcTimerDue()) {
+            rtcDeactivateCompareInterrupt();
             statemachineGotoBcuRunning();
             break;
         }

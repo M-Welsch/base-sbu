@@ -3,16 +3,10 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include "hal.h"
-#include "hal_rtc.h"
-#include "hal_led.h"
-#include "hal_adc.h"
-#include "hal_display.h"
 #include "statemachine.h"
 #include "usart.h"
-#include "hal_buttons.h"
 #include "mainloops.h"
 #include "flags.h"
-#include "hal_usart.h"
 
 
 int main(void) 

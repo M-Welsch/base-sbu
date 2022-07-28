@@ -4,14 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <avr/interrupt.h>
-#include "hal_usart.h"
 #include "usart.h"
-#include "hal_display.h"
-#include "hal_led.h"
-#include "hal_rtc.h"
-#include "hal_adc.h"
 #include "statemachine.h"
-#include "hal_rtc.h"
+#include "hal.h"
 #include "flags.h"
 
 #define UNUSED_PARAM(x) (void)(x)
@@ -153,6 +148,33 @@ void callback_set_wakeup_reason(const char* payload) {
     _usartSendReady();
 }
 
+typedef enum {
+    test_for_echo = 0,
+    write_to_display_line1 = 1,
+    write_to_display_line2 = 2,
+    set_display_brightness = 3,
+    set_led_brightness = 4,
+    set_seconds_to_next_bu = 5,
+    get_seconds_to_next_bu = 6,
+    send_readable_timestamp_of_next_bu = 7,
+    read_readable_timestamp_of_next_bu = 8,
+    measure_current = 9,
+    measure_vcc3v = 10,
+    measure_temperature = 11,
+    request_shutdown = 12,
+    abort_shutdown = 13,
+    request_wakeup_reason = 14,
+    set_wakeup_reason = 15,
+    get_reset_reason = 16,
+    __end__ = -1
+} usartCommands_t;
+
+typedef struct {
+    usartCommands_t usartCommand;
+    char msgCode[3];
+    void (*callback)(const char* payload);
+}usartCommandsStruct ;
+
 usartCommandsStruct usartCommands[] = {
     {test_for_echo, "Te", callback_test_for_echo},
     {write_to_display_line1, "D1", callback_write_to_display_line1},
@@ -180,7 +202,7 @@ usartCommandsStruct usartCommands[] = {
  * @param[in] msgCode 2-letter message code of the message that shall be acknowledged
  */
 void _acknowledge(const char *msgCode) {
-    USART0_sendString("ACK:");
+    _USART0SendString("ACK:");
     USART0_sendString_w_newline_eol(msgCode);
 }
 

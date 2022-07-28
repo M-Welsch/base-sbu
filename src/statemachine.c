@@ -7,9 +7,7 @@ uint8_t SLPCTRL_SMODE_STDBY_gc, SLPCTRL_SEN_bm;
 #endif
 
 #include "statemachine.h"
-#include "hal_powerpath.h"
-#include "hal_display.h"
-#include "hal_usart.h"
+#include "hal.h"
 #include "delay.h"
 
 void _gotoSleepStandby()
@@ -78,7 +76,7 @@ baseSbuError_t statemachineGotoStandby(void) {
         // deactivateBcuSupply();
         // delayMs(100);
         // deactivate5vRail();
-        _delayMs(100);
+        delayMs(100);
         
         g_currentState = stateStandby;
         g_wakeupReason = NO_REASON;
