@@ -74,11 +74,11 @@ baseSbuError_t statemachineGotoStandby(void) {
     baseSbuError_t retval = invalid_transfer;
     if ((g_currentState == stateShutdownRequested) || (g_currentState == stateMenu)) {
         states_t lastState = g_currentState;
-        displayPinsAllLow();
-        deactivateBcuSupply();
-        delayMs(100);
-        deactivate5vRail();
-        delayMs(100);
+        // displayPinsAllLow();
+        // deactivateBcuSupply();
+        // delayMs(100);
+        // deactivate5vRail();
+        _delayMs(100);
         
         g_currentState = stateStandby;
         g_wakeupReason = NO_REASON;
@@ -114,7 +114,7 @@ void stringifyCurrentState(char *buffer) {
             sprintf(buffer, "BcuR (%i)", g_currentState);
             break;
         case stateShutdownRequested:
-            sprintf(buffer, "SdRes (%i)", g_currentState);
+            sprintf(buffer, "SdReq (%i)", g_currentState);
             break;
         case stateStandby:
             sprintf(buffer, "Stby (%i)", g_currentState);

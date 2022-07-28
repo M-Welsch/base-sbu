@@ -102,11 +102,5 @@ ISR(USART0_RXC_vect) {
 	g_usartReceiveBuffer[0] = '\0';
 	USART0_read_string(g_usartReceiveBuffer, 20);
 	USART0_sendString_w_newline_eol(g_usartReceiveBuffer);
-	if(strcmp(g_usartReceiveBuffer, "Test:") == 0) {
-		_delay_ms(100);
-		USART0_sendString_w_newline_eol("ACK:Test");
-		USART0_sendString_w_newline_eol("Echo");
-		USART0_sendString_w_newline_eol("Ready");
-	}
 	g_usart0ReceiveComplete = true;
-} 
+}

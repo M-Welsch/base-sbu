@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "hal_rtc.h"
@@ -29,9 +30,14 @@ bool rtc_enabled() {
 	return RTC.CTRLA & RTC_RTCEN_bm;
 }
 
-void rtc_set_compare_interrupt()
+void rtcActivateCompareInterrupt()
 {
 	RTC.INTCTRL = RTC_CMP_bm;
+}
+
+void rtcDeactivateCompareInterrupt()
+{
+	RTC.INTCTRL &= ~RTC_CMP_bm;
 }
 
 void rtc_use_internal_1k024_oscillator()
@@ -41,10 +47,9 @@ void rtc_use_internal_1k024_oscillator()
 }
 
 void rtcInit(void) {
-	//flag_wakeup_by_rtc = false;
 	rtc_wait_for_all_status_bits_zero();
 	rtc_set_prescaler_and_enable();
-	rtc_set_compare_interrupt();
+	// rtcActivateCompareInterrupt();
 	rtc_use_internal_1k024_oscillator();
 }
 

@@ -6,6 +6,7 @@
 #define DIMENSION_OF(a) (sizeof(a) / sizeof(a[0]) )
 
 typedef enum {
+    test_for_echo = 0,
     write_to_display_line1 = 1,
     write_to_display_line2 = 2,
     set_display_brightness = 3,
@@ -21,6 +22,7 @@ typedef enum {
     abort_shutdown = 13,
     request_wakeup_reason = 14,
     set_wakeup_reason = 15,
+    get_reset_reason = 16,
     __end__ = -1
 } usartCommands_t;
 

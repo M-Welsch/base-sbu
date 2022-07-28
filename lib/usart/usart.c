@@ -16,10 +16,15 @@
 
 #define UNUSED_PARAM(x) (void)(x)
 
-char _returnBuffer[48];
+char _returnBuffer[100];
 
 void _usartSendReady() {
 	USART0_sendString_w_newline_eol("Ready");
+}
+
+void callback_test_for_echo(const char* payload) {
+    USART0_sendString_w_newline_eol("Echo");
+    _usartSendReady();
 }
 
 void callback_write_to_display_line1(const char* payload) {
@@ -47,6 +52,7 @@ void callback_set_led_brightness(const char* payload) {
 void callback_set_seconds_to_next_bu(const char* payload) {
     uint16_t _seconds = (uint16_t) strtol(payload, NULL, 10);
     rtcSetWakeupInSeconds(_seconds);
+    rtcActivateCompareInterrupt();
     g_nextBackupInfo.secondsToWakeupReceived = true;
     USART0_sendString_w_newline_eol("CMP:123");  // Todo: get rid of this. BCU shouldn't rely on that.
     _usartSendReady();
@@ -104,6 +110,13 @@ void callback_abort_shutdown(const char* payload) {
     _usartSendReady();
 }
 
+void callback_get_reset_reason(const char* payload) {
+    char buffer[32];
+    sprintf(buffer, "RST: 0x%x", RSTCTRL_RSTFR);
+    USART0_sendString_w_newline_eol(buffer);
+    _usartSendReady();
+}
+
 typedef struct {
     wakeupReasons_t reason;
     char keyword[10];
@@ -140,7 +153,8 @@ void callback_set_wakeup_reason(const char* payload) {
     _usartSendReady();
 }
 
-usartCommandsStruct usartCommands[13] = {
+usartCommandsStruct usartCommands[] = {
+    {test_for_echo, "Te", callback_test_for_echo},
     {write_to_display_line1, "D1", callback_write_to_display_line1},
     {write_to_display_line2, "D2", callback_write_to_display_line2},
     {set_display_brightness, "DB", callback_set_display_brightness},
@@ -155,7 +169,8 @@ usartCommandsStruct usartCommands[13] = {
     {request_shutdown, "SR", callback_request_shutdown},
     {abort_shutdown, "SA", callback_abort_shutdown},
     {request_wakeup_reason, "WR", callback_request_wakeup_reason},
-    {set_wakeup_reason, "WD", callback_set_wakeup_reason}
+    {set_wakeup_reason, "WD", callback_set_wakeup_reason},
+    {get_reset_reason, "RS", callback_get_reset_reason}
 };
 
 /**
@@ -182,7 +197,7 @@ void _acknowledge(const char *msgCode) {
 baseSbuError_t usartDecodeIncomingMessage() {
     baseSbuError_t retval = fail;
     char messageCode[3]; 
-    char payload[17];
+    char payload[40];
     cli();
     strncpy(messageCode, g_usartReceiveBuffer, 2);
     messageCode[2] = '\0';

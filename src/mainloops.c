@@ -13,23 +13,21 @@
 void _processCommunication() {
     if (g_usart0ReceiveComplete) {
         g_usart0ReceiveComplete = false;
-        // if(usartDecodeIncomingMessage(&decodedMsg) == success) {
-        //     decodedMsg.callback(decodedMsg.payload);
-        // }
         usartDecodeIncomingMessage();
     }
 }
 
 void mainloopBcuRunning() {
     _processCommunication();
-    if (g_rtcTriggered) {
-        g_rtcTriggered = false;
-        statemachineGotoBcuRunning();
-    }
 }
 
+uint8_t shutdownCounter = 0;
+char _buffer[32];
 void mainloopShutdownRequested() {
-    if (adc3v3present()) {
+    if (shutdownCounter < 30) {
+        sprintf(_buffer, "SCnt: %d", shutdownCounter);
+        USART0_sendString_w_newline_eol(_buffer);
+        shutdownCounter++;
         _processCommunication();
     }
     else {

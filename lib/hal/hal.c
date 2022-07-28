@@ -94,5 +94,6 @@ ISR(BADISR_vect) {
 ISR(RTC_CNT_vect) {
 	RTC.INTFLAGS |= RTC_CMP_bm;
 	USART0_sendString_w_newline_eol("CMP");
+	rtcDeactivateCompareInterrupt();
 	g_rtcTriggered = true;
 }
