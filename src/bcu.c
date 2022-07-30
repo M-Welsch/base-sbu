@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "statemachine.h"
 #include "hal.h"
 
 /**
@@ -37,6 +38,7 @@ void _startsWithB(const char* messageCode, const char* payload) {
         case 'U':  // Seconds to next Wakeup. LSB first, important!!
             secondsToWakeup = _decodeBU(payload);
             rtcSetWakeupInSeconds(secondsToWakeup);
+            rtcActivateCompareInterrupt();
             break;
         default:
             break;
@@ -44,15 +46,21 @@ void _startsWithB(const char* messageCode, const char* payload) {
 }
 
 void _startsWithS(const char* messageCode, const char* payload) {
-
     switch (*(messageCode+1)) {
         case 'R':
+            statemachineGotoShutdownRequested();
             break;
         case 'A':
+            statemachineGotoBcuRunning();
             break;
         default:
             break;
     }
+}
+
+void _startsWithT(const char* messageCode, const char* payload) {
+    if (*(messageCode+1) == 'e')
+        USART0SendString("Echo");
 }
 
 void decodeMessageAndRunAction(const char *receiveBuffer) {
@@ -66,6 +74,10 @@ void decodeMessageAndRunAction(const char *receiveBuffer) {
 
         case 'S':
             _startsWithS(messageCode, payload);
+            break;
+
+        case 'T':
+            _startsWithT(messageCode, payload);
             break;
 
         default:

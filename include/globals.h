@@ -4,14 +4,6 @@
 #include <stdint.h>
 
 typedef enum {
-    stateInit,
-    stateBcuRunning,
-    stateShutdownRequested,
-    stateStandby,
-    stateMenu
-} states_t;
-
-typedef enum {
     BACKUP_NOW,
     SCHEDULED_BACKUP,
     CONFIGURATION,
@@ -28,12 +20,12 @@ typedef struct {
 
 wakeupReasons_t g_wakeupReason;
 nextBackupInfo_t g_nextBackupInfo;
-states_t g_currentState;
+// states_t g_currentState;
 
 #define LEN_USART_RECEIVE_BUFFER 38
 
-char g_usartReceiveBuffer[LEN_USART_RECEIVE_BUFFER];
-volatile bool g_usart0ReceiveComplete;
+//char g_usartReceiveBuffer[LEN_USART_RECEIVE_BUFFER];
+//volatile bool g_usart0ReceiveComplete;
 
 void flagsInit();
 #endif

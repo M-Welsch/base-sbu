@@ -9,7 +9,7 @@
 
 /* USART */
 void USART0_send_ready();
-void USART0_sendString_w_newline_eol(const char *s);
+void USART0SendString(const char *s);
 void USART0_process_incoming_message();
 
 /* Buttons */

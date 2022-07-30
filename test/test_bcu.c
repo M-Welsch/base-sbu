@@ -1,5 +1,6 @@
 
 #include "bcu.h"
+#include "mock_statemachine.h"
 #include "mock_hal.h"
 
 #define DIMENSION_OF(x) (sizeof(x)/sizeof(x[0]))
@@ -33,6 +34,7 @@ void test_decodeMessageAndRunAction_should_decoudeMeaningfullTwoBytePayload() {
     };
 
     for (uint8_t c=0; c<DIMENSION_OF(map); c++) {
+        rtcActivateCompareInterrupt_Ignore();
         rtcSetWakeupInSeconds_Expect(map[c].outInt);
         decodeMessageAndRunAction(map[c].inArray);
     }

@@ -37,6 +37,7 @@ void USART0SendString(const char *s) {
 	for(uint16_t i = 0; i < strlen(s); i++) {
 		_USART0SendChar(s[i]);
 	}
+	_USART0SendChar('\n');
 }
 
 uint8_t _USART0ReceiveComplete() {
@@ -214,8 +215,8 @@ void halInit(void) {
 
 /* Interrupt Service Routines */
 
-ISR(RTC_CNT_vect) {
-	RTC.INTFLAGS |= RTC_CMP_bm;
-	//USART0SendString("CMP");
-	rtcDeactivateCompareInterrupt();
-}
+// ISR(RTC_CNT_vect) {
+// 	RTC.INTFLAGS |= RTC_CMP_bm;
+// 	//USART0SendString("CMP");
+// 	rtcDeactivateCompareInterrupt();
+// }
