@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-#include "globals.h"
+// #include "globals.h"
 #include "hal.h"
 
 /* USART */
@@ -80,8 +80,6 @@ void _buttonsInit() {
 	BUTTON_PORT.DIRCLR = (BUTTON_0 | BUTTON_1);
 	BUTTON_PORT.BUTTON_0_CTRL |= (PORT_PULLUPEN_bm | PORT_ISC_FALLING_gc);
 	BUTTON_PORT.BUTTON_1_CTRL |= (PORT_PULLUPEN_bm | PORT_ISC_FALLING_gc);
-    button0Pressed = false;
-    button1Pressed = false;
 }
 
 bool button0PinHigh(void) {
@@ -220,9 +218,4 @@ ISR(RTC_CNT_vect) {
 	RTC.INTFLAGS |= RTC_CMP_bm;
 	//USART0SendString("CMP");
 	rtcDeactivateCompareInterrupt();
-}
-
-ISR(USART0_RXC_vect) {
-	USART0_read_string(g_usartReceiveBuffer, 20);
-	USART0SendString(g_usartReceiveBuffer);
 }

@@ -29,7 +29,9 @@
         "stdbool.h": "c",
         "stdint.h": "c",
         "stdint-gcc.h": "c",
-        "globals.h": "c"
+        "globals.h": "c",
+        "bcu.h": "c",
+        "mock_hal.h": "c"
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json"
 }

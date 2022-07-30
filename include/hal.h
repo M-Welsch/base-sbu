@@ -12,12 +12,6 @@ void USART0_send_ready();
 void USART0_sendString_w_newline_eol(const char *s);
 void USART0_process_incoming_message();
 
-/* ADC */
-uint16_t adcResult3v3();
-uint16_t adcResultInCur();
-uint16_t adcTemperature();
-bool adc3v3present();
-
 /* Buttons */
 typedef enum {
     pressed,
@@ -26,8 +20,6 @@ typedef enum {
 
 buttonState_t button0(void);
 buttonState_t button1(void);
-volatile bool button0Pressed;
-volatile bool button1Pressed;
 
 /* Display */
 void displayPinsAllLow(void);

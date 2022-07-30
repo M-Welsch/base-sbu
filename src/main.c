@@ -1,5 +1,6 @@
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 #include <stdio.h>
 
 #include "bcu.h"
@@ -18,7 +19,7 @@ int main(void)
   halInit();
   while(1) {
     if(g_usart0ReceiveComplete) {
-      decodeMessageAndRunAction(); 
+      decodeMessageAndRunAction(g_usartReceiveBuffer); 
     }
 
     switch (g_currentState) {
@@ -32,4 +33,9 @@ int main(void)
         break;
     }
   }
+}
+
+ISR(USART0_RXC_vect) {
+	USART0_read_string(g_usartReceiveBuffer, 20);
+	USART0SendString(g_usartReceiveBuffer);
 }
